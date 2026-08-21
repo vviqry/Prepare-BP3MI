@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BP3MI SMK Go Global — Simulasi Seleksi Welder & English</title>
+    <meta name="description" content="Aplikasi simulasi ujian seleksi pelatihan SMK Go Global BP3MI untuk bidang Welder dan Bahasa Inggris. Latihan soal, interview, checklist, dan cheat-sheet.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        charcoal: { 50:'#f6f6f7', 100:'#e1e2e5', 200:'#c3c5cb', 300:'#9ea1aa', 400:'#7a7e89', 500:'#60636e', 600:'#4c4f58', 700:'#3e4049', 800:'#2e3038', 900:'#1e2028', 950:'#131419' },
+                        safety: { 50:'#fff8ed', 100:'#fff0d4', 200:'#ffdca8', 300:'#ffc370', 400:'#ff9f37', 500:'#ff8310', 600:'#f06806', 700:'#c74d07', 800:'#9e3d0e', 900:'#80330f' },
+                        steel: { 50:'#f4f6f7', 100:'#e3e7ea', 200:'#c9d1d8', 300:'#a3b0bc', 400:'#768999', 500:'#5b6e7e', 600:'#4b5b6b', 700:'#3f4d5a', 800:'#38434d', 900:'#313a43' },
+                        industrial: { 50:'#fffbeb', 100:'#fff3c6', 200:'#ffe588', 300:'#ffd24a', 400:'#ffc020', 500:'#f0a500', 600:'#d07d00', 700:'#a85800', 800:'#8a4409', 900:'#70370c' }
+                    },
+                    fontFamily: { sans: ['Inter','system-ui','sans-serif'], mono: ['JetBrains Mono','monospace'] }
+                }
+            }
+        }
+    </script>
+    <style>
+        * { scrollbar-width: thin; scrollbar-color: #4c4f58 transparent; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #4c4f58; border-radius: 3px; }
+        body { font-family: 'Inter', system-ui, sans-serif; }
+
+        /* Page transition */
+        .page { display: none; opacity: 0; transform: translateY(12px); }
+        .page.active { display: block; animation: pageIn .35s cubic-bezier(.16,1,.3,1) forwards; }
+        @keyframes pageIn { to { opacity:1; transform:translateY(0); } }
+
+        /* Sidebar link hover */
+        .nav-link { transition: all .2s ease; }
+        .nav-link:hover { background: rgba(255,131,16,.08); }
+        .nav-link.active { background: linear-gradient(90deg, rgba(255,131,16,.15) 0%, transparent 100%); border-left: 3px solid #ff8310; color: #ff8310; }
+        .nav-link.active .nav-icon { color: #ff8310; }
+
+        /* Card hover */
+        .card-hover { transition: transform .2s ease, box-shadow .2s ease; }
+        .card-hover:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,0,0,.08); }
+
+        /* Option button styles */
+        .opt-btn { transition: all .15s ease; }
+        .opt-btn:hover:not(.selected):not(.correct):not(.wrong) { border-color: #ff8310; background: rgba(255,131,16,.04); }
+        .opt-btn.selected { border-color: #ff8310; background: rgba(255,131,16,.08); box-shadow: 0 0 0 2px rgba(255,131,16,.2); }
+        .opt-btn.correct { border-color: #22c55e; background: rgba(34,197,94,.08); }
+        .opt-btn.wrong { border-color: #ef4444; background: rgba(239,68,68,.08); }
+
+        /* Accordion */
+        .accordion-content { max-height: 0; overflow: hidden; transition: max-height .4s cubic-bezier(.16,1,.3,1), padding .3s ease; }
+        .accordion-content.open { max-height: 2000px; padding-top: 1rem; padding-bottom: 1rem; }
+        .accordion-icon { transition: transform .3s ease; }
+        .accordion-icon.rotated { transform: rotate(180deg); }
+
+        /* Progress ring */
+        .progress-ring { transition: stroke-dashoffset .6s cubic-bezier(.16,1,.3,1); }
+
+        /* Toast */
+        .toast { animation: toastIn .4s cubic-bezier(.16,1,.3,1) forwards; }
+        .toast.exit { animation: toastOut .3s ease forwards; }
+        @keyframes toastIn { from { opacity:0; transform:translateX(100%); } to { opacity:1; transform:translateX(0); } }
+        @keyframes toastOut { to { opacity:0; transform:translateX(100%); } }
+
+        /* Checkbox animation */
+        .check-animate { animation: checkPop .3s cubic-bezier(.16,1,.3,1); }
+        @keyframes checkPop { 0% { transform: scale(0.8); } 50% { transform: scale(1.15); } 100% { transform: scale(1); } }
+
+        /* Pulse glow */
+        .pulse-glow { animation: pulseGlow 2s infinite; }
+        @keyframes pulseGlow { 0%,100% { box-shadow: 0 0 0 0 rgba(255,131,16,.3); } 50% { box-shadow: 0 0 0 8px rgba(255,131,16,0); } }
+
+        /* Mobile sidebar overlay */
+        .sidebar-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.4); z-index:40; opacity:0; transition: opacity .3s ease; }
+        .sidebar-overlay.show { display:block; opacity:1; }
+
+        /* Shimmer loading */
+        .shimmer { background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
+        @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+        /* Timer danger */
+        .timer-danger { animation: timerPulse .8s infinite; }
+        @keyframes timerPulse { 0%,100% { color: #ef4444; } 50% { color: #fca5a5; } }
+    </style>
+</head>
+<body class="bg-charcoal-50 text-charcoal-900 min-h-screen">
+
+    <!-- Toast Container -->
+    <div id="toastContainer" class="fixed top-4 right-4 z-[100] flex flex-col gap-2"></div>
+
+    <!-- Mobile Menu Toggle -->
+    <button id="mobileMenuBtn" class="lg:hidden fixed top-4 left-4 z-50 bg-charcoal-900 text-white p-2.5 rounded-xl shadow-lg hover:bg-charcoal-800 transition-colors">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+
+    <!-- Sidebar Overlay -->
+    <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
+    <div class="flex min-h-screen">
+
+        <!-- ===== SIDEBAR ===== -->
+        <aside id="sidebar" class="fixed lg:sticky top-0 left-0 h-screen w-72 bg-charcoal-950 text-white flex flex-col z-50 transform -translate-x-full lg:translate-x-0 transition-transform duration-300">
+            <!-- Logo -->
+            <div class="p-6 border-b border-charcoal-800">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-safety-500 to-safety-600 flex items-center justify-center shadow-lg">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.879 16.121A3 3 0 1012.015 11L11 14H9c0 .768.293 1.536.879 2.121z"/></svg>
+                    </div>
+                    <div>
+                        <h1 class="text-sm font-bold tracking-wide">SMK GO GLOBAL</h1>
+                        <p class="text-[10px] text-charcoal-400 tracking-widest uppercase">BP3MI · Welder Prep</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="flex-1 p-4 space-y-1">
+                <button onclick="navigateTo('exam')" data-page="exam" class="nav-link active w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-charcoal-300">
+                    <span class="nav-icon text-charcoal-500">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+                    </span>
+                    Simulasi Ujian
+                    <span class="ml-auto bg-safety-500/20 text-safety-400 text-[10px] font-bold px-2 py-0.5 rounded-full">15 SOAL</span>
+                </button>
+                <button onclick="navigateTo('interview')" data-page="interview" class="nav-link w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-charcoal-300">
+                    <span class="nav-icon text-charcoal-500">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
+                    </span>
+                    Latihan Interview
+                </button>
+                <button onclick="navigateTo('checklist')" data-page="checklist" class="nav-link w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-charcoal-300">
+                    <span class="nav-icon text-charcoal-500">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    </span>
+                    Checklist Kesiapan
+                </button>
+                <button onclick="navigateTo('cheatsheet')" data-page="cheatsheet" class="nav-link w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-charcoal-300">
+                    <span class="nav-icon text-charcoal-500">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                    </span>
+                    Quick Cheat-Sheet
+                </button>
+            </nav>
+
+            <!-- Footer -->
+            <div class="p-4 border-t border-charcoal-800">
+                <div class="bg-charcoal-900 rounded-xl p-4">
+                    <div class="flex items-center gap-2 mb-2">
+                        <div class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></div>
+                        <span class="text-[11px] text-charcoal-400 uppercase tracking-wider font-medium">Status Anda</span>
+                    </div>
+                    <p class="text-xs text-charcoal-300" id="statusText">Belum memulai ujian</p>
+                </div>
+            </div>
+        </aside>
+
+        <!-- ===== MAIN CONTENT ===== -->
+        <main class="flex-1 min-h-screen">
+            <!-- Top Bar -->
+            <header class="sticky top-0 z-30 bg-white/80 backdrop-blur-xl border-b border-charcoal-100">
+                <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+                    <div class="pl-12 lg:pl-0">
+                        <h2 class="text-lg font-bold text-charcoal-900" id="pageTitle">Simulasi Ujian Tertulis</h2>
+                        <p class="text-xs text-charcoal-400" id="pageSubtitle">Tes Juru Las & Bahasa Inggris — 15 Soal Pilihan Ganda</p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div id="timerDisplay" class="hidden items-center gap-2 bg-charcoal-900 text-white pl-3 pr-4 py-2 rounded-xl text-sm font-mono font-semibold">
+                            <svg class="w-4 h-4 text-safety-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            <span id="timerText">15:00</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content Area -->
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+                <!-- ============ PAGE: EXAM ============ -->
+                <section id="page-exam" class="page active">
+
+                    <!-- Exam Intro -->
+                    <div id="examIntro">
+                        <div class="bg-white rounded-2xl border border-charcoal-100 overflow-hidden card-hover">
+                            <div class="bg-gradient-to-r from-charcoal-900 via-charcoal-800 to-charcoal-900 p-8 text-white relative overflow-hidden">
+                                <div class="absolute top-0 right-0 w-64 h-64 bg-safety-500/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
+                                <div class="relative">
+                                    <div class="inline-flex items-center gap-2 bg-safety-500/20 text-safety-300 text-xs font-bold px-3 py-1.5 rounded-full mb-4">
+                                        <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2L3 7l7 5 7-5-7-5zM3 17l7 5 7-5M3 12l7 5 7-5"/></svg>
+                                        SIMULASI RESMI
+                                    </div>
+                                    <h3 class="text-2xl font-bold mb-2">Tes Tertulis Juru Las & Bahasa Inggris</h3>
+                                    <p class="text-charcoal-300 text-sm max-w-xl">Simulasi ujian seleksi pelatihan SMK Go Global BP3MI. Uji pengetahuan Anda di bidang pengelasan, K3, bahasa Inggris teknis, dan regulasi pekerja migran.</p>
+                                </div>
+                            </div>
+                            <div class="p-8">
+                                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+                                    <div class="text-center p-4 bg-charcoal-50 rounded-xl">
+                                        <div class="text-2xl font-bold text-charcoal-900">15</div>
+                                        <div class="text-xs text-charcoal-500 mt-1">Total Soal</div>
+                                    </div>
+                                    <div class="text-center p-4 bg-charcoal-50 rounded-xl">
+                                        <div class="text-2xl font-bold text-charcoal-900">15:00</div>
+                                        <div class="text-xs text-charcoal-500 mt-1">Waktu (Menit)</div>
+                                    </div>
+                                    <div class="text-center p-4 bg-charcoal-50 rounded-xl">
+                                        <div class="text-2xl font-bold text-charcoal-900">4</div>
+                                        <div class="text-xs text-charcoal-500 mt-1">Kategori</div>
+                                    </div>
+                                    <div class="text-center p-4 bg-charcoal-50 rounded-xl">
+                                        <div class="text-2xl font-bold text-safety-600">70%</div>
+                                        <div class="text-xs text-charcoal-500 mt-1">Nilai Min. Lulus</div>
+                                    </div>
+                                </div>
+                                <div class="grid sm:grid-cols-2 gap-3 mb-8">
+                                    <div class="flex items-start gap-3 p-3 rounded-lg bg-blue-50 border border-blue-100">
+                                        <span class="mt-0.5 text-blue-500"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg></span>
+                                        <div><h4 class="text-xs font-semibold text-blue-800">Technical Welding</h4><p class="text-[11px] text-blue-600 mt-0.5">SMAW, GTAW, GMAW, posisi las 1G-4G, cacat las</p></div>
+                                    </div>
+                                    <div class="flex items-start gap-3 p-3 rounded-lg bg-green-50 border border-green-100">
+                                        <span class="mt-0.5 text-green-500"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg></span>
+                                        <div><h4 class="text-xs font-semibold text-green-800">Workshop English</h4><p class="text-[11px] text-green-600 mt-0.5">Welding tools, safety commands, blueprint vocab</p></div>
+                                    </div>
+                                    <div class="flex items-start gap-3 p-3 rounded-lg bg-amber-50 border border-amber-100">
+                                        <span class="mt-0.5 text-amber-500"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg></span>
+                                        <div><h4 class="text-xs font-semibold text-amber-800">K3 Safety Standards</h4><p class="text-[11px] text-amber-600 mt-0.5">APD, pemilihan shade helm, penanganan tabung gas</p></div>
+                                    </div>
+                                    <div class="flex items-start gap-3 p-3 rounded-lg bg-purple-50 border border-purple-100">
+                                        <span class="mt-0.5 text-purple-500"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg></span>
+                                        <div><h4 class="text-xs font-semibold text-purple-800">Regulasi & Logika</h4><p class="text-[11px] text-purple-600 mt-0.5">Prosedur BP2MI & logika spasial dasar</p></div>
+                                    </div>
+                                </div>
+                                <button onclick="startExam()" class="w-full sm:w-auto bg-gradient-to-r from-safety-500 to-safety-600 hover:from-safety-600 hover:to-safety-700 text-white font-bold py-3.5 px-8 rounded-xl transition-all duration-200 shadow-lg shadow-safety-500/20 pulse-glow flex items-center justify-center gap-2 mx-auto">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                    Mulai Ujian Sekarang
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Active Exam -->
+                    <div id="examActive" class="hidden">
+                        <!-- Progress Bar -->
+                        <div class="mb-6">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-sm font-semibold text-charcoal-700">Progres Ujian</span>
+                                <span class="text-sm font-mono font-semibold text-charcoal-500" id="progressText">0 / 15</span>
+                            </div>
+                            <div class="h-2 bg-charcoal-100 rounded-full overflow-hidden">
+                                <div id="progressBar" class="h-full bg-gradient-to-r from-safety-500 to-safety-400 rounded-full transition-all duration-500 ease-out" style="width:0%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Category Badges -->
+                        <div class="flex flex-wrap gap-2 mb-6" id="categoryBadges"></div>
+
+                        <!-- Question Card -->
+                        <div class="bg-white rounded-2xl border border-charcoal-100 overflow-hidden">
+                            <div class="p-6 sm:p-8">
+                                <div class="flex items-start gap-4 mb-6">
+                                    <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-charcoal-900 text-white flex items-center justify-center font-bold text-sm" id="questionNumber">1</div>
+                                    <div class="flex-1">
+                                        <span class="inline-block text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full mb-2" id="questionCategory">Technical Welding</span>
+                                        <p class="text-base font-medium leading-relaxed text-charcoal-800" id="questionText"></p>
+                                    </div>
+                                </div>
+                                <div class="space-y-3" id="optionsContainer"></div>
+                            </div>
+                            <div class="border-t border-charcoal-100 px-6 sm:px-8 py-4 flex items-center justify-between bg-charcoal-50/50">
+                                <button onclick="prevQuestion()" id="prevBtn" class="flex items-center gap-2 text-sm font-medium text-charcoal-500 hover:text-charcoal-800 transition-colors disabled:opacity-30 disabled:cursor-not-allowed" disabled>
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                                    Sebelumnya
+                                </button>
+                                <div class="flex gap-1.5" id="dotIndicators"></div>
+                                <button onclick="nextQuestion()" id="nextBtn" class="flex items-center gap-2 text-sm font-bold text-safety-600 hover:text-safety-700 transition-colors">
+                                    Selanjutnya
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Submit Exam -->
+                        <div class="mt-6 text-center">
+                            <button onclick="submitExam()" id="submitExamBtn" class="bg-charcoal-900 hover:bg-charcoal-800 text-white font-bold py-3 px-8 rounded-xl transition-colors shadow-lg inline-flex items-center gap-2">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                Kumpulkan Jawaban
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Exam Result -->
+                    <div id="examResult" class="hidden">
+                        <!-- Score Card -->
+                        <div class="bg-white rounded-2xl border border-charcoal-100 overflow-hidden mb-6">
+                            <div class="p-8 text-center" id="resultHeader">
+                                <div class="relative inline-block mb-4">
+                                    <svg class="w-32 h-32" viewBox="0 0 120 120">
+                                        <circle cx="60" cy="60" r="52" fill="none" stroke="#e5e7eb" stroke-width="8"/>
+                                        <circle id="scoreRing" class="progress-ring" cx="60" cy="60" r="52" fill="none" stroke="#ff8310" stroke-width="8" stroke-linecap="round" transform="rotate(-90 60 60)" stroke-dasharray="326.73" stroke-dashoffset="326.73"/>
+                                    </svg>
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div>
+                                            <div class="text-3xl font-black" id="scorePercent">0%</div>
+                                            <div class="text-[10px] font-semibold text-charcoal-400 uppercase tracking-wider">Nilai</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <h3 class="text-xl font-bold mb-1" id="resultTitle">Hasil Ujian</h3>
+                                <p class="text-sm text-charcoal-500" id="resultSubtitle"></p>
+                                <div class="flex justify-center gap-6 mt-6">
+                                    <div class="text-center">
+                                        <div class="text-2xl font-bold text-green-600" id="correctCount">0</div>
+                                        <div class="text-xs text-charcoal-400">Benar</div>
+                                    </div>
+                                    <div class="w-px bg-charcoal-200"></div>
+                                    <div class="text-center">
+                                        <div class="text-2xl font-bold text-red-500" id="wrongCount">0</div>
+                                        <div class="text-xs text-charcoal-400">Salah</div>
+                                    </div>
+                                    <div class="w-px bg-charcoal-200"></div>
+                                    <div class="text-center">
+                                        <div class="text-2xl font-bold text-charcoal-400" id="unansweredCount">0</div>
+                                        <div class="text-xs text-charcoal-400">Kosong</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Answer Breakdown -->
+                        <div class="space-y-4" id="answerBreakdown"></div>
+
+                        <!-- Retake -->
+                        <div class="mt-8 text-center">
+                            <button onclick="retakeExam()" class="bg-gradient-to-r from-safety-500 to-safety-600 hover:from-safety-600 hover:to-safety-700 text-white font-bold py-3.5 px-8 rounded-xl transition-all shadow-lg shadow-safety-500/20 inline-flex items-center gap-2">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                                Ulangi Ujian
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ============ PAGE: INTERVIEW ============ -->
+                <section id="page-interview" class="page">
+                    <div class="mb-8">
+                        <div class="bg-gradient-to-r from-charcoal-900 via-charcoal-800 to-charcoal-900 rounded-2xl p-8 text-white relative overflow-hidden">
+                            <div class="absolute bottom-0 right-0 w-48 h-48 bg-safety-500/10 rounded-full translate-y-1/2 translate-x-1/4 blur-3xl"></div>
+                            <div class="relative">
+                                <div class="inline-flex items-center gap-2 bg-safety-500/20 text-safety-300 text-xs font-bold px-3 py-1.5 rounded-full mb-4">
+                                    <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7 4a3 3 0 016 0v4a3 3 0 11-6 0V4zm4 10.93A7.001 7.001 0 0017 8a1 1 0 10-2 0A5 5 0 015 8a1 1 0 00-2 0 7.001 7.001 0 006 6.93V17H6a1 1 0 100 2h8a1 1 0 100-2h-3v-2.07z" clip-rule="evenodd"/></svg>
+                                    INTERVIEW PRACTICE
+                                </div>
+                                <h3 class="text-2xl font-bold mb-2">English Interview Simulator</h3>
+                                <p class="text-charcoal-300 text-sm max-w-xl">Latihan menjawab 8 pertanyaan interview yang paling umum ditanyakan dalam rekrutmen welder global. Lengkap dengan panduan jawaban terbaik dalam Bahasa Inggris teknis dan terjemahan Indonesia.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="space-y-4" id="interviewContainer"></div>
+                </section>
+
+                <!-- ============ PAGE: CHECKLIST ============ -->
+                <section id="page-checklist" class="page">
+                    <div class="mb-8">
+                        <div class="bg-gradient-to-r from-charcoal-900 via-charcoal-800 to-charcoal-900 rounded-2xl p-8 text-white relative overflow-hidden">
+                            <div class="absolute top-0 left-0 w-40 h-40 bg-green-500/10 rounded-full -translate-y-1/2 -translate-x-1/4 blur-3xl"></div>
+                            <div class="relative">
+                                <div class="inline-flex items-center gap-2 bg-green-500/20 text-green-300 text-xs font-bold px-3 py-1.5 rounded-full mb-4">
+                                    <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                                    CHECKLIST KESIAPAN
+                                </div>
+                                <h3 class="text-2xl font-bold mb-2">Checklist Kesiapan Pekerja Migran</h3>
+                                <p class="text-charcoal-300 text-sm max-w-xl">Pastikan semua persiapan fisik, dokumen, dan mental Anda sudah lengkap berdasarkan persyaratan BP3MI Sumbar. Progres tersimpan otomatis di browser Anda.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Overall Progress -->
+                    <div class="bg-white rounded-2xl border border-charcoal-100 p-6 mb-6">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-sm font-bold text-charcoal-700">Progres Keseluruhan</span>
+                            <span class="text-sm font-mono font-bold text-safety-600" id="checklistProgress">0%</span>
+                        </div>
+                        <div class="h-3 bg-charcoal-100 rounded-full overflow-hidden">
+                            <div id="checklistBar" class="h-full bg-gradient-to-r from-green-500 to-emerald-400 rounded-full transition-all duration-500 ease-out" style="width:0%"></div>
+                        </div>
+                        <p class="text-xs text-charcoal-400 mt-2" id="checklistSummary">0 dari 0 item selesai</p>
+                    </div>
+                    <div class="space-y-6" id="checklistContainer"></div>
+                </section>
+
+                <!-- ============ PAGE: CHEATSHEET ============ -->
+                <section id="page-cheatsheet" class="page">
+                    <div class="mb-8">
+                        <div class="bg-gradient-to-r from-charcoal-900 via-charcoal-800 to-charcoal-900 rounded-2xl p-8 text-white relative overflow-hidden">
+                            <div class="absolute bottom-0 left-1/2 w-56 h-56 bg-industrial-500/10 rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl"></div>
+                            <div class="relative">
+                                <div class="inline-flex items-center gap-2 bg-industrial-500/20 text-industrial-300 text-xs font-bold px-3 py-1.5 rounded-full mb-4">
+                                    <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z"/></svg>
+                                    QUICK REFERENCE
+                                </div>
+                                <h3 class="text-2xl font-bold mb-2">Quick Cheat-Sheet</h3>
+                                <p class="text-charcoal-300 text-sm max-w-xl">Ringkasan visual simbol las, posisi pengelasan, dan kosakata Bahasa Inggris frekuensi tinggi untuk pekerja industri. Hafalkan sebelum ujian!</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="cheatsheetContainer"></div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+<script>
+// ==================== DATA ====================
+
+const questions = [
+    // === TECHNICAL WELDING (Q1-Q5) ===
+    {
+        id: 1, category: 'Technical Welding', catColor: 'bg-blue-100 text-blue-700',
+        question: 'What does SMAW stand for in welding terminology?',
+        options: ['Submerged Metal Arc Welding', 'Shielded Metal Arc Welding', 'Standard Manual Arc Welding', 'Semi-Manual Alloy Welding'],
+        correct: 1,
+        explanation: 'SMAW = Shielded Metal Arc Welding (Las busur listrik manual/elektroda terbungkus). Proses ini menggunakan elektroda terbungkus flux yang mencair bersama logam induk untuk membentuk lapisan pelindung dari kontaminasi atmosfer.'
+    },
+    {
+        id: 2, category: 'Technical Welding', catColor: 'bg-blue-100 text-blue-700',
+        question: 'Posisi pengelasan "3G" mengacu pada pengelasan dalam posisi apa?',
+        options: ['Flat / Datar (horizontal plate)', 'Horizontal (sambungan horizontal)', 'Vertical / Tegak (vertikal naik/turun)', 'Overhead / Di atas kepala'],
+        correct: 2,
+        explanation: '3G = Posisi pengelasan vertikal (Vertical Position). 1G=Flat, 2G=Horizontal, 3G=Vertical, 4G=Overhead. Semakin tinggi angkanya, semakin sulit posisi pengelasannya.'
+    },
+    {
+        id: 3, category: 'Technical Welding', catColor: 'bg-blue-100 text-blue-700',
+        question: 'Which welding process uses a non-consumable tungsten electrode with inert shielding gas?',
+        options: ['SMAW (Stick Welding)', 'GMAW (MIG Welding)', 'GTAW (TIG Welding)', 'FCAW (Flux-Cored Arc Welding)'],
+        correct: 2,
+        explanation: 'GTAW (Gas Tungsten Arc Welding) atau TIG welding menggunakan elektroda tungsten yang tidak ikut meleleh (non-consumable). Gas inert seperti Argon melindungi area las dari kontaminasi udara. Proses ini menghasilkan las berkualitas tinggi untuk material tipis dan logam khusus.'
+    },
+    {
+        id: 4, category: 'Technical Welding', catColor: 'bg-blue-100 text-blue-700',
+        question: 'Cacat las berupa lubang-lubang kecil bulat yang terjebak dalam logam las disebut:',
+        options: ['Undercut', 'Porosity', 'Slag Inclusion', 'Spatter'],
+        correct: 1,
+        explanation: 'Porosity (porositas) adalah cacat las berupa rongga/lubang gas yang terjebak dalam logam las. Penyebabnya antara lain: elektroda lembab, permukaan kotor, gas pelindung tidak cukup, atau arc length terlalu panjang.'
+    },
+    {
+        id: 5, category: 'Technical Welding', catColor: 'bg-blue-100 text-blue-700',
+        question: 'In GMAW (MIG welding), what is the primary function of the shielding gas?',
+        options: ['To increase the arc temperature', 'To protect the weld pool from atmospheric contamination', 'To preheat the base metal', 'To accelerate cooling of the weld joint'],
+        correct: 1,
+        explanation: 'Gas pelindung pada GMAW (CO₂ atau campuran Argon-CO₂) berfungsi melindungi genangan las (weld pool) dari kontaminasi udara (oksigen, nitrogen, hidrogen) yang dapat menyebabkan cacat las seperti porosity dan embrittlement.'
+    },
+    // === WORKSHOP ENGLISH (Q6-Q8) ===
+    {
+        id: 6, category: 'Workshop English', catColor: 'bg-green-100 text-green-700',
+        question: 'What is the correct English term for "palu terak" used to clean slag from a weld bead?',
+        options: ['Ball-peen hammer', 'Chipping hammer', 'Sledge hammer', 'Claw hammer'],
+        correct: 1,
+        explanation: 'Chipping hammer (palu terak/palu chip) digunakan untuk membersihkan slag (terak) dari permukaan hasil las. Alat ini memiliki ujung lancip dan ujung pahat untuk memudahkan pengangkatan kerak las tanpa merusak hasil lasan.'
+    },
+    {
+        id: 7, category: 'Workshop English', catColor: 'bg-green-100 text-green-700',
+        question: '"Keep clear of the welding area and do not look directly at the arc." — Kalimat ini merupakan contoh:',
+        options: ['Blueprint instruction', 'Safety command / warning', 'Quality inspection report', 'Material requisition form'],
+        correct: 1,
+        explanation: 'Kalimat tersebut adalah contoh safety command/warning (perintah/peringatan keselamatan). "Keep clear" = menjauh, "do not look directly at the arc" = jangan melihat langsung ke busur las. Perintah keselamatan di workshop selalu menggunakan imperative form.'
+    },
+    {
+        id: 8, category: 'Workshop English', catColor: 'bg-green-100 text-green-700',
+        question: 'On a welding blueprint, "WPS" stands for:',
+        options: ['Welding Procedure Specification', 'Weld Position Standard', 'Workshop Production Schedule', 'Wire Processing System'],
+        correct: 0,
+        explanation: 'WPS = Welding Procedure Specification, dokumen yang berisi parameter detail prosedur pengelasan: jenis proses, posisi, jenis & ukuran elektroda/kawat, arus, voltase, kecepatan travel, preheat, dan PWHT. WPS wajib diikuti oleh setiap welder di lapangan.'
+    },
+    // === K3 SAFETY (Q9-Q12) ===
+    {
+        id: 9, category: 'K3 Safety', catColor: 'bg-amber-100 text-amber-700',
+        question: 'Shade number berapa yang direkomendasikan untuk welding helmet saat proses SMAW dengan arus 100-150 Ampere?',
+        options: ['Shade #8', 'Shade #10', 'Shade #12', 'Shade #14'],
+        correct: 1,
+        explanation: 'Untuk SMAW dengan arus 100-150A, shade #10 adalah rekomendasi standar (ANSI Z87.1). Semakin tinggi arus las, semakin tinggi shade yang diperlukan. Shade terlalu rendah = risiko kerusakan mata (arc eye/welder\'s flash). Shade terlalu tinggi = sulit melihat weld pool.'
+    },
+    {
+        id: 10, category: 'K3 Safety', catColor: 'bg-amber-100 text-amber-700',
+        question: 'Which PPE item is NOT typically required when performing overhead (4G) welding?',
+        options: ['Welding helmet with proper shade lens', 'Leather welding jacket/cape', 'Safety sandals with open toes', 'Fire-resistant welding gloves'],
+        correct: 2,
+        explanation: 'Safety sandals/open-toe footwear TIDAK PERNAH diperbolehkan di area welding! Welder wajib menggunakan safety boots/shoes tertutup penuh (steel-toe). Pada posisi 4G (overhead), risiko percikan api dan tetesan logam cair jatuh ke bawah sangat tinggi — perlindungan lengkap dari kepala hingga kaki wajib.'
+    },
+    {
+        id: 11, category: 'K3 Safety', catColor: 'bg-amber-100 text-amber-700',
+        question: 'Saat menangani tabung gas Argon/CO₂ untuk GTAW/GMAW, tindakan mana yang BENAR?',
+        options: ['Menggelindingkan tabung di lantai untuk memindahkannya', 'Menyimpan tabung dalam posisi rebah/horizontal', 'Merantai/mengikat tabung pada troli atau dinding secara vertikal', 'Melepas safety cap saat tidak digunakan agar mudah dipasang'],
+        correct: 2,
+        explanation: 'Tabung gas bertekanan tinggi WAJIB disimpan dan ditransportasi dalam posisi tegak (vertikal) dan diikat/dirantai ke troli, dinding, atau rak agar tidak jatuh. Safety cap harus terpasang saat tidak digunakan. JANGAN menggelindingkan, melempar, atau menyimpan secara horizontal.'
+    },
+    {
+        id: 12, category: 'K3 Safety', catColor: 'bg-amber-100 text-amber-700',
+        question: 'Before starting any welding operation, the first safety step is to:',
+        options: ['Strike the arc immediately to test the machine', 'Check all PPE, inspect equipment, and ensure proper ventilation', 'Ask a colleague to hold the workpiece by hand', 'Disconnect the ground clamp to avoid electric shock'],
+        correct: 1,
+        explanation: 'Langkah pertama sebelum pengelasan: (1) Periksa semua APD lengkap, (2) Inspeksi peralatan las, kabel, dan koneksi, (3) Pastikan ventilasi/exhaust memadai, (4) Periksa area kerja dari bahan mudah terbakar. Tidak pernah langsung menyalakan arc tanpa persiapan keselamatan!'
+    },
+    // === REGULATIONS & LOGIC (Q13-Q15) ===
+    {
+        id: 13, category: 'Regulasi & Logika', catColor: 'bg-purple-100 text-purple-700',
+        question: 'Dalam prosedur resmi BP2MI, urutan yang BENAR untuk penempatan Pekerja Migran Indonesia (PMI) adalah:',
+        options: [
+            'Paspor → Medical → PAP → Penempatan',
+            'Pendaftaran SISKOP2MI → Seleksi → Pelatihan/Sertifikasi → Medical → PAP (Pembekalan Akhir Pemberangkatan) → Penempatan',
+            'Medical → Paspor → Berangkat → Pelatihan di negara tujuan',
+            'Seleksi → Berangkat → Pelatihan → Medical'
+        ],
+        correct: 1,
+        explanation: 'Prosedur resmi BP2MI: Pendaftaran online di SISKOP2MI → Seleksi oleh pemberi kerja → Pelatihan kerja & sertifikasi kompetensi → Pemeriksaan kesehatan (Medical Check-Up) → PAP (Pembekalan Akhir Pemberangkatan) → Penandatangan Perjanjian Kerja → Penerbitan Visa → Pemberangkatan. Semua tahapan WAJIB dilalui secara berurutan.'
+    },
+    {
+        id: 14, category: 'Regulasi & Logika', catColor: 'bg-purple-100 text-purple-700',
+        question: 'Jika sebuah kubus memiliki 6 sisi dan setiap sisi diberi warna berbeda, berapa minimum warna yang diperlukan agar tidak ada dua sisi yang bersebelahan memiliki warna sama?',
+        options: ['2 warna', '3 warna', '4 warna', '6 warna'],
+        correct: 1,
+        explanation: 'Minimum 3 warna diperlukan. Kubus memiliki 3 pasang sisi berlawanan. Sisi berlawanan tidak bersebelahan, sehingga bisa diwarnai sama. Dengan 3 warna, setiap pasangan sisi berlawanan mendapat warna yang sama, dan tidak ada sisi bersebelahan yang berwarna sama. Ini soal logika spasial dasar.'
+    },
+    {
+        id: 15, category: 'Regulasi & Logika', catColor: 'bg-purple-100 text-purple-700',
+        question: 'Menurut peraturan, dokumen mana yang WAJIB dimiliki oleh calon PMI sebelum berangkat ke luar negeri?',
+        options: [
+            'Hanya Paspor saja sudah cukup',
+            'Paspor, Visa Kerja, Perjanjian Kerja, Sertifikat Kompetensi, Surat Keterangan Sehat',
+            'KTP dan Ijazah terakhir',
+            'Rekomendasi dari kepala desa saja'
+        ],
+        correct: 1,
+        explanation: 'Calon PMI wajib memiliki: (1) Paspor, (2) Visa Kerja yang sesuai, (3) Perjanjian Kerja yang ditandatangani kedua belah pihak, (4) Sertifikat kompetensi/keahlian, (5) Surat keterangan sehat dari rumah sakit yang ditunjuk. Semua dokumen ini diperlukan untuk perlindungan hukum pekerja.'
+    }
+];
+
+const interviewQuestions = [
+    {
+        question: "Tell me about yourself.",
+        tip: "Fokus pada pengalaman welding, sertifikasi, dan motivasi profesional. Jangan ceritakan hal pribadi yang tidak relevan.",
+        answer: `"Good morning, Sir/Ma'am. My name is [Name], I am [age] years old from West Sumatra, Indonesia. I graduated from [SMK/training center] majoring in Welding Technology. I have [X] years of experience in SMAW and GTAW welding processes, and I hold a valid welding competency certificate from BNSP. I am passionate about developing my skills internationally, and I believe working abroad will allow me to gain valuable experience with advanced welding standards and technologies."`,
+        translation: `"Selamat pagi, Bapak/Ibu. Nama saya [Nama], usia [umur] tahun dari Sumatera Barat, Indonesia. Saya lulusan [SMK/lembaga pelatihan] jurusan Teknologi Pengelasan. Saya memiliki pengalaman [X] tahun di proses las SMAW dan GTAW, dan saya memiliki sertifikat kompetensi las yang valid dari BNSP. Saya sangat antusias mengembangkan kemampuan saya secara internasional, dan saya yakin bekerja di luar negeri akan memberi saya pengalaman berharga dengan standar dan teknologi pengelasan terkini."`
+    },
+    {
+        question: "Why do you want to work abroad as a welder?",
+        tip: "Tunjukkan motivasi profesional, bukan sekadar alasan finansial. Sebutkan peluang belajar standar internasional.",
+        answer: `"I want to work abroad because I am eager to improve my welding skills by working with international standards such as AWS and ASME codes. Working overseas will expose me to advanced welding technologies, modern equipment, and strict quality requirements that will make me a more competent and globally competitive welder. Additionally, this opportunity aligns with the BP3MI program's mission to develop skilled Indonesian workers for the global market."`,
+        translation: `"Saya ingin bekerja di luar negeri karena saya ingin meningkatkan kemampuan las saya dengan bekerja mengikuti standar internasional seperti kode AWS dan ASME. Bekerja di luar negeri akan memberi saya paparan terhadap teknologi las canggih, peralatan modern, dan persyaratan kualitas ketat yang akan membuat saya menjadi welder yang lebih kompeten dan berdaya saing global."`
+    },
+    {
+        question: "How do you handle a welding defect when you discover one?",
+        tip: "Tunjukkan pendekatan sistematis: identifikasi → analisis penyebab → perbaikan → pencegahan. Jangan mengatakan 'abaikan saja'.",
+        answer: `"When I discover a welding defect, I follow a systematic approach. First, I stop welding and assess the type of defect — whether it's porosity, undercut, lack of fusion, or a crack. Then I identify the root cause, which could be incorrect parameters, contaminated materials, or improper technique. I remove the defective weld by grinding if necessary, adjust my settings or technique, and re-weld the joint. Finally, I inspect the repair to ensure it meets the required specification. I also document the defect and the corrective action taken so it can be prevented in future work."`,
+        translation: `"Ketika saya menemukan cacat las, saya mengikuti pendekatan sistematis. Pertama, saya berhenti mengelas dan menilai jenis cacat — apakah itu porositas, undercut, lack of fusion, atau retak. Kemudian saya identifikasi akar masalahnya. Saya menggerinda bagian yang cacat jika perlu, menyesuaikan pengaturan, dan mengelas ulang. Terakhir, saya periksa hasil perbaikan dan mendokumentasikan cacat beserta tindakan korektifnya."`
+    },
+    {
+        question: "How do you handle a high-stress or high-pressure work environment?",
+        tip: "Ceritakan pengalaman nyata dan strategi mengelola tekanan. Tunjukkan kedewasaan profesional.",
+        answer: `"I manage stress by staying organized and focused on the task at hand. In welding, rushing leads to defects and safety hazards, so I always maintain a steady pace regardless of pressure. I prioritize safety procedures, communicate clearly with my team about any concerns, and break complex tasks into manageable steps. During my training, I often worked under timed welding tests, which taught me to remain calm and maintain weld quality even under pressure. I believe that good preparation and a positive mindset are the best ways to handle stress."`,
+        translation: `"Saya mengelola tekanan dengan tetap terorganisir dan fokus pada tugas. Dalam pengelasan, tergesa-gesa akan menyebabkan cacat dan bahaya keselamatan, jadi saya selalu menjaga kecepatan stabil. Saya memprioritaskan prosedur keselamatan, berkomunikasi jelas dengan tim, dan memecah tugas kompleks menjadi langkah-langkah yang lebih mudah dikelola."`
+    },
+    {
+        question: "Explain the difference between SMAW and GTAW welding processes.",
+        tip: "Jelaskan secara teknis tapi ringkas. Tunjukkan penguasaan mendalam terhadap kedua proses.",
+        answer: `"SMAW, or Shielded Metal Arc Welding, uses a consumable electrode coated with flux. The flux melts during welding to create a shielding gas and slag layer that protects the weld pool. It is versatile and commonly used for structural steel and field work. GTAW, or Gas Tungsten Arc Welding, uses a non-consumable tungsten electrode with a separate inert shielding gas, usually Argon. The filler metal is added manually if needed. GTAW produces higher quality and more precise welds, making it ideal for thin materials, stainless steel, and aluminum. The main differences are the electrode type, shielding method, and the level of precision each process offers."`,
+        translation: `"SMAW menggunakan elektroda terbungkus flux yang ikut meleleh. Flux menciptakan gas pelindung dan lapisan slag. GTAW menggunakan elektroda tungsten yang tidak meleleh dengan gas pelindung terpisah (Argon). GTAW menghasilkan las berkualitas lebih tinggi dan lebih presisi, ideal untuk material tipis, stainless steel, dan aluminium."`
+    },
+    {
+        question: "What safety precautions do you always follow before welding?",
+        tip: "Sebutkan APD spesifik dan prosedur keselamatan. Tunjukkan kebiasaan kerja yang disiplin.",
+        answer: `"Before welding, I always perform a complete safety check. First, I wear all required PPE: welding helmet with the correct shade lens, fire-resistant jacket, leather welding gloves, safety boots, and ear protection if needed. I inspect the welding machine, cables, and connections for any damage. I ensure the work area has proper ventilation or exhaust systems. I remove any flammable materials from the welding zone and verify that a fire extinguisher is accessible nearby. I also check the welding procedure specification (WPS) to confirm the correct parameters. Only after completing all these checks do I begin welding."`,
+        translation: `"Sebelum mengelas, saya selalu melakukan pemeriksaan keselamatan lengkap. Pertama, saya memakai semua APD: helm las dengan shade yang benar, jaket tahan api, sarung tangan kulit, safety boots, dan pelindung telinga. Saya periksa mesin las, kabel, dan koneksi. Saya pastikan ventilasi memadai dan area bersih dari bahan mudah terbakar."`
+    },
+    {
+        question: "Can you work in a team with people from different countries?",
+        tip: "Tunjukkan keterbukaan budaya dan kemampuan komunikasi. Beri contoh konkret jika memungkinkan.",
+        answer: `"Yes, absolutely. I enjoy working in diverse teams because I can learn different techniques and perspectives. I understand that clear communication is essential in a multicultural environment, so I am committed to improving my English skills. I am respectful of different cultures and working styles. During my training at the BP3MI program, I practiced working with instructors and peers from various backgrounds, which helped me develop patience, adaptability, and strong teamwork skills. I believe that mutual respect and good communication are the foundations of successful teamwork."`,
+        translation: `"Ya, tentu saja. Saya senang bekerja dalam tim yang beragam karena saya bisa belajar teknik dan perspektif berbeda. Saya memahami bahwa komunikasi jelas sangat penting dalam lingkungan multikultural. Saya menghormati budaya dan gaya kerja yang berbeda. Saya percaya bahwa saling menghormati dan komunikasi yang baik adalah fondasi kerja tim yang sukses."`
+    },
+    {
+        question: "Where do you see yourself in 5 years?",
+        tip: "Tunjukkan ambisi realistis dan komitmen terhadap pengembangan karier di bidang welding.",
+        answer: `"In five years, I see myself as a certified international welder with multiple welding process qualifications, including specialized certifications like 6G pipe welding. I plan to gain extensive experience working on major industrial projects abroad, such as pipeline construction, shipbuilding, or petrochemical plants. My long-term goal is to become a welding inspector or supervisor, where I can use my practical experience to ensure quality standards and mentor the next generation of Indonesian welders. I also want to contribute my international experience back to Indonesia's welding industry."`,
+        translation: `"Dalam lima tahun, saya melihat diri saya sebagai welder internasional bersertifikat dengan kualifikasi multiple proses las, termasuk sertifikasi 6G pipe welding. Tujuan jangka panjang saya adalah menjadi welding inspector atau supervisor. Saya juga ingin berkontribusi memberikan pengalaman internasional saya untuk industri pengelasan Indonesia."`
+    }
+];
+
+const checklistData = [
+    {
+        title: '📄 Kelengkapan Dokumen',
+        icon: '📄',
+        items: [
+            { id: 'doc-1', text: 'Cek email hasil seleksi dari BP3MI/P3MI secara berkala' },
+            { id: 'doc-2', text: 'Paspor masih berlaku (minimal 18 bulan sebelum habis masa berlaku)' },
+            { id: 'doc-3', text: 'Fotokopi KTP dan Kartu Keluarga (legalisir)' },
+            { id: 'doc-4', text: 'Ijazah terakhir & transkrip nilai (legalisir)' },
+            { id: 'doc-5', text: 'Sertifikat kompetensi las (BNSP/LSP) masih berlaku' },
+            { id: 'doc-6', text: 'Pas foto terbaru ukuran 4x6 (latar putih, 10 lembar)' },
+            { id: 'doc-7', text: 'SKCK (Surat Keterangan Catatan Kepolisian) masih berlaku' },
+            { id: 'doc-8', text: 'Surat izin dari orang tua/wali/pasangan (bermaterai)' }
+        ]
+    },
+    {
+        title: '🏥 Medical Check-Up & Kesehatan',
+        icon: '🏥',
+        items: [
+            { id: 'med-1', text: 'Tidak memiliki tato (tattoo) di area tubuh manapun' },
+            { id: 'med-2', text: 'Tidak memiliki tindik (piercing) selain telinga standar wanita' },
+            { id: 'med-3', text: 'Kesehatan mata baik — visus normal atau terkoreksi kacamata' },
+            { id: 'med-4', text: 'Kesehatan pernapasan/paru-paru baik (rontgen dada clear)' },
+            { id: 'med-5', text: 'Tidak buta warna (tes Ishihara normal)' },
+            { id: 'med-6', text: 'Gigi dan gusi dalam kondisi baik (tidak ada infeksi)' },
+            { id: 'med-7', text: 'Tekanan darah normal (sistole < 140, diastole < 90)' },
+            { id: 'med-8', text: 'Bebas narkoba & alkohol (tes urine negatif)' },
+            { id: 'med-9', text: 'Tidak memiliki penyakit menular (Hepatitis B, TBC, HIV)' }
+        ]
+    },
+    {
+        title: '🏋️ Kesiapan Fisik & Keterampilan',
+        icon: '🏋️',
+        items: [
+            { id: 'phys-1', text: 'Stamina fisik baik — mampu bekerja 8-10 jam berdiri' },
+            { id: 'phys-2', text: 'Sudah berlatih posisi las 1G, 2G, 3G secara rutin' },
+            { id: 'phys-3', text: 'Mampu membaca gambar teknik/blueprint dasar' },
+            { id: 'phys-4', text: 'Sudah latihan praktek las dengan berbagai jenis elektroda' },
+            { id: 'phys-5', text: 'Menguasai penggunaan alat ukur (meteran, jangka sorong, welding gauge)' }
+        ]
+    },
+    {
+        title: '🧠 Kesiapan Mental & Bahasa',
+        icon: '🧠',
+        items: [
+            { id: 'ment-1', text: 'Siap tinggal jauh dari keluarga untuk jangka waktu kontrak' },
+            { id: 'ment-2', text: 'Kemampuan Bahasa Inggris dasar — mampu komunikasi sehari-hari' },
+            { id: 'ment-3', text: 'Memahami kosakata Inggris teknis pengelasan' },
+            { id: 'ment-4', text: 'Sudah berlatih menjawab pertanyaan interview dalam Bahasa Inggris' },
+            { id: 'ment-5', text: 'Memahami budaya dan aturan kerja negara tujuan' },
+            { id: 'ment-6', text: 'Sudah mengikuti PAP (Pembekalan Akhir Pemberangkatan) atau siap mengikuti' }
+        ]
+    }
+];
+
+const cheatSheetData = {
+    weldingSymbols: [
+        { symbol: '╱', name: 'Fillet Weld', desc: 'Las sudut — sambungan T atau lap joint', example: 'Simbol segitiga di garis referensi' },
+        { symbol: '╲╱', name: 'V-Groove Weld', desc: 'Las kampuh V — pelat tebal perlu penetrasi penuh', example: 'Simbol V di bawah garis referensi' },
+        { symbol: '▭', name: 'Square Groove', desc: 'Las kampuh persegi — pelat tipis tanpa bevel', example: 'Dua garis vertikal paralel' },
+        { symbol: '⌒', name: 'Bevel Groove', desc: 'Las kampuh bevel — satu sisi pelat di-bevel', example: 'Simbol setengah V' },
+        { symbol: '◯', name: 'Plug / Slot Weld', desc: 'Las lubang — menyambung pelat bertumpuk', example: 'Lingkaran pada garis referensi' },
+        { symbol: '─○─', name: 'Field Weld', desc: 'Las dilakukan di lapangan/site (bukan di workshop)', example: 'Bendera/flag di persimpangan' },
+        { symbol: '⟲', name: 'Weld All Around', desc: 'Las keliling — seluruh sekeliling sambungan', example: 'Lingkaran di junction arrow-reference' },
+        { symbol: '───', name: 'Back/Backing Weld', desc: 'Las backing — penguatan dari sisi belakang', example: 'Semicircle di sisi berlawanan' }
+    ],
+    weldingPositions: [
+        { pos: '1G / 1F', name: 'Flat Position', desc: 'Posisi datar — las dari atas, paling mudah', difficulty: 1 },
+        { pos: '2G / 2F', name: 'Horizontal Position', desc: 'Posisi horizontal — sambungan menghadap ke samping', difficulty: 2 },
+        { pos: '3G / 3F', name: 'Vertical Position', desc: 'Posisi vertikal — las naik/turun, gravitasi jadi tantangan', difficulty: 3 },
+        { pos: '4G / 4F', name: 'Overhead Position', desc: 'Posisi atas kepala — paling sulit, risiko tinggi', difficulty: 4 },
+        { pos: '5G', name: 'Pipe Horizontal Fixed', desc: 'Pipa horizontal tetap — welder bergerak keliling', difficulty: 4 },
+        { pos: '6G', name: 'Pipe 45° Fixed', desc: 'Pipa miring 45° tetap — posisi paling menantang', difficulty: 5 }
+    ],
+    englishVocab: [
+        { en: 'Arc Welding', id: 'Las Busur Listrik', cat: 'Process' },
+        { en: 'Filler Metal', id: 'Logam Pengisi', cat: 'Material' },
+        { en: 'Base Metal', id: 'Logam Induk/Dasar', cat: 'Material' },
+        { en: 'Weld Pool', id: 'Genangan Las / Kubangan Las', cat: 'Process' },
+        { en: 'Electrode', id: 'Elektroda', cat: 'Equipment' },
+        { en: 'Welding Torch', id: 'Obor Las / Torch', cat: 'Equipment' },
+        { en: 'Grinding Disc', id: 'Batu Gerinda', cat: 'Equipment' },
+        { en: 'Wire Brush', id: 'Sikat Kawat', cat: 'Equipment' },
+        { en: 'Flux', id: 'Fluks (pelapis elektroda)', cat: 'Material' },
+        { en: 'Slag', id: 'Terak Las', cat: 'Defect' },
+        { en: 'Spatter', id: 'Percikan Las', cat: 'Defect' },
+        { en: 'Porosity', id: 'Porositas (lubang gas)', cat: 'Defect' },
+        { en: 'Undercut', id: 'Alur pada tepi las (cekungan)', cat: 'Defect' },
+        { en: 'Crack', id: 'Retak / Retakan', cat: 'Defect' },
+        { en: 'Lack of Fusion', id: 'Kurang Peleburan / Tidak Menyatu', cat: 'Defect' },
+        { en: 'Penetration', id: 'Penembusan Las', cat: 'Process' },
+        { en: 'Heat Affected Zone (HAZ)', id: 'Zona Terpengaruh Panas', cat: 'Process' },
+        { en: 'Bevel', id: 'Sudut potong / Kampuh', cat: 'Process' },
+        { en: 'Tack Weld', id: 'Las Titik / Las Ikat', cat: 'Process' },
+        { en: 'Joint / Seam', id: 'Sambungan Las', cat: 'Process' },
+        { en: 'Safety Helmet', id: 'Helm Keselamatan', cat: 'PPE' },
+        { en: 'Welding Gloves', id: 'Sarung Tangan Las', cat: 'PPE' },
+        { en: 'Safety Boots', id: 'Sepatu Safety', cat: 'PPE' },
+        { en: 'Respirator', id: 'Masker Pernapasan', cat: 'PPE' },
+        { en: 'Fire Extinguisher', id: 'Alat Pemadam Api / APAR', cat: 'Safety' },
+        { en: 'Ventilation', id: 'Sirkulasi Udara / Ventilasi', cat: 'Safety' },
+        { en: 'Confined Space', id: 'Ruang Terbatas/Sempit', cat: 'Safety' },
+        { en: 'Hot Work Permit', id: 'Izin Kerja Panas', cat: 'Safety' }
+    ]
+};
+
+
+// ==================== STATE ====================
+let currentPage = 'exam';
+let currentQuestion = 0;
+let userAnswers = new Array(15).fill(-1);
+let examTimer = null;
+let timeLeft = 15 * 60; // 15 minutes in seconds
+let examStarted = false;
+let examSubmitted = false;
+
+// ==================== NAVIGATION ====================
+function navigateTo(page) {
+    currentPage = page;
+    // Update nav links
+    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+    document.querySelector(`[data-page="${page}"]`).classList.add('active');
+    // Update pages
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(`page-${page}`).classList.add('active');
+    // Update header
+    const titles = {
+        exam: ['Simulasi Ujian Tertulis', 'Tes Juru Las & Bahasa Inggris — 15 Soal Pilihan Ganda'],
+        interview: ['Latihan Interview Bahasa Inggris', 'Top 8 Pertanyaan Interview Rekrutmen Welder Global'],
+        checklist: ['Checklist Kesiapan Pekerja', 'Persiapan Fisik, Dokumen & Mental — BP3MI Sumbar'],
+        cheatsheet: ['Quick Cheat-Sheet', 'Simbol Las, Posisi Pengelasan & Kosakata Inggris Industri']
+    };
+    document.getElementById('pageTitle').textContent = titles[page][0];
+    document.getElementById('pageSubtitle').textContent = titles[page][1];
+    // Show/hide timer
+    if (page === 'exam' && examStarted && !examSubmitted) {
+        document.getElementById('timerDisplay').classList.remove('hidden');
+        document.getElementById('timerDisplay').classList.add('flex');
+    } else {
+        document.getElementById('timerDisplay').classList.remove('flex');
+        document.getElementById('timerDisplay').classList.add('hidden');
+    }
+    // Close mobile sidebar
+    closeSidebar();
+}
+
+// ==================== MOBILE SIDEBAR ====================
+const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+const sidebar = document.getElementById('sidebar');
+const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+mobileMenuBtn.addEventListener('click', () => {
+    sidebar.classList.toggle('-translate-x-full');
+    sidebarOverlay.classList.toggle('show');
+});
+sidebarOverlay.addEventListener('click', closeSidebar);
+
+function closeSidebar() {
+    sidebar.classList.add('-translate-x-full');
+    sidebar.classList.remove('lg:-translate-x-full');
+    sidebarOverlay.classList.remove('show');
+}
+
+// ==================== TOAST SYSTEM ====================
+function showToast(message, type = 'info') {
+    const container = document.getElementById('toastContainer');
+    const colors = {
+        success: 'bg-green-600', error: 'bg-red-600', warning: 'bg-amber-600', info: 'bg-charcoal-800'
+    };
+    const icons = {
+        success: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>',
+        error: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>',
+        warning: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"/>',
+        info: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>'
+    };
+    const toast = document.createElement('div');
+    toast.className = `toast ${colors[type]} text-white px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 text-sm font-medium max-w-sm`;
+    toast.innerHTML = `<svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">${icons[type]}</svg><span>${message}</span>`;
+    container.appendChild(toast);
+    setTimeout(() => {
+        toast.classList.add('exit');
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
+
+// ==================== EXAM FUNCTIONS ====================
+function startExam() {
+    examStarted = true;
+    examSubmitted = false;
+    currentQuestion = 0;
+    userAnswers = new Array(15).fill(-1);
+    timeLeft = 15 * 60;
+
+    document.getElementById('examIntro').classList.add('hidden');
+    document.getElementById('examActive').classList.remove('hidden');
+    document.getElementById('examResult').classList.add('hidden');
+    document.getElementById('timerDisplay').classList.remove('hidden');
+    document.getElementById('timerDisplay').classList.add('flex');
+
+    renderQuestion();
+    startTimer();
+    showToast('Ujian dimulai! Waktu Anda 15 menit.', 'info');
+    document.getElementById('statusText').textContent = 'Ujian sedang berlangsung...';
+}
+
+function startTimer() {
+    clearInterval(examTimer);
+    examTimer = setInterval(() => {
+        timeLeft--;
+        const min = Math.floor(timeLeft / 60).toString().padStart(2, '0');
+        const sec = (timeLeft % 60).toString().padStart(2, '0');
+        const timerText = document.getElementById('timerText');
+        timerText.textContent = `${min}:${sec}`;
+
+        if (timeLeft <= 60) {
+            timerText.classList.add('timer-danger');
+        } else {
+            timerText.classList.remove('timer-danger');
+        }
+
+        if (timeLeft <= 0) {
+            clearInterval(examTimer);
+            showToast('⏰ Waktu habis! Jawaban otomatis dikumpulkan.', 'warning');
+            submitExam();
+        }
+    }, 1000);
+}
+
+function renderQuestion() {
+    const q = questions[currentQuestion];
+    document.getElementById('questionNumber').textContent = currentQuestion + 1;
+    document.getElementById('questionText').textContent = q.question;
+
+    const catBadge = document.getElementById('questionCategory');
+    catBadge.textContent = q.category;
+    catBadge.className = `inline-block text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full mb-2 ${q.catColor}`;
+
+    // Render options
+    const container = document.getElementById('optionsContainer');
+    container.innerHTML = '';
+    const letters = ['A', 'B', 'C', 'D'];
+    q.options.forEach((opt, i) => {
+        const selected = userAnswers[currentQuestion] === i;
+        const btn = document.createElement('button');
+        btn.className = `opt-btn w-full text-left flex items-start gap-3 p-4 rounded-xl border-2 border-charcoal-100 ${selected ? 'selected' : ''}`;
+        btn.innerHTML = `
+            <span class="flex-shrink-0 w-8 h-8 rounded-lg ${selected ? 'bg-safety-500 text-white' : 'bg-charcoal-100 text-charcoal-600'} flex items-center justify-center font-bold text-sm transition-colors">${letters[i]}</span>
+            <span class="text-sm font-medium pt-1 leading-relaxed">${opt}</span>
+        `;
+        btn.addEventListener('click', () => selectAnswer(i));
+        container.appendChild(btn);
+    });
+
+    // Update navigation
+    document.getElementById('prevBtn').disabled = currentQuestion === 0;
+    const nextBtn = document.getElementById('nextBtn');
+    if (currentQuestion === questions.length - 1) {
+        nextBtn.innerHTML = 'Selesai <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4"/></svg>';
+    } else {
+        nextBtn.innerHTML = 'Selanjutnya <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>';
+    }
+
+    // Progress
+    const answered = userAnswers.filter(a => a !== -1).length;
+    document.getElementById('progressText').textContent = `${answered} / ${questions.length}`;
+    document.getElementById('progressBar').style.width = `${(answered / questions.length) * 100}%`;
+
+    // Dot indicators
+    const dots = document.getElementById('dotIndicators');
+    dots.innerHTML = '';
+    questions.forEach((_, i) => {
+        const dot = document.createElement('button');
+        dot.className = `w-2.5 h-2.5 rounded-full transition-all ${i === currentQuestion ? 'bg-safety-500 scale-125' : userAnswers[i] !== -1 ? 'bg-charcoal-400' : 'bg-charcoal-200'}`;
+        dot.addEventListener('click', () => { currentQuestion = i; renderQuestion(); });
+        dots.appendChild(dot);
+    });
+}
+
+function selectAnswer(idx) {
+    userAnswers[currentQuestion] = idx;
+    renderQuestion();
+}
+
+function prevQuestion() {
+    if (currentQuestion > 0) { currentQuestion--; renderQuestion(); }
+}
+
+function nextQuestion() {
+    if (currentQuestion < questions.length - 1) { currentQuestion++; renderQuestion(); }
+}
+
+function submitExam() {
+    if (!examSubmitted && userAnswers.filter(a => a !== -1).length < questions.length) {
+        const unanswered = userAnswers.filter(a => a === -1).length;
+        if (!confirm(`Anda masih memiliki ${unanswered} soal yang belum dijawab. Yakin ingin mengumpulkan?`)) return;
+    }
+    clearInterval(examTimer);
+    examSubmitted = true;
+    examStarted = false;
+
+    document.getElementById('timerDisplay').classList.remove('flex');
+    document.getElementById('timerDisplay').classList.add('hidden');
+    document.getElementById('examActive').classList.add('hidden');
+    document.getElementById('examResult').classList.remove('hidden');
+
+    // Calculate score
+    let correct = 0, wrong = 0, unanswered = 0;
+    questions.forEach((q, i) => {
+        if (userAnswers[i] === -1) unanswered++;
+        else if (userAnswers[i] === q.correct) correct++;
+        else wrong++;
+    });
+
+    const percent = Math.round((correct / questions.length) * 100);
+    const passed = percent >= 70;
+
+    // Animate score ring
+    const ring = document.getElementById('scoreRing');
+    const circumference = 2 * Math.PI * 52;
+    ring.style.strokeDasharray = circumference;
+    setTimeout(() => {
+        ring.style.strokeDashoffset = circumference - (percent / 100) * circumference;
+        ring.style.stroke = passed ? '#22c55e' : percent >= 50 ? '#f59e0b' : '#ef4444';
+    }, 100);
+
+    document.getElementById('scorePercent').textContent = `${percent}%`;
+    document.getElementById('correctCount').textContent = correct;
+    document.getElementById('wrongCount').textContent = wrong;
+    document.getElementById('unansweredCount').textContent = unanswered;
+
+    const resultHeader = document.getElementById('resultHeader');
+    if (passed) {
+        document.getElementById('resultTitle').textContent = '🎉 Selamat! Anda LULUS!';
+        document.getElementById('resultSubtitle').textContent = `Skor ${percent}% — di atas batas minimum 70%. Terus pertahankan!`;
+        resultHeader.classList.add('bg-green-50');
+    } else {
+        document.getElementById('resultTitle').textContent = '📚 Belum Lulus — Pelajari Lagi!';
+        document.getElementById('resultSubtitle').textContent = `Skor ${percent}% — di bawah batas minimum 70%. Review materi dan coba lagi.`;
+        resultHeader.classList.add('bg-red-50');
+    }
+
+    // Answer breakdown
+    const breakdown = document.getElementById('answerBreakdown');
+    breakdown.innerHTML = '<h4 class="text-lg font-bold text-charcoal-800 mb-2">📋 Pembahasan Jawaban</h4>';
+    questions.forEach((q, i) => {
+        const userAns = userAnswers[i];
+        const isCorrect = userAns === q.correct;
+        const isUnanswered = userAns === -1;
+        const letters = ['A', 'B', 'C', 'D'];
+
+        const card = document.createElement('div');
+        card.className = `bg-white rounded-xl border ${isCorrect ? 'border-green-200' : isUnanswered ? 'border-charcoal-200' : 'border-red-200'} overflow-hidden`;
+        card.innerHTML = `
+            <div class="p-5">
+                <div class="flex items-start gap-3 mb-3">
+                    <div class="flex-shrink-0 w-8 h-8 rounded-lg ${isCorrect ? 'bg-green-100 text-green-700' : isUnanswered ? 'bg-charcoal-100 text-charcoal-500' : 'bg-red-100 text-red-700'} flex items-center justify-center font-bold text-xs">${i + 1}</div>
+                    <div class="flex-1">
+                        <span class="inline-block text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full mb-1 ${q.catColor}">${q.category}</span>
+                        <p class="text-sm font-medium text-charcoal-800">${q.question}</p>
+                    </div>
+                    <span class="flex-shrink-0 text-xs font-bold px-2 py-1 rounded-full ${isCorrect ? 'bg-green-100 text-green-700' : isUnanswered ? 'bg-charcoal-100 text-charcoal-500' : 'bg-red-100 text-red-700'}">
+                        ${isCorrect ? '✓ BENAR' : isUnanswered ? '— KOSONG' : '✗ SALAH'}
+                    </span>
+                </div>
+                <div class="ml-11 space-y-1.5 mb-3">
+                    ${q.options.map((opt, j) => `
+                        <div class="flex items-center gap-2 text-sm py-1 px-2 rounded ${j === q.correct ? 'bg-green-50 text-green-800 font-medium' : j === userAns && !isCorrect ? 'bg-red-50 text-red-700 line-through' : 'text-charcoal-500'}">
+                            <span class="font-mono text-xs font-bold">${letters[j]}.</span> ${opt}
+                            ${j === q.correct ? '<span class="ml-auto text-[10px] font-bold text-green-600">✓ Jawaban Benar</span>' : ''}
+                            ${j === userAns && !isCorrect ? '<span class="ml-auto text-[10px] font-bold text-red-500">✗ Jawaban Anda</span>' : ''}
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="ml-11 bg-blue-50 border border-blue-100 rounded-lg p-3">
+                    <p class="text-xs text-blue-800 leading-relaxed"><span class="font-bold">💡 Penjelasan:</span> ${q.explanation}</p>
+                </div>
+            </div>
+        `;
+        breakdown.appendChild(card);
+    });
+
+    document.getElementById('statusText').textContent = `Ujian selesai — Skor: ${percent}%`;
+    showToast(passed ? `Selamat! Skor Anda ${percent}%` : `Skor ${percent}%. Pelajari lagi!`, passed ? 'success' : 'warning');
+}
+
+function retakeExam() {
+    document.getElementById('examResult').classList.add('hidden');
+    document.getElementById('resultHeader').classList.remove('bg-green-50', 'bg-red-50');
+    const ring = document.getElementById('scoreRing');
+    ring.style.strokeDashoffset = 2 * Math.PI * 52;
+    startExam();
+}
+
+// ==================== INTERVIEW ====================
+function renderInterview() {
+    const container = document.getElementById('interviewContainer');
+    container.innerHTML = '';
+    interviewQuestions.forEach((iq, i) => {
+        const card = document.createElement('div');
+        card.className = 'bg-white rounded-2xl border border-charcoal-100 overflow-hidden card-hover';
+        card.innerHTML = `
+            <div class="p-6">
+                <div class="flex items-start gap-4">
+                    <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-gradient-to-br from-safety-500 to-safety-600 text-white flex items-center justify-center font-bold text-sm shadow-lg shadow-safety-500/20">Q${i + 1}</div>
+                    <div class="flex-1">
+                        <h4 class="text-base font-bold text-charcoal-800 mb-1">"${iq.question}"</h4>
+                        <p class="text-xs text-charcoal-400 flex items-center gap-1.5">
+                            <svg class="w-3.5 h-3.5 text-amber-500" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                            <span class="font-medium">Tips:</span> ${iq.tip}
+                        </p>
+                    </div>
+                </div>
+                <!-- Accordion -->
+                <div class="mt-4 ml-14">
+                    <button onclick="toggleAccordion(this)" class="w-full flex items-center justify-between bg-charcoal-50 hover:bg-charcoal-100 transition-colors rounded-xl px-4 py-3 text-sm font-semibold text-charcoal-700">
+                        <span class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-safety-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                            Show Best Answer Guide
+                        </span>
+                        <svg class="w-4 h-4 accordion-icon transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                    <div class="accordion-content px-4">
+                        <div class="space-y-4">
+                            <div>
+                                <h5 class="text-xs font-bold uppercase tracking-wider text-green-600 mb-2 flex items-center gap-1.5">
+                                    <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                                    Best Answer (English)
+                                </h5>
+                                <div class="bg-green-50 border border-green-100 rounded-xl p-4 text-sm text-green-900 leading-relaxed italic">${iq.answer}</div>
+                            </div>
+                            <div>
+                                <h5 class="text-xs font-bold uppercase tracking-wider text-blue-600 mb-2 flex items-center gap-1.5">
+                                    <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7 2a1 1 0 011 1v1h3a1 1 0 110 2H9.578a18.87 18.87 0 01-1.724 4.78c.29.354.596.696.914 1.026a1 1 0 11-1.44 1.389 21.034 21.034 0 01-.554-.6 19.098 19.098 0 01-3.107 3.567 1 1 0 01-1.334-1.49 17.087 17.087 0 003.13-3.733 18.992 18.992 0 01-1.487-2.494 1 1 0 111.79-.89c.234.47.489.928.764 1.372.417-.934.752-1.913.997-2.927H3a1 1 0 110-2h3V3a1 1 0 011-1zm6 6a1 1 0 01.894.553l2.991 5.982a.869.869 0 01.02.037l.99 1.98a1 1 0 11-1.79.895L15.383 16h-4.764l-.724 1.447a1 1 0 11-1.788-.894l.99-1.98.019-.038 2.99-5.982A1 1 0 0113 8zm-1.382 6h2.764L13 11.236 11.618 14z" clip-rule="evenodd"/></svg>
+                                    Terjemahan (Bahasa Indonesia)
+                                </h5>
+                                <div class="bg-blue-50 border border-blue-100 rounded-xl p-4 text-sm text-blue-900 leading-relaxed">${iq.translation}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        container.appendChild(card);
+    });
+}
+
+function toggleAccordion(btn) {
+    const content = btn.nextElementSibling;
+    const icon = btn.querySelector('.accordion-icon');
+    content.classList.toggle('open');
+    icon.classList.toggle('rotated');
+}
+
+// ==================== CHECKLIST ====================
+function renderChecklist() {
+    const container = document.getElementById('checklistContainer');
+    container.innerHTML = '';
+    const saved = JSON.parse(localStorage.getItem('bp3mi_checklist') || '{}');
+
+    checklistData.forEach(section => {
+        const sectionDiv = document.createElement('div');
+        sectionDiv.className = 'bg-white rounded-2xl border border-charcoal-100 overflow-hidden';
+        const checkedInSection = section.items.filter(item => saved[item.id]).length;
+        const sectionProgress = Math.round((checkedInSection / section.items.length) * 100);
+
+        sectionDiv.innerHTML = `
+            <div class="p-5 border-b border-charcoal-100 flex items-center justify-between">
+                <h4 class="text-base font-bold text-charcoal-800">${section.title}</h4>
+                <div class="flex items-center gap-2">
+                    <span class="text-xs font-mono font-bold ${sectionProgress === 100 ? 'text-green-600' : 'text-charcoal-400'}">${checkedInSection}/${section.items.length}</span>
+                    <div class="w-16 h-1.5 bg-charcoal-100 rounded-full overflow-hidden">
+                        <div class="h-full rounded-full transition-all duration-500 ${sectionProgress === 100 ? 'bg-green-500' : 'bg-safety-500'}" style="width:${sectionProgress}%"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="p-4 space-y-1">
+                ${section.items.map(item => `
+                    <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-charcoal-50 transition-colors cursor-pointer group">
+                        <input type="checkbox" ${saved[item.id] ? 'checked' : ''} onchange="toggleCheck('${item.id}', this)" class="sr-only peer">
+                        <div class="flex-shrink-0 w-5 h-5 rounded-md border-2 border-charcoal-200 peer-checked:bg-green-500 peer-checked:border-green-500 flex items-center justify-center transition-all">
+                            <svg class="w-3 h-3 text-white opacity-0 peer-checked:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                        </div>
+                        <span class="text-sm text-charcoal-700 peer-checked:text-charcoal-400 peer-checked:line-through transition-colors">${item.text}</span>
+                    </label>
+                `).join('')}
+            </div>
+        `;
+        container.appendChild(sectionDiv);
+    });
+
+    updateChecklistProgress();
+}
+
+// Fix the checkbox visual - need to use a different approach since peer selectors in the generated HTML
+// We'll handle the visual state via JS
+function toggleCheck(id, checkbox) {
+    const saved = JSON.parse(localStorage.getItem('bp3mi_checklist') || '{}');
+    saved[id] = checkbox.checked;
+    localStorage.setItem('bp3mi_checklist', JSON.stringify(saved));
+
+    // Animate the checkbox container
+    const wrapper = checkbox.closest('label');
+    const checkDiv = wrapper.querySelector('div');
+    const checkSvg = checkDiv.querySelector('svg');
+    const textSpan = wrapper.querySelector('span');
+
+    if (checkbox.checked) {
+        checkDiv.classList.add('bg-green-500', 'border-green-500', 'check-animate');
+        checkDiv.classList.remove('border-charcoal-200');
+        checkSvg.classList.remove('opacity-0');
+        checkSvg.classList.add('opacity-100');
+        textSpan.classList.add('text-charcoal-400', 'line-through');
+        textSpan.classList.remove('text-charcoal-700');
+        setTimeout(() => checkDiv.classList.remove('check-animate'), 300);
+    } else {
+        checkDiv.classList.remove('bg-green-500', 'border-green-500');
+        checkDiv.classList.add('border-charcoal-200');
+        checkSvg.classList.add('opacity-0');
+        checkSvg.classList.remove('opacity-100');
+        textSpan.classList.remove('text-charcoal-400', 'line-through');
+        textSpan.classList.add('text-charcoal-700');
+    }
+
+    updateChecklistProgress();
+    renderChecklist(); // Re-render to update section progress bars
+}
+
+function updateChecklistProgress() {
+    const saved = JSON.parse(localStorage.getItem('bp3mi_checklist') || '{}');
+    const totalItems = checklistData.reduce((sum, s) => sum + s.items.length, 0);
+    const checkedItems = checklistData.reduce((sum, s) => sum + s.items.filter(item => saved[item.id]).length, 0);
+    const percent = Math.round((checkedItems / totalItems) * 100);
+
+    document.getElementById('checklistProgress').textContent = `${percent}%`;
+    document.getElementById('checklistBar').style.width = `${percent}%`;
+    document.getElementById('checklistSummary').textContent = `${checkedItems} dari ${totalItems} item selesai`;
+
+    if (percent === 100) {
+        document.getElementById('checklistProgress').classList.add('text-green-600');
+        showToast('🎉 Semua checklist sudah lengkap!', 'success');
+    }
+}
+
+// ==================== CHEAT SHEET ====================
+function renderCheatSheet() {
+    const container = document.getElementById('cheatsheetContainer');
+    container.innerHTML = '';
+
+    // Tab navigation
+    const tabsHTML = `
+        <div class="flex gap-2 mb-6 overflow-x-auto pb-2">
+            <button onclick="switchCheatTab('symbols', this)" class="cheat-tab active flex-shrink-0 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all bg-charcoal-900 text-white shadow-lg">
+                🔣 Simbol Las
+            </button>
+            <button onclick="switchCheatTab('positions', this)" class="cheat-tab flex-shrink-0 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all bg-white text-charcoal-600 border border-charcoal-200 hover:border-charcoal-300">
+                📐 Posisi Las
+            </button>
+            <button onclick="switchCheatTab('vocab', this)" class="cheat-tab flex-shrink-0 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all bg-white text-charcoal-600 border border-charcoal-200 hover:border-charcoal-300">
+                📖 Kosakata Inggris
+            </button>
+        </div>
+    `;
+
+    // Symbols tab
+    const symbolsHTML = `
+        <div id="cheat-symbols" class="cheat-panel">
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                ${cheatSheetData.weldingSymbols.map(s => `
+                    <div class="bg-white rounded-xl border border-charcoal-100 p-5 card-hover group">
+                        <div class="text-center mb-3">
+                            <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-charcoal-800 to-charcoal-900 text-white text-2xl font-mono shadow-lg group-hover:scale-110 transition-transform">${s.symbol}</div>
+                        </div>
+                        <h5 class="text-sm font-bold text-charcoal-800 text-center mb-1">${s.name}</h5>
+                        <p class="text-xs text-charcoal-500 text-center leading-relaxed">${s.desc}</p>
+                        <div class="mt-3 bg-amber-50 rounded-lg px-3 py-2">
+                            <p class="text-[10px] text-amber-700 text-center"><span class="font-bold">Keterangan:</span> ${s.example}</p>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+    `;
+
+    // Positions tab
+    const positionsHTML = `
+        <div id="cheat-positions" class="cheat-panel hidden">
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                ${cheatSheetData.weldingPositions.map(p => `
+                    <div class="bg-white rounded-xl border border-charcoal-100 overflow-hidden card-hover">
+                        <div class="bg-gradient-to-r from-charcoal-800 to-charcoal-900 p-4 text-white">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <span class="text-safety-400 text-xs font-bold uppercase tracking-wider">${p.pos}</span>
+                                    <h5 class="text-base font-bold mt-0.5">${p.name}</h5>
+                                </div>
+                                <div class="flex gap-0.5">
+                                    ${Array(5).fill(0).map((_, i) => `<div class="w-2 h-6 rounded-full ${i < p.difficulty ? 'bg-safety-500' : 'bg-charcoal-700'}"></div>`).join('')}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <p class="text-sm text-charcoal-600 leading-relaxed">${p.desc}</p>
+                            <div class="mt-3 flex items-center gap-2">
+                                <span class="text-[10px] font-bold uppercase tracking-wider ${p.difficulty <= 2 ? 'text-green-600' : p.difficulty <= 3 ? 'text-amber-600' : 'text-red-600'}">
+                                    Kesulitan: ${p.difficulty <= 2 ? 'Mudah' : p.difficulty <= 3 ? 'Menengah' : p.difficulty <= 4 ? 'Sulit' : 'Sangat Sulit'}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+    `;
+
+    // Vocabulary tab
+    const vocabCategories = [...new Set(cheatSheetData.englishVocab.map(v => v.cat))];
+    const catColors = { Process:'bg-blue-100 text-blue-700 border-blue-200', Material:'bg-green-100 text-green-700 border-green-200', Equipment:'bg-amber-100 text-amber-700 border-amber-200', Defect:'bg-red-100 text-red-700 border-red-200', PPE:'bg-purple-100 text-purple-700 border-purple-200', Safety:'bg-orange-100 text-orange-700 border-orange-200' };
+
+    const vocabHTML = `
+        <div id="cheat-vocab" class="cheat-panel hidden">
+            <div class="flex flex-wrap gap-2 mb-6">
+                <button onclick="filterVocab('all', this)" class="vocab-filter active px-3 py-1.5 rounded-lg text-xs font-bold bg-charcoal-900 text-white transition-all">Semua</button>
+                ${vocabCategories.map(cat => `<button onclick="filterVocab('${cat}', this)" class="vocab-filter px-3 py-1.5 rounded-lg text-xs font-bold bg-white border border-charcoal-200 text-charcoal-600 hover:border-charcoal-300 transition-all">${cat}</button>`).join('')}
+            </div>
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3" id="vocabGrid">
+                ${cheatSheetData.englishVocab.map(v => `
+                    <div class="vocab-card bg-white rounded-xl border border-charcoal-100 p-4 card-hover" data-cat="${v.cat}">
+                        <div class="flex items-start justify-between mb-2">
+                            <h5 class="text-sm font-bold text-charcoal-900">${v.en}</h5>
+                            <span class="flex-shrink-0 text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded border ${catColors[v.cat] || 'bg-charcoal-100 text-charcoal-600'}">${v.cat}</span>
+                        </div>
+                        <p class="text-sm text-charcoal-500">${v.id}</p>
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+    `;
+
+    container.innerHTML = tabsHTML + symbolsHTML + positionsHTML + vocabHTML;
+}
+
+function switchCheatTab(tab, btn) {
+    document.querySelectorAll('.cheat-tab').forEach(t => {
+        t.className = 'cheat-tab flex-shrink-0 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all bg-white text-charcoal-600 border border-charcoal-200 hover:border-charcoal-300';
+    });
+    btn.className = 'cheat-tab active flex-shrink-0 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all bg-charcoal-900 text-white shadow-lg';
+    document.querySelectorAll('.cheat-panel').forEach(p => p.classList.add('hidden'));
+    document.getElementById(`cheat-${tab}`).classList.remove('hidden');
+}
+
+function filterVocab(cat, btn) {
+    document.querySelectorAll('.vocab-filter').forEach(f => {
+        f.className = 'vocab-filter px-3 py-1.5 rounded-lg text-xs font-bold bg-white border border-charcoal-200 text-charcoal-600 hover:border-charcoal-300 transition-all';
+    });
+    btn.className = 'vocab-filter active px-3 py-1.5 rounded-lg text-xs font-bold bg-charcoal-900 text-white transition-all';
+
+    document.querySelectorAll('.vocab-card').forEach(card => {
+        if (cat === 'all' || card.dataset.cat === cat) {
+            card.style.display = '';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+}
+
+// ==================== INIT ====================
+document.addEventListener('DOMContentLoaded', () => {
+    renderInterview();
+    renderChecklist();
+    renderCheatSheet();
+});
+</script>
+</body>
+</html>
