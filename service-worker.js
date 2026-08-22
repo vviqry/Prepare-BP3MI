@@ -1,9 +1,20 @@
-const CACHE_NAME = 'bp3mi-welder-v1';
+const CACHE_NAME = 'bp3mi-welder-v2';
 const ASSETS_TO_CACHE = [
     './',
     './index.html',
     './manifest.json',
     './BP3MI.png',
+    './icon-32.png',
+    './icon-72.png',
+    './icon-96.png',
+    './icon-128.png',
+    './icon-144.png',
+    './icon-152.png',
+    './apple-touch-icon.png',
+    './icon-192.png',
+    './icon-384.png',
+    './icon-512.png',
+    './icon-maskable-512.png',
     'https://cdn.tailwindcss.com',
     'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap'
 ];
