@@ -329,7 +329,7 @@
                         <div class="mb-6">
                             <div class="flex items-center justify-between mb-2">
                                 <span class="text-sm font-semibold text-charcoal-700">Progres Ujian</span>
-                                <span class="text-sm font-mono font-semibold text-charcoal-500" id="progressText">0 / 20</span>
+                                <span class="text-sm font-mono font-semibold text-charcoal-500" id="progressText">0 / 100</span>
                             </div>
                             <div class="h-2 bg-charcoal-100 rounded-full overflow-hidden">
                                 <div id="progressBar" class="h-full bg-gradient-to-r from-safety-500 to-safety-400 rounded-full transition-all duration-500 ease-out" style="width:0%"></div>
@@ -347,7 +347,7 @@
                                     <div class="flex-1 min-w-0">
                                         <!-- Category + Hint row — wraps on narrow screens -->
                                         <div class="question-meta flex flex-wrap items-center gap-2 mb-2">
-                                            <span class="inline-block text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full flex-shrink-0" id="questionCategory">Technical Welding</span>
+                                             <span class="inline-block text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full flex-shrink-0" id="questionCategory">Technical Welding</span>
                                             <button type="button" onclick="toggleHint()" id="hintBtn" class="hint-btn inline-flex items-center gap-1.5 text-xs font-bold text-safety-600 hover:text-safety-700 bg-safety-50 hover:bg-safety-100 border border-safety-200 px-3 py-1 rounded-lg transition-all ml-auto">
                                                 <span>💡</span> <span id="hintBtnText">Hint</span>
                                             </button>
@@ -367,9 +367,9 @@
                                     <span class="hidden xs:inline">Sebelumnya</span>
                                 </button>
                                 <!-- Dots (desktop) / Counter (mobile) -->
-                                <div class="flex gap-1" id="dotIndicators"></div>
+                                <div class="flex items-center gap-1.5" id="dotIndicators"></div>
                                 <div id="dotCounter" class="hidden items-center gap-1 text-xs font-mono font-bold text-charcoal-500 bg-charcoal-100 px-3 py-1.5 rounded-lg">
-                                    <span id="dotCounterText">1 / 20</span>
+                                    <span id="dotCounterText">1 / 100</span>
                                 </div>
                                 <button onclick="nextQuestion()" id="nextBtn" class="flex items-center gap-1.5 text-sm font-bold text-safety-600 hover:text-safety-700 transition-colors">
                                     <span class="hidden xs:inline">Selanjutnya</span>
@@ -592,217 +592,1505 @@
 // ==================== DATA ====================
 
 const questions = [
-    // === TECHNICAL WELDING (Q1-Q6) ===
     {
-        id: 1, category: 'Technical Welding', catColor: 'bg-blue-100 text-blue-700',
-        question: 'What does SMAW stand for in industrial welding terminology?',
-        options: ['Submerged Metal Arc Welding', 'Shielded Metal Arc Welding', 'Standard Manual Arc Welding', 'Semi-Manual Alloy Welding'],
-        correct: 1,
-        hint: 'Proses ini sering disebut "Stick Welding" karena menggunakan elektroda stik terbungkus fluks pelindung (shielding flux).',
-        explanation: 'SMAW = Shielded Metal Arc Welding (Las Busur Listrik Terlindung / Las Stik). Fluks pada elektroda terbakar menghasilkan gas pelindung dan terak (slag) untuk melindungi kubangan las dari oksigen udara.'
-    },
-    {
-        id: 2, category: 'Technical Welding', catColor: 'bg-blue-100 text-blue-700',
-        question: 'Dalam standardisasi pengelasan pelat (plate), kode posisi pengelasan "3G" merujuk pada posisi apa?',
-        options: ['Posisi Datar / Flat (bawah tangan)', 'Posisi Horizontal (mendatar)', 'Posisi Vertikal / Tegak (naik/turun)', 'Posisi Overhead (di atas kepala)'],
-        correct: 2,
-        hint: 'Angka 1 = Flat, 2 = Horizontal, 3 = Vertikal, 4 = Overhead. Huruf "G" merujuk pada sambungan alur (Groove).',
-        explanation: 'Posisi 3G adalah posisi pengelasan vertikal (Vertical Position) untuk sambungan alur pelat (Groove). Pengelasan dapat dilakukan dengan teknik vertical-up atau vertical-down.'
-    },
-    {
-        id: 3, category: 'Technical Welding', catColor: 'bg-blue-100 text-blue-700',
-        question: 'Which welding process utilizes a non-consumable tungsten electrode and a shielding gas such as 100% Argon?',
-        options: ['SMAW (Stick Welding)', 'GMAW (MIG Welding)', 'GTAW (TIG Welding)', 'FCAW (Flux-Cored Arc Welding)'],
-        correct: 2,
-        hint: 'Huruf "T" pada singkatannya merujuk pada unsur logam tahan panas tinggi berikatan "Tungsten".',
-        explanation: 'GTAW (Gas Tungsten Arc Welding) atau TIG (Tungsten Inert Gas) menggunakan elektroda tungsten yang tidak ikut mencair (non-consumable) dan gas argon murni sebagai pelindung.'
-    },
-    {
-        id: 4, category: 'Technical Welding', catColor: 'bg-blue-100 text-blue-700',
-        question: 'Cacat las (welding defect) berupa lubang-lubang kecil atau rongga gas yang terperangkap di dalam deposit logam las disebut:',
-        options: ['Undercut', 'Porosity (Porositas)', 'Slag Inclusion', 'Lack of Fusion'],
-        correct: 1,
-        hint: 'Cacat ini menyerupai rongga spons/busa berpori yang disebabkan oleh kelembaban fluks atau aliran gas pelindung yang terganggu angin.',
-        explanation: 'Porosity (porositas) terbentuk akibat gas yang terperangkap saat logam las membeku cepat. Penyebab utamanya adalah elektroda lembab, kontaminasi minyak/karat, atau hembusan angin pada gas pelindung.'
-    },
-    {
-        id: 5, category: 'Technical Welding', catColor: 'bg-blue-100 text-blue-700',
-        question: 'In GMAW (MIG/MAG welding), what is the primary function of the shielding gas cylinder mixture (e.g., Ar + CO2)?',
-        options: [
-            'To increase electrical resistance and melt the wire faster',
-            'To isolate and protect the molten weld pool from oxygen and nitrogen atmospheric contamination',
-            'To cool down the welding gun handle continuously',
-            'To add alloy elements to the steel base metal'
+        "id": 1,
+        "category": "Technical Welding",
+        "catColor": "bg-blue-100 text-blue-700",
+        "question": "What does SMAW stand for in industrial welding terminology?",
+        "options": [
+            "Submerged Metal Arc Welding",
+            "Shielded Metal Arc Welding",
+            "Standard Manual Arc Welding",
+            "Semi-Manual Alloy Welding"
         ],
-        correct: 1,
-        hint: 'Udara luar mengandung oksigen dan nitrogen yang dapat merusak kualitas ikatan logam cair jika tidak diselimuti (shielded).',
-        explanation: 'Fungsi utama gas pelindung pada GMAW adalah menyelimuti dan mengisolasi cairan logam las (molten weld pool) agar tidak teroksidasi oleh oksigen atau terkontaminasi nitrogen dari atmosfer bebas.'
+        "correct": 1,
+        "hint": "Proses ini sering disebut \"Stick Welding\" karena menggunakan elektroda stik terbungkus fluks pelindung (shielding flux).",
+        "explanation": "SMAW = Shielded Metal Arc Welding (Las Busur Listrik Terlindung / Las Stik). Fluks pada elektroda terbakar menghasilkan gas pelindung dan terak (slag) untuk melindungi kubangan las dari oksigen udara."
     },
     {
-        id: 6, category: 'Technical Welding', catColor: 'bg-blue-100 text-blue-700',
-        question: 'Posisi pengelasan pipa tetap dengan sumbu kemiringan 45 derajat tanpa boleh diputar (fixed position) diklasifikasikan sebagai:',
-        options: ['Posisi 1G Pipe', 'Posisi 2G Pipe', 'Posisi 5G Pipe', 'Posisi 6G Pipe'],
-        correct: 3,
-        hint: 'Ini adalah kualifikasi tingkat tertinggi untuk sertifikasi juru las pipa dengan sudut kemiringan 45°.',
-        explanation: 'Posisi 6G adalah posisi pengujian pipa paling komprehensif di mana pipa dipasang pada sudut kemiringan 45° dan tidak boleh diputar. Welder yang lulus 6G umumnya terkualifikasi untuk semua posisi lainnya.'
-    },
-
-    // === WORKSHOP ENGLISH (Q7-Q11) ===
-    {
-        id: 7, category: 'Workshop English', catColor: 'bg-green-100 text-green-700',
-        question: 'What is the correct English term for "palu terak" used to chip away solidified flux slag after completing a weld bead?',
-        options: ['Ball-peen hammer', 'Chipping hammer', 'Sledge hammer', 'Claw hammer'],
-        correct: 1,
-        hint: 'Kata dasarnya adalah "chip" (mengelupas/memecah kerak kecil).',
-        explanation: 'Chipping hammer (palu ketok terak) memiliki ujung runcing dan ujung pipih pahat untuk membersihkan terak sisa pembakaran fluks pada las SMAW atau FCAW.'
-    },
-    {
-        id: 8, category: 'Workshop English', catColor: 'bg-green-100 text-green-700',
-        question: 'On an engineering blueprint and welding drawing, what does the technical abbreviation "WPS" stand for?',
-        options: ['Welding Procedure Specification', 'Weld Position Standard', 'Workshop Production Schedule', 'Wire Processing System'],
-        correct: 0,
-        hint: 'Dokumen panduan parameter resmi yang mengatur voltase, amper, kawat las, dan suhu kerja.',
-        explanation: 'WPS (Welding Procedure Specification) adalah dokumen acuan tertulis yang merinci seluruh parameter teknis pengelasan yang telah diuji dan disetujui (PQR) untuk memastikan kualitas hasil sambungan.'
-    },
-    {
-        id: 9, category: 'Workshop English', catColor: 'bg-green-100 text-green-700',
-        question: '"Adjust the wire feed speed and ensure proper gas flow rate before striking the arc." — Kalimat instruksi tersebut paling sering digunakan pada proses:',
-        options: ['Manual Oxy-Acetylene Cutting (OAW)', 'Gas Metal Arc Welding (GMAW / MIG)', 'Shielded Metal Arc Welding (SMAW)', 'Submerged Arc Welding (SAW)'],
-        correct: 1,
-        hint: 'Kata kunci: "wire feed speed" (kecepatan pengumpanan kawat gulung otomatis) dan "gas flow rate".',
-        explanation: 'Instruksi "wire feed speed" dan "gas flow rate" sangat spesifik untuk mesin las semi-otomatis GMAW (MIG/MAG) atau FCAW yang menggunakan feeder kawat roll.'
-    },
-    {
-        id: 10, category: 'Workshop English', catColor: 'bg-green-100 text-green-700',
-        question: 'What is the Indonesian equivalent for the industrial safety instruction: "Inspect the ground clamp connection to prevent stray current"?',
-        options: [
-            'Periksa regulator gas untuk mencegah kebocoran selang',
-            'Periksa koneksi klem massa (ground clamp) untuk mencegah arus liar',
-            'Ganti stang las elektroda agar tidak terjadi sengatan listrik',
-            'Matikan sakelar utama ketika kabel las mulai memanas'
+        "id": 2,
+        "category": "Technical Welding",
+        "catColor": "bg-blue-100 text-blue-700",
+        "question": "Dalam standardisasi pengelasan pelat alur (plate groove), kode posisi pengelasan \"3G\" merujuk pada posisi apa?",
+        "options": [
+            "Posisi Datar / Flat (bawah tangan)",
+            "Posisi Horizontal (mendatar)",
+            "Posisi Vertikal / Tegak (naik/turun)",
+            "Posisi Overhead (di atas kepala)"
         ],
-        correct: 1,
-        hint: '"Ground clamp" = klem massa (arde/penjepit ke benda kerja), "stray current" = arus bocor/arus liar.',
-        explanation: 'Ground clamp adalah penjepit massa ke logam kerja. Sambungan yang longgar dapat memicu percikan berbahaya, panas berlebih, dan arus liar (stray current) yang merusak mesin las.'
+        "correct": 2,
+        "hint": "Angka 1 = Flat, 2 = Horizontal, 3 = Vertikal, 4 = Overhead. Huruf \"G\" merujuk pada sambungan alur (Groove).",
+        "explanation": "Posisi 3G adalah posisi pengelasan vertikal (Vertical Position) untuk sambungan alur pelat (Groove). Pengelasan dapat dilakukan dengan teknik vertical-up atau vertical-down."
     },
     {
-        id: 11, category: 'Workshop English', catColor: 'bg-green-100 text-green-700',
-        question: 'Which English phrase correctly describes the defect where the weld metal fails to penetrate completely through the root of the joint?',
-        options: ['Excessive Spatter', 'Incomplete Root Penetration', 'Root Concavity', 'Overfill Crown'],
-        correct: 1,
-        hint: 'Perhatikan kata "penetrate" dan bagian akar sambungan "root".',
-        explanation: 'Incomplete Root Penetration (kurang penembusan akar) terjadi ketika logam las tidak menembus hingga bagian dasar/akar celah sambungan.'
-    },
-
-    // === K3 SAFETY STANDARDS (Q12-Q16) ===
-    {
-        id: 12, category: 'K3 Safety', catColor: 'bg-amber-100 text-amber-700',
-        question: 'Tingkat kegelapan kaca filter (Shade Number) berapakah yang direkomendasikan standar ANSI Z87.1 untuk proses SMAW dengan arus kerja 100 – 150 Ampere?',
-        options: ['Shade #5 - #6', 'Shade #8', 'Shade #10', 'Shade #14'],
-        correct: 2,
-        hint: 'Shade 5 untuk pemotongan oksi-asetilen, shade 8 untuk arus rendah < 75A, dan shade 10 adalah standar umum 100-150A.',
-        explanation: 'Standar ANSI / OSHA menetapkan filter shade #10 untuk pengelasan busur listrik elektroda terbungkus (SMAW) pada rentang arus 75 hingga 150 Ampere guna melindungi retina dari sinar ultraviolet dan inframerah.'
-    },
-    {
-        id: 13, category: 'K3 Safety', catColor: 'bg-amber-100 text-amber-700',
-        question: 'Manakah tindakan keselamatan yang BENAR saat memindahkan dan menyimpan tabung gas bertekanan tinggi (Argon, CO2, Oksigen) di area workshop?',
-        options: [
-            'Menggelindingkan tabung secara horizontal di atas lantai agar lebih cepat dipindahkan',
-            'Menyimpan tabung dalam posisi berdiri tegak dan diikat/dirantai kuat pada rak atau dinding pengaman',
-            'Membuka tutup pelindung katup (safety valve cap) saat tabung diangkat dengan forklift',
-            'Menempatkan tabung gas berdampingan tepat di sebelah sumber percikan api las agar selang tidak terlalu panjang'
+        "id": 3,
+        "category": "Technical Welding",
+        "catColor": "bg-blue-100 text-blue-700",
+        "question": "Which welding process utilizes a non-consumable tungsten electrode and a shielding gas such as 100% Argon?",
+        "options": [
+            "SMAW (Stick Welding)",
+            "GMAW (MIG Welding)",
+            "GTAW (TIG Welding)",
+            "FCAW (Flux-Cored Arc Welding)"
         ],
-        correct: 1,
-        hint: 'Tabung bertekanan tidak boleh roboh atau terkena benturan katupnya karena dapat melesat seperti roket.',
-        explanation: 'Tabung gas bertekanan wajib disimpan dalam posisi tegak vertikal, diikat rantai pengaman, tutup pelindung terpasang saat tidak digunakan, dan dijauhkan minimal 6 meter dari sumber panas atau percikan api terbuka.'
+        "correct": 2,
+        "hint": "Huruf \"T\" pada singkatannya merujuk pada unsur logam tahan panas tinggi berikatan \"Tungsten\".",
+        "explanation": "GTAW (Gas Tungsten Arc Welding) atau TIG (Tungsten Inert Gas) menggunakan elektroda tungsten yang tidak ikut mencair (non-consumable) dan gas argon murni sebagai pelindung."
     },
     {
-        id: 14, category: 'K3 Safety', catColor: 'bg-amber-100 text-amber-700',
-        question: 'Kondisi iritasi mata akibat paparan langsung radiasi sinar ultraviolet (UV) busur las tanpa kacamata pelindung disebut secara medis:',
-        options: ['Astigmatisme Akut', 'Photokeratitis / Arc Eye (Flash Burn)', 'Katarak Traumatik', 'Presbiopia'],
-        correct: 1,
-        hint: 'Dikenal di kalangan welder dengan istilah "Welder\'s Flash" atau rasa berpasir terbakar pada kornea mata.',
-        explanation: 'Arc Eye atau Welder\'s Flash (Photokeratitis) adalah luka bakar radiasi UV pada kornea mata. Gejalanya mata merah, berair, sangat perih dan terasa seperti ada pasir di mata beberapa jam setelah terpapar.'
-    },
-    {
-        id: 15, category: 'K3 Safety', catColor: 'bg-amber-100 text-amber-700',
-        question: 'When welding inside a "Confined Space" (tangki tertutup, ruang sempit kapal), what critical safety measure is mandatory?',
-        options: [
-            'Use only 100% pure oxygen ventilation to keep workers alert',
-            'Continuous atmospheric gas testing, proper exhaust ventilation, and a designated standby safety observer outside',
-            'Working alone in silence to avoid disturbing other personnel',
-            'Switching off all lighting to prevent short circuits'
+        "id": 4,
+        "category": "Technical Welding",
+        "catColor": "bg-blue-100 text-blue-700",
+        "question": "Cacat las (welding defect) berupa lubang-lubang kecil atau rongga gas yang terperangkap di dalam deposit logam las disebut:",
+        "options": [
+            "Undercut",
+            "Porosity (Porositas)",
+            "Slag Inclusion",
+            "Lack of Fusion"
         ],
-        correct: 1,
-        hint: 'Ruang terbatas rentan penumpukan gas beracun dan kekurangan oksigen, sehingga perlu pemantauan udara dan pengawas di pintu masuk.',
-        explanation: 'Pekerjaan di confined space mewajibkan tes udara berkala (kadar O2, LEL, H2S/CO), ventilasi blower keluar masuk udara, izin kerja ruang terbatas, dan petugas standby (safety watcher) di luar.'
+        "correct": 1,
+        "hint": "Cacat ini menyerupai rongga spons/busa berpori yang disebabkan oleh kelembaban fluks atau aliran gas pelindung yang terganggu angin.",
+        "explanation": "Porosity (porositas) terbentuk akibat gas yang terperangkap saat logam las membeku cepat. Penyebab utamanya adalah elektroda lembab, kontaminasi minyak/karat, atau hembusan angin pada gas pelindung."
     },
     {
-        id: 16, category: 'K3 Safety', catColor: 'bg-amber-100 text-amber-700',
-        question: 'Bahan APD sarung tangan dan apron juru las yang paling aman terhadap percikan logam cair dan konduksi panas adalah terbuat dari:',
-        options: [
-            'Kulit split sapi asli tahan panas (Heavy Duty Split Cowhide Leather)',
-            'Kain nilon sintetis elastis',
-            'Karet sintetis PVC tahan air',
-            'Kain poliester rajut tebal'
+        "id": 5,
+        "category": "Technical Welding",
+        "catColor": "bg-blue-100 text-blue-700",
+        "question": "In GMAW (MIG/MAG welding), what is the primary function of the shielding gas cylinder mixture (e.g., Ar + CO2)?",
+        "options": [
+            "To increase electrical resistance and melt the wire faster",
+            "To isolate and protect the molten weld pool from oxygen and nitrogen atmospheric contamination",
+            "To cool down the welding gun handle continuously",
+            "To add alloy elements to the steel base metal"
         ],
-        correct: 0,
-        hint: 'Bahan sintetis (nilon/poliester) akan meleleh saat terkena percikan panas dan menempel pada kulit, sehingga bahan alami kulit hewan adalah standar utama.',
-        explanation: 'Bahan kulit asli (cowhide leather) tidak mudah meleleh atau terbakar, memberikan isolasi termal yang baik dan melindungi kulit tangan dari tetesan terak serta spatter bersuhu tinggi.'
-    },
-
-    // === REGULASI MIGRAN & LOGIKA (Q17-Q20) ===
-    {
-        id: 17, category: 'Regulasi & Logika', catColor: 'bg-purple-100 text-purple-700',
-        question: 'Berdasarkan UU No. 18 Tahun 2017 tentang Pelindungan Pekerja Migran Indonesia, platform resmi satu pintu milik BP2MI untuk pendataan dan verifikasi dokumen calon PMI adalah:',
-        options: [
-            'SIAPkerja Kemnaker',
-            'SISKOP2MI (Sistem Komputerisasi Pelayanan Penempatan dan Pelindungan PMI)',
-            'SIMDA Migran',
-            'Portal Paspor Ditjen Imigrasi'
-        ],
-        correct: 1,
-        hint: 'Singkatan dari Sistem Komputerisasi Pelayanan Penempatan dan Pelindungan Pekerja Migran Indonesia.',
-        explanation: 'SISKOP2MI adalah basis data terpadu resmi BP2MI yang mencatat seluruh tahapan seleksi, verifikasi dokumen, perjanjian kerja, e-PMI, hingga kepulangan PMI guna menjamin penempatan secara prosedural dan terlindungi.'
+        "correct": 1,
+        "hint": "Udara luar mengandung oksigen dan nitrogen yang dapat merusak kualitas ikatan logam cair jika tidak diselimuti (shielded).",
+        "explanation": "Fungsi utama gas pelindung pada GMAW adalah menyelimuti dan mengisolasi cairan logam las (molten weld pool) agar tidak teroksidasi oleh oksigen atau terkontaminasi nitrogen dari atmosfer bebas."
     },
     {
-        id: 18, category: 'Regulasi & Logika', catColor: 'bg-purple-100 text-purple-700',
-        question: 'Tahapan wajib yang harus diikuti oleh calon Pekerja Migran Indonesia (PMI) setelah lulus medical check-up dan sebelum diberangkatkan ke negara tujuan penempatan adalah:',
-        options: [
-            'Uji Kompetensi Ulang di Bandara Internasional',
-            'PAP (Pembekalan Akhir Pemberangkatan) / OPP',
-            'Wawancara Langsung di Kedutaan Besar Tanpa Dokumen',
-            'Pelatihan Bahasa Tambahan Mandiri Tanpa Pengawasan'
+        "id": 6,
+        "category": "Technical Welding",
+        "catColor": "bg-blue-100 text-blue-700",
+        "question": "Posisi pengelasan pipa tetap dengan sumbu kemiringan 45 derajat tanpa boleh diputar (fixed position) diklasifikasikan sebagai:",
+        "options": [
+            "Posisi 1G Pipe",
+            "Posisi 2G Pipe",
+            "Posisi 5G Pipe",
+            "Posisi 6G Pipe"
         ],
-        correct: 1,
-        hint: 'Program pembekalan resmi dari pemerintah mengenai regulasi, perlindungan hukum, dan hak-kewajiban sebelum terbang.',
-        explanation: 'PAP (Pembekalan Akhir Pemberangkatan) adalah orientasi pra-keberangkatan resmi yang diselenggarakan oleh BP3MI/BP2MI untuk memberikan pemahaman mengenai hak kewajiban, kebiasaan lokal negara tujuan, dan mitigasi masalah hukum.'
+        "correct": 3,
+        "hint": "Ini adalah kualifikasi tingkat tertinggi untuk sertifikasi juru las pipa dengan sudut kemiringan 45°.",
+        "explanation": "Posisi 6G adalah posisi pengujian pipa paling komprehensif di mana pipa dipasang pada sudut kemiringan 45° dan tidak boleh diputar. Welder yang lulus 6G umumnya terkualifikasi untuk semua posisi lainnya."
     },
     {
-        id: 19, category: 'Regulasi & Logika', catColor: 'bg-purple-100 text-purple-700',
-        question: 'Tes Logika Spasial: Sebuah pipa silinder dengan diameter 10 inci dipotong miring tepat bersudut 45 derajat. Bentuk penampang bidang potongan (cross-section surface) pipa tersebut adalah:',
-        options: [
-            'Lingkaran sempurna (Perfect Circle)',
-            'Elips / Lonjong (Ellipse)',
-            'Segitiga siku-siku (Right Triangle)',
-            'Persegi panjang (Rectangle)'
+        "id": 7,
+        "category": "Technical Welding",
+        "catColor": "bg-blue-100 text-blue-700",
+        "question": "Berdasarkan klasifikasi elektroda AWS A5.1, arti dua angka pertama pada elektroda \"E7018\" menunjukkan:",
+        "options": [
+            "Kuat tarik minimum (minimum tensile strength) sebesar 70.000 psi",
+            "Kuat luluh (yield strength) sebesar 70 MPa",
+            "Panjang elektroda sebesar 70 cm",
+            "Kadar karbon elektroda sebesar 0,70%"
         ],
-        correct: 1,
-        hint: 'Jika dipotong tegak lurus 90° menghasilkan lingkaran; jika dipotong miring miring menghasilkan bentuk oval/lonjong beraturan.',
-        explanation: 'Irisan kerucut atau silinder lingkaran yang dipotong miring oleh bidang datar membentuk bangun geometri Elips (lonjong beraturan).'
+        "correct": 0,
+        "hint": "Huruf \"E\" = Elektroda, dua digit pertama (70) dikalikan 1.000 psi menghasilkan kekuatan tarik logam las.",
+        "explanation": "Pada E7018, angka \"70\" mengindikasikan kuat tarik minimum hasil las adalah 70.000 psi (pound per square inch), angka \"1\" berarti untuk semua posisi las, dan \"8\" menunjukkan fluks serbuk besi rendah hidrogen (low hydrogen iron powder)."
     },
     {
-        id: 20, category: 'Regulasi & Logika', catColor: 'bg-purple-100 text-purple-700',
-        question: 'Manakah kombinasi dokumen mutlak yang wajib dipegang oleh Pekerja Migran Indonesia saat bekerja di luar negeri secara resmi (non-unprocedural)?',
-        options: [
-            'Hanya KTP dan Paspor Turis (Visa Kunjungan)',
-            'Paspor, Visa Kerja Resmi, Perjanjian Kerja (PK), dan Terdaftar di SISKOP2MI/e-PMI',
-            'Surat Rekomendasi dari Kepala Desa dan Tiket Pesawat Pulang-Pergi',
-            'Sertifikat Pelatihan Kursus Singkat tanpa Visa Kerja'
+        "id": 8,
+        "category": "Technical Welding",
+        "catColor": "bg-blue-100 text-blue-700",
+        "question": "Jenis elektroda SMAW berselaput selulosa (Cellulose) yang terkenal menghasilkan penetrasi sangat dalam pada lapisan akar (root pass) pipa saluran migas adalah:",
+        "options": [
+            "AWS E7018",
+            "AWS E6010 / E6011",
+            "AWS E6013",
+            "AWS E308L-16"
         ],
-        correct: 1,
-        hint: 'PMI wajib berangkat dengan visa kerja (bukan turis), perjanjian kerja resmi yang ditandatangani, dan perlindungan e-PMI.',
-        explanation: 'Bekerja ke luar negeri secara prosedural mewajibkan visa kerja legal (bukan visa wisata/ziarah), kontrak Perjanjian Kerja berkekuatan hukum, kepemilikan e-PMI BP2MI, serta jaminan BPJS Ketenagakerjaan Migran.'
+        "correct": 1,
+        "hint": "Elektroda berakhiran digit \"0\" atau \"1\" dengan fluks selulosa organik menghasilkan gas semburan busur yang kuat dan penetrasi akar tembus.",
+        "explanation": "E6010 dan E6011 menggunakan fluks selulosa yang menghasilkan busur las kencang dan penetrasi akar (root penetration) yang dalam dan cepat membeku, standar industri untuk pengelasan pipa cross-country."
+    },
+    {
+        "id": 9,
+        "category": "Technical Welding",
+        "catColor": "bg-blue-100 text-blue-700",
+        "question": "Pada pengelasan busur listrik arus searah (DC), polaritas DCEP (Direct Current Electrode Positive / Reverse Polarity) menghasilkan karakteristik:",
+        "options": [
+            "Dua pertiga panas terkonsentrasi pada elektroda, menghasilkan penetrasi yang lebih dalam pada logam induk",
+            "Seluruh panas terpusat pada klem massa arde",
+            "Tidak menghasilkan panas sama sekali pada benda kerja",
+            "Hanya dapat digunakan untuk pengelasan bahan plastik sintetis"
+        ],
+        "correct": 0,
+        "hint": "DCEP (polaritas terbalik): stang elektroda dihubungkan ke kutub positif (+) dan benda kerja ke kutub negatif (-).",
+        "explanation": "Pada DCEP, aliran elektron menuju elektroda, menstabilkan transfer logam dan menghasilkan penetrasi las yang lebih dalam dibandingkan DCEN pada proses SMAW dan GMAW."
+    },
+    {
+        "id": 10,
+        "category": "Technical Welding",
+        "catColor": "bg-blue-100 text-blue-700",
+        "question": "Istilah \"Duty Cycle\" 60% pada mesin las berkapasitas 200 Ampere berarti mesin tersebut aman digunakan mengelas terus-menerus selama:",
+        "options": [
+            "6 menit dalam siklus periode kerja 10 menit pada arus 200 Ampere",
+            "60 menit tanpa henti dalam siklus 100 menit",
+            "6 jam dalam sehari",
+            "Hanya boleh digunakan saat efisiensi listrik 60%"
+        ],
+        "correct": 0,
+        "hint": "Standar Duty Cycle internasional dihitung berdasarkan periode siklus total 10 menit.",
+        "explanation": "Duty Cycle 60% @ 200A berarti mesin las dapat beroperasi pada beban 200A selama 6 menit penuh, kemudian wajib istirahat pendinginan (cooling) selama 4 menit dalam rentang siklus 10 menit agar tidak overheat."
+    },
+    {
+        "id": 11,
+        "category": "Technical Welding",
+        "catColor": "bg-blue-100 text-blue-700",
+        "question": "Perbedaan utama antara proses las FCAW-S (Self-Shielded) dan FCAW-G (Gas-Shielded) adalah:",
+        "options": [
+            "FCAW-S tidak memerlukan tabung gas pelindung eksternal karena fluks inti kawat sudah menghasilkan gas pelindung mandiri",
+            "FCAW-S menggunakan elektroda tungsten yang tidak mencair",
+            "FCAW-G hanya bisa digunakan untuk memotong pelat baja tebal",
+            "FCAW-S tidak menghasilkan busur listrik sama sekali"
+        ],
+        "correct": 0,
+        "hint": "Huruf \"S\" adalah singkatan dari \"Self-Shielded\" (melindungi dirinya sendiri lewat serbuk fluks inti).",
+        "explanation": "FCAW-S (Self-Shielded) memiliki bahan kimiawi di dalam inti kawat tubular yang menghasilkan gas pelindung saat terbakar, sehingga sangat ideal untuk pekerjaan luar ruangan berangin tanpa membawa tabung gas berat."
+    },
+    {
+        "id": 12,
+        "category": "Technical Welding",
+        "catColor": "bg-blue-100 text-blue-700",
+        "question": "Posisi pengelasan pipa tetap dengan sumbu pipa terpasang horizontal dan juru las mengelas melingkari pipa secara vertikal disebut:",
+        "options": [
+            "Posisi 1G Pipe",
+            "Posisi 2G Pipe",
+            "Posisi 5G Pipe",
+            "Posisi 6GR Pipe"
+        ],
+        "correct": 2,
+        "hint": "Pipa horizontal tetap (tidak diputar) mengharuskan juru las mengelas dari arah bawah jam 6 naik ke atas jam 12 (5G).",
+        "explanation": "Posisi 5G (Pipe Horizontal Fixed) adalah posisi di mana sumbu pipa horizontal diam/tetap, dan welder harus mengelas berkeliling vertikal (mencakup posisi flat, vertikal, dan overhead)."
+    },
+    {
+        "id": 13,
+        "category": "Technical Welding",
+        "catColor": "bg-blue-100 text-blue-700",
+        "question": "Proses pengelasan otomatis di mana busur listrik sepenuhnya tertutup di bawah timbunan serbuk fluks granular tanpa percikan sinar tampak adalah:",
+        "options": [
+            "SAW (Submerged Arc Welding)",
+            "SMAW (Stick Welding)",
+            "OAW (Oxy-Acetylene Welding)",
+            "GTAW (TIG Welding)"
+        ],
+        "correct": 0,
+        "hint": "Kata \"Submerged\" berarti terendam atau tenggelam di bawah lapisan timbunan fluks mineral.",
+        "explanation": "SAW (Submerged Arc Welding / Las Busur Terendam) menimbun busur listrik dan cairan las di bawah lapisan tebal fluks butiran, menghasilkan laju deposisi tertinggi dan tanpa radiasi sinar busur terbuka."
+    },
+    {
+        "id": 14,
+        "category": "Technical Welding",
+        "catColor": "bg-blue-100 text-blue-700",
+        "question": "Cacat las berupa alur parit (groove) yang termakan pada tepi jalur las akibat logam induk mencair tanpa terisi cairan logam las disebut:",
+        "options": [
+            "Porosity",
+            "Undercut",
+            "Spatter",
+            "Excessive Reinforcement"
+        ],
+        "correct": 1,
+        "hint": "Sering disebabkan oleh arus pengelasan yang terlalu tinggi (amperage too high) atau ayunan elektroda terlalu cepat di bagian tepi.",
+        "explanation": "Undercut adalah takik/cekungan tajam pada tepi jari-jari manik las (weld toe) yang mengurangi ketebalan efektif pelat dan dapat menjadi titik konsentrasi tegangan pemicu retak kelelahan (fatigue crack)."
+    },
+    {
+        "id": 15,
+        "category": "Technical Welding",
+        "catColor": "bg-blue-100 text-blue-700",
+        "question": "Penyebab utama terjadinya cacat \"Slag Inclusion\" pada pengelasan multi-pass adalah:",
+        "options": [
+            "Pembersihan terak las antar-lapisan (pass) yang tidak tuntas sebelum mengelas lapisan berikutnya",
+            "Penggunaan gas argon murni 100%",
+            "Kecepatan pengelasan yang terlalu lambat pada pelat tipis",
+            "Penggunaan elektroda tungsten tanpa fluks"
+        ],
+        "correct": 0,
+        "hint": "Terak sisa lapisan terdahulu yang tidak digerinda/disikat kawat akan tertimpa dan terperangkap di dalam cairan las baru.",
+        "explanation": "Slag inclusion (terak terjebak) terjadi ketika juru las tidak membersihkan kerak fluks secara sempurna dengan chipping hammer dan sikat kawat baja sebelum memulai lapisan (pass) berikutnya."
+    },
+    {
+        "id": 16,
+        "category": "Technical Welding",
+        "catColor": "bg-blue-100 text-blue-700",
+        "question": "Kondisi di mana logam las tidak melebur menyatu secara metalurgi dengan logam dasar atau lapisan las sebelumnya disebut:",
+        "options": [
+            "Lack of Fusion (Incomplete Fusion / Cold Lap)",
+            "Root Concavity",
+            "Burn-through",
+            "Overfill"
+        ],
+        "correct": 0,
+        "hint": "Terjadi akibat masukan panas (heat input) yang tidak mencukupi untuk melelehkan permukaan dinding sambungan.",
+        "explanation": "Lack of Fusion (kurang peleburan) adalah cacat planar di mana cairan las hanya menempel di permukaan tanpa mencairkan dan mengikat logam induk, biasanya akibat amper terlalu kecil atau kecepatan ayunan salah."
+    },
+    {
+        "id": 17,
+        "category": "Technical Welding",
+        "catColor": "bg-blue-100 text-blue-700",
+        "question": "Tujuan utama dilakukannya pemanasan awal (Pre-heating) sebelum pengelasan pada baja karbon tebal adalah:",
+        "options": [
+            "Memperlambat laju pendinginan (cooling rate) untuk mencegah pembentukan struktur getas martensit dan retak hidrogen",
+            "Membuat elektroda mencair lebih lambat",
+            "Menghilangkan lapisan cat dekoratif pada baja",
+            "Menambah ketebalan pelat baja secara instan"
+        ],
+        "correct": 0,
+        "hint": "Pendinginan yang terlalu mendadak (rapid quenching) pada baja tebal dapat memicu struktur keras namun getas yang rentan retak.",
+        "explanation": "Preheating mengurangi gradien suhu antara sambungan dan lingkungan, memperlambat pendinginan zona HAZ, memungkinkan difusi gas hidrogen keluar, dan meminimalkan tegangan sisa pencegah retak dingin."
+    },
+    {
+        "id": 18,
+        "category": "Technical Welding",
+        "catColor": "bg-blue-100 text-blue-700",
+        "question": "Proses perlakuan panas pasca-pengelasan (Post-Weld Heat Treatment / PWHT) bertujuan utama untuk:",
+        "options": [
+            "Menghilangkan tegangan sisa (residual stress) dan meningkatkan keuletan sambungan",
+            "Mengubah warna permukaan logam menjadi mengkilap",
+            "Meningkatkan berat total struktur konstruksi",
+            "Mempercepat proses pembekuan terak las"
+        ],
+        "correct": 0,
+        "hint": "Setelah dilas, daerah sekitar las menyimpan tegangan tarik sisa yang sangat tinggi akibat penyusutan termal.",
+        "explanation": "PWHT memanaskan sambungan las secara terkontrol ke suhu di bawah titik kritis transformasi untuk mereduksi tegangan sisa (stress relief), memperbaiki ketangguhan, dan mencegah keretakan saat beroperasi."
+    },
+    {
+        "id": 19,
+        "category": "Technical Welding",
+        "catColor": "bg-blue-100 text-blue-700",
+        "question": "Zona pada logam induk yang mengalami perubahan struktur mikro akibat panas las tetapi tidak ikut mencair disebut:",
+        "options": [
+            "Weld Metal Zone (WMZ)",
+            "Heat-Affected Zone (HAZ)",
+            "Base Metal Unaffected",
+            "Fusion Boundary Line"
+        ],
+        "correct": 1,
+        "hint": "Singkatan dari \"Heat-Affected Zone\" (Daerah Pengaruh Panas).",
+        "explanation": "HAZ (Heat-Affected Zone) adalah area logam dasar yang tidak mencair tetapi sifat mekanik dan struktur butir kristalnya berubah akibat siklus termal pengelasan, sering menjadi zona paling kritis terhadap retak."
+    },
+    {
+        "id": 20,
+        "category": "Technical Welding",
+        "catColor": "bg-blue-100 text-blue-700",
+        "question": "Kode warna cincin merah pada elektroda tungsten GTAW (TIG) menunjukkan tipe kandungan:",
+        "options": [
+            "Pure Tungsten (Tungsten Murni)",
+            "2% Thoriated Tungsten (EWTh-2)",
+            "2% Ceriated Tungsten (EWCe-2)",
+            "Zirconiated Tungsten"
+        ],
+        "correct": 1,
+        "hint": "Warna merah adalah tanda paduan Torium (Thoria 2%), memiliki emisi elektron tinggi untuk arus DC pada baja.",
+        "explanation": "Elektroda tungsten berkode warna Merah (EWTh-2) mengandung 2% Thorium Oksida, memiliki kemampuan start busur yang stabil dan daya tahan panas tinggi untuk pengelasan arus DCEN pada baja karbon dan stainless steel."
+    },
+    {
+        "id": 21,
+        "category": "Technical Welding",
+        "catColor": "bg-blue-100 text-blue-700",
+        "question": "Saat mengelas material Aluminium dengan proses GTAW (TIG), jenis arus listrik yang wajib digunakan adalah:",
+        "options": [
+            "DCEN (Direct Current Electrode Negative)",
+            "DCEP (Direct Current Electrode Positive)",
+            "AC (Alternating Current / Arus Bolak-Balik)",
+            "DC Arus Konstan Tanpa Frekuensi"
+        ],
+        "correct": 2,
+        "hint": "Siklus positif pada arus AC berfungsi membersihkan lapisan oksida aluminium (cleaning action), dan siklus negatif mencairkan logam.",
+        "explanation": "Pengelasan aluminium GTAW memerlukan arus AC (Alternating Current). Siklus polaritas positif memecah lapisan oksida aluminium (Al2O3) yang bersuhu lebur 2050°C, sementara siklus negatif memberikan penetrasi cairan las."
+    },
+    {
+        "id": 22,
+        "category": "Technical Welding",
+        "catColor": "bg-blue-100 text-blue-700",
+        "question": "Proses pengisian gas pelindung inert (Back Purging) ke dalam bagian dalam rongga pipa stainless steel saat pengelasan akar (root) bertujuan:",
+        "options": [
+            "Mencegah oksidasi dan pembentukan kerak \"sugaring\" pada bagian dalam tembusan akar las",
+            "Mempercepat pendinginan air pada pipa",
+            "Meningkatkan tekanan gas di dalam pipa agar meledak",
+            "Menghilangkan kebutuhan juru las memakai topeng kedok"
+        ],
+        "correct": 0,
+        "hint": "Stainless steel panas sangat peka bereaksi dengan oksigen di dalam rongga pipa membentuk oksidasi kasar seperti gula terbakar (sugaring).",
+        "explanation": "Back purging dengan gas Argon murni mengusir oksigen dari bagian dalam pipa, menghasilkan penembusan akar (root pass) yang halus, bersih, tahan korosi, dan bebas dari cacat kristalisasi oksida (sugaring)."
+    },
+    {
+        "id": 23,
+        "category": "Technical Welding",
+        "catColor": "bg-blue-100 text-blue-700",
+        "question": "Posisi pengelasan pipa 2G (Pipe Horizontal) memiliki konfigurasi sumbu pipa yang berada pada posisi:",
+        "options": [
+            "Sumbu pipa vertikal tegak, dan juru las mengelas jalur sambungan secara horizontal",
+            "Sumbu pipa horizontal berputar bebas",
+            "Sumbu pipa miring 45 derajat tetap",
+            "Pipa digantung di langit-langit"
+        ],
+        "correct": 0,
+        "hint": "Pada 2G pipa, pipa berdiri tegak lurus (vertikal) seperti tiang, jalur kampuh sambungannya melingkar mendatar.",
+        "explanation": "Posisi 2G pipa adalah posisi di mana pipa dipasang dengan sumbu vertikal tetap (tegak lurus bumi), dan kampuh sambungan las berada pada bidang horizontal melingkar."
+    },
+    {
+        "id": 24,
+        "category": "Technical Welding",
+        "catColor": "bg-blue-100 text-blue-700",
+        "question": "Pada sambungan las sudut (Fillet Weld), ukuran dimensi \"Throat\" (Tenggorokan Las) merujuk pada:",
+        "options": [
+            "Jarak terpendek dari akar sambungan (root) ke permukaan muka manik las",
+            "Panjang total keseluruhan pelat baja",
+            "Diameter kawat elektroda yang digunakan",
+            "Lebar celah akar sambungan pelat tumpang"
+        ],
+        "correct": 0,
+        "hint": "Throat adalah ketebalan kritis penentu kekuatan sambungan sudut fillet menahan beban geser.",
+        "explanation": "Throat (tebal leher) pada fillet weld adalah jarak terpendek dari titik temu akar (root) hingga bidang muka las (weld face), yang menjadi parameter utama perhitungan kekuatan mekanis sambungan las sudut."
+    },
+    {
+        "id": 25,
+        "category": "Technical Welding",
+        "catColor": "bg-blue-100 text-blue-700",
+        "question": "Fungsi utama pembuatan celah akar (Root Gap) pada persiapan sambungan alur (Groove Joint) adalah:",
+        "options": [
+            "Memberikan ruang bagi cairan elektroda untuk menembus penuh hingga dasar sambungan (complete root penetration)",
+            "Membuat pelat mudah bergeser saat dipukul",
+            "Mengurangi jumlah kawat las yang dibutuhkan",
+            "Mencegah juru las menyalakan busur api"
+        ],
+        "correct": 0,
+        "hint": "Tanpa celah akar (zero gap), cairan las sulit menembus ke sisi belakang pelat tebal.",
+        "explanation": "Root gap (celah akar) selebar 2-3 mm disiapkan agar busur dan cairan logam elektroda dapat mencapai dasar celah kampuh dan meleburkan kedua sisi root face secara sempurna."
+    },
+    {
+        "id": 26,
+        "category": "Technical Welding",
+        "catColor": "bg-blue-100 text-blue-700",
+        "question": "Tindakan yang benar sebelum melanjutkan pengelasan pada las ikat sementara (Tack Weld) adalah:",
+        "options": [
+            "Menggerinda kedua ujung tack weld hingga membentuk lereng landai (feathering) untuk memastikan fusi sempurna",
+            "Membiarkan tack weld retak dan menimpanya langsung dengan amper tinggi",
+            "Memukul tack weld dengan palu hingga terlepas",
+            "Mengecat tack weld dengan cat primer merah"
+        ],
+        "correct": 0,
+        "hint": "Ujung tack weld yang tebal dan bulat akan menimbulkan cacat kurang peleburan jika tidak ditiruskan (feathered) dengan gerinda.",
+        "explanation": "Feathering (meniruskan kedua ujung tack weld dengan batu gerinda) memastikan busur lapisan utama (root pass) dapat melebur mulus menyatu dengan tack weld tanpa meninggalkan cacat lack of fusion atau porositas."
+    },
+    {
+        "id": 27,
+        "category": "Technical Welding",
+        "catColor": "bg-blue-100 text-blue-700",
+        "question": "Suhu antar-lapisan (Interpass Temperature) maksimum pada baja paduan rendah tidak boleh dilewati karena:",
+        "options": [
+            "Suhu yang terlalu panas akan memperlambat pendinginan, memperbesar butir kristal, dan menurunkan ketangguhan (toughness)",
+            "Membuat mesin las mati otomatis",
+            "Mengubah elektroda menjadi cair di udara",
+            "Menghilangkan sifat konduktor listrik pada kabel las"
+        ],
+        "correct": 0,
+        "hint": "Pendinginan yang terlalu lama akibat interpass berlebih menyebabkan pembesaran butir struktur mikro baja.",
+        "explanation": "Mempertahankan interpass temperature maksimum di bawah batas WPS (misal < 250°C) mencegah pertumbuhan butir kasar pada HAZ dan menjaga ketahanan impak serta kekuatan luluh logam las."
+    },
+    {
+        "id": 28,
+        "category": "Technical Welding",
+        "catColor": "bg-blue-100 text-blue-700",
+        "question": "Fenomena penyimpangan busur las dari jalurnya akibat gaya medan magnetik yang tidak seimbang di sekitar benda kerja disebut:",
+        "options": [
+            "Magnetic Arc Blow",
+            "Thermal Shock",
+            "Eddy Current",
+            "Corona Discharge"
+        ],
+        "correct": 0,
+        "hint": "Sering terjadi saat mengelas arus DC di dekat sudut benda kerja atau ujung pelat baja feromagnetik.",
+        "explanation": "Arc Blow terjadi akibat medan magnetik asimetris saat arus DC mengalir melalui baja feromagnetik, membelokkan busur las ke arah samping dan menimbulkan spatter berlebih serta kurang fusi."
+    },
+    {
+        "id": 29,
+        "category": "Technical Welding",
+        "catColor": "bg-blue-100 text-blue-700",
+        "question": "Cara efektif untuk mengatasi gangguan \"Magnetic Arc Blow\" saat mengelas baja dengan arus DC adalah:",
+        "options": [
+            "Beralih ke arus bolak-balik (AC), memperpendek panjang busur, atau memindahkan posisi klem massa",
+            "Menaikkan amper ke kapasitas maksimum",
+            "Menambah panjang busur listrik setinggi 20 mm",
+            "Menyiram benda kerja dengan air dingin"
+        ],
+        "correct": 0,
+        "hint": "Arus AC tidak membentuk medan magnet terarah tetap, dan busur pendek meminimalkan pembelokan busur.",
+        "explanation": "Mengganti mesin ke mode AC, memperpendek arc length, melilitkan kabel massa di sekeliling benda kerja, atau mengelas menjauhi arah klem massa adalah solusi standar industri mengatasi arc blow."
+    },
+    {
+        "id": 30,
+        "category": "Technical Welding",
+        "catColor": "bg-blue-100 text-blue-700",
+        "question": "Uji Tak Rusak (Non-Destructive Testing / NDT) yang menggunakan cairan zat pewarna kapiler untuk mendeteksi retak terbuka di permukaan logam las adalah:",
+        "options": [
+            "Liquid Penetrant Testing (PT / DPT)",
+            "Radiographic Testing (RT)",
+            "Ultrasonic Testing (UT)",
+            "Hardness Testing"
+        ],
+        "correct": 0,
+        "hint": "Menggunakan semprotan cairan merah peresap (penetrant), cairan pembersih (cleaner), dan cairan pengembang putih (developer).",
+        "explanation": "Liquid Penetrant Testing (Dye Penetrant / PT) memanfaatkan daya kapilaritas cairan penetran berwarna terang untuk meresap ke dalam celah retak permukaan, kemudian ditarik keluar oleh developer bubuk putih."
+    },
+    {
+        "id": 31,
+        "category": "Technical Welding",
+        "catColor": "bg-blue-100 text-blue-700",
+        "question": "Metode pengujian NDT yang paling efektif untuk mendeteksi cacat internal di dalam ketebalan logam las menggunakan gelombang suara frekuensi tinggi adalah:",
+        "options": [
+            "Ultrasonic Testing (UT)",
+            "Visual Testing (VT)",
+            "Liquid Penetrant Testing (PT)",
+            "Spark Testing"
+        ],
+        "correct": 0,
+        "hint": "Memanfaatkan pantulan pulsa gelombang ultrasonik (2-10 MHz) yang ditampilkan pada layar osiloskop instrumen.",
+        "explanation": "Ultrasonic Testing (UT) menembakkan gelombang suara frekuensi tinggi melalui probe transduser; pantulan gema gelombang mendeteksi kedalaman, ukuran, dan orientasi cacat internal seperti lack of fusion atau retak."
+    },
+    {
+        "id": 32,
+        "category": "Technical Welding",
+        "catColor": "bg-blue-100 text-blue-700",
+        "question": "Dokumen tertulis resmi yang berisi catatan data riil hasil uji mekanik (tarik, tekuk, impak) untuk membuktikan bahwa suatu prosedur pengelasan memenuhi standar kode konstruksi disebut:",
+        "options": [
+            "PQR (Procedure Qualification Record)",
+            "WPS (Welding Procedure Specification)",
+            "MTC (Mill Test Certificate)",
+            "Inspection Release Note"
+        ],
+        "correct": 0,
+        "hint": "PQR adalah dokumen induk hasil pengujian laboratorium nyata yang menjadi dasar penyusunan WPS operasional.",
+        "explanation": "PQR (Procedure Qualification Record) mencatat seluruh variabel aktual pengelasan sampel uji (kupon) dan hasil uji laboratorium mekanik (tensile, bend, impact) sebagai bukti legalitas validasi WPS."
+    },
+    {
+        "id": 33,
+        "category": "Technical Welding",
+        "catColor": "bg-blue-100 text-blue-700",
+        "question": "Kode elektroda AWS ER70S-6 pada kawat las GMAW (MIG/MAG) memiliki arti huruf \"S\" dan angka \"6\":",
+        "options": [
+            "\"S\" = Solid Wire (kawat pejal), \"6\" = tingkat penambahan deoksidator silikon dan mangan tinggi",
+            "\"S\" = Stainless Steel, \"6\" = diameter 6 mm",
+            "\"S\" = Soft Iron, \"6\" = voltase 6 Volt",
+            "\"S\" = Shielded, \"6\" = panjang 6 meter"
+        ],
+        "correct": 0,
+        "hint": "ER = Electrode / Rod, 70 = 70.000 psi kuat tarik, S = Solid bare wire, 6 = komposisi kimiawi Si/Mn deoxidizer.",
+        "explanation": "ER70S-6 adalah kawat las solid baja karbon yang mengandung deoksidator Silikon (Si) dan Mangan (Mn) tinggi untuk meredam pembentukan porositas saat mengelas pelat yang sedikit berkarat atau kotor."
+    },
+    {
+        "id": 34,
+        "category": "Technical Welding",
+        "catColor": "bg-blue-100 text-blue-700",
+        "question": "Cacat tembus jebol (Burn-through) pada pengelasan akar pelat tipis biasanya diakibatkan oleh:",
+        "options": [
+            "Arus (amperage) terlalu tinggi dan kecepatan gerak las (travel speed) terlalu lambat",
+            "Gas argon yang terlalu dingin",
+            "Kawat las terlalu besar diameternya",
+            "Klem massa arde dipasang terlalu kuat"
+        ],
+        "correct": 0,
+        "hint": "Masukan panas berlebihan melelehkan seluruh dasar celah hingga logam cair ambrol meninggalkan lubang menganga.",
+        "explanation": "Burn-through terjadi akibat masukan panas (heat input) berlebihan saat root pass—kombinasi amper terlalu besar, root gap terlalu renggang, dan kecepatan gerak terlalu lambat pada logam berpenampang tipis."
+    },
+    {
+        "id": 35,
+        "category": "Technical Welding",
+        "catColor": "bg-blue-100 text-blue-700",
+        "question": "Posisi pengelasan pipa 6GR berbeda dengan posisi 6G standar karena adanya penambahan:",
+        "options": [
+            "Cincin cincin penghalang pembatas (Restriction Ring) yang membatasi ruang gerak tangan juru las di dekat sambungan",
+            "Dua buah elektroda yang dinyalakan bersamaan",
+            "Sistem pendingin air bertekanan tinggi",
+            "Motor pemutar otomatis berkecepatan konstan"
+        ],
+        "correct": 0,
+        "hint": "Huruf \"R\" pada 6GR berarti \"Restriction\" (hambatan/rintangan fisik pelat penghalang cincin).",
+        "explanation": "Posisi 6GR (Restriction Ring) adalah kualifikasi khusus struktur T-Y-K lepas pantai (offshore), di mana pelat rintangan dipasang 12,5 mm di dekat sambungan pipa untuk mensimulasikan ruang gerak sempit."
+    },
+    {
+        "id": 36,
+        "category": "Workshop English",
+        "catColor": "bg-green-100 text-green-700",
+        "question": "What is the correct English term for \"palu terak\" used to chip away solidified flux slag after completing a weld bead?",
+        "options": [
+            "Ball-peen hammer",
+            "Chipping hammer",
+            "Sledge hammer",
+            "Claw hammer"
+        ],
+        "correct": 1,
+        "hint": "Kata dasarnya adalah \"chip\" (mengelupas/memecah kerak kecil).",
+        "explanation": "Chipping hammer (palu ketok terak) memiliki ujung runcing dan ujung pipih pahat untuk membersihkan terak sisa pembakaran fluks pada las SMAW atau FCAW."
+    },
+    {
+        "id": 37,
+        "category": "Workshop English",
+        "catColor": "bg-green-100 text-green-700",
+        "question": "On an engineering blueprint and welding drawing, what does the technical abbreviation \"WPS\" stand for?",
+        "options": [
+            "Welding Procedure Specification",
+            "Weld Position Standard",
+            "Workshop Production Schedule",
+            "Wire Processing System"
+        ],
+        "correct": 0,
+        "hint": "Dokumen panduan parameter resmi yang mengatur voltase, amper, kawat las, dan suhu kerja.",
+        "explanation": "WPS (Welding Procedure Specification) adalah dokumen acuan tertulis yang merinci seluruh parameter teknis pengelasan yang telah diuji dan disetujui (PQR) untuk memastikan kualitas hasil sambungan."
+    },
+    {
+        "id": 38,
+        "category": "Workshop English",
+        "catColor": "bg-green-100 text-green-700",
+        "question": "\"Adjust the wire feed speed and ensure proper gas flow rate before striking the arc.\" — Kalimat instruksi tersebut paling sering digunakan pada proses:",
+        "options": [
+            "Manual Oxy-Acetylene Cutting (OAW)",
+            "Gas Metal Arc Welding (GMAW / MIG)",
+            "Shielded Metal Arc Welding (SMAW)",
+            "Submerged Arc Welding (SAW)"
+        ],
+        "correct": 1,
+        "hint": "Kata kunci: \"wire feed speed\" (kecepatan pengumpanan kawat gulung otomatis) dan \"gas flow rate\".",
+        "explanation": "Instruksi \"wire feed speed\" dan \"gas flow rate\" sangat spesifik untuk mesin las semi-otomatis GMAW (MIG/MAG) atau FCAW yang menggunakan feeder kawat roll."
+    },
+    {
+        "id": 39,
+        "category": "Workshop English",
+        "catColor": "bg-green-100 text-green-700",
+        "question": "What is the Indonesian equivalent for the industrial safety instruction: \"Inspect the ground clamp connection to prevent stray current\"?",
+        "options": [
+            "Periksa regulator gas untuk mencegah kebocoran selang",
+            "Periksa koneksi klem massa (ground clamp) untuk mencegah arus liar",
+            "Ganti stang las elektroda agar tidak terjadi sengatan listrik",
+            "Matikan sakelar utama ketika kabel las mulai memanas"
+        ],
+        "correct": 1,
+        "hint": "\"Ground clamp\" = klem massa (arde/penjepit ke benda kerja), \"stray current\" = arus bocor/arus liar.",
+        "explanation": "Ground clamp adalah penjepit massa ke logam kerja. Sambungan yang longgar dapat memicu percikan berbahaya, panas berlebih, dan arus liar (stray current) yang merusak mesin las."
+    },
+    {
+        "id": 40,
+        "category": "Workshop English",
+        "catColor": "bg-green-100 text-green-700",
+        "question": "Which English phrase correctly describes the defect where the weld metal fails to penetrate completely through the root of the joint?",
+        "options": [
+            "Excessive Spatter",
+            "Incomplete Root Penetration",
+            "Root Concavity",
+            "Overfill Crown"
+        ],
+        "correct": 1,
+        "hint": "Perhatikan kata \"penetrate\" dan bagian akar sambungan \"root\".",
+        "explanation": "Incomplete Root Penetration (kurang penembusan akar) terjadi ketika logam las tidak menembus hingga bagian dasar/akar celah sambungan."
+    },
+    {
+        "id": 41,
+        "category": "Workshop English",
+        "catColor": "bg-green-100 text-green-700",
+        "question": "What is the English term for the handheld power tool used with an abrasive disc to clean bevel edges and grind weld caps?",
+        "options": [
+            "Angle Grinder",
+            "Bench Drill Press",
+            "Hydraulic Guillotine Shear",
+            "Band Saw Machine"
+        ],
+        "correct": 0,
+        "hint": "Alat tangan listrik berputar kencang dengan piringan batu gerinda abrasif 4 atau 7 inci.",
+        "explanation": "Angle grinder (mesin gerinda tangan) adalah perkakas utama bengkel las untuk membersihkan karat, membuat kampuh bevel, memotong logam, dan meratakan manik las."
+    },
+    {
+        "id": 42,
+        "category": "Workshop English",
+        "catColor": "bg-green-100 text-green-700",
+        "question": "On a standard AWS welding symbol, what does a flag symbol (⚑) placed at the intersection of the reference line and arrow line indicate?",
+        "options": [
+            "Field Weld (The weld must be made on site / field, not in the fabrication workshop)",
+            "The weld requires immediate fire extinguisher stand-by",
+            "The weld is rejected by quality control",
+            "The weld must be painted with country national flag colors"
+        ],
+        "correct": 0,
+        "hint": "Simbol bendera kecil menandakan pengelasan dikerjakan di lokasi proyek luar (site/lapangan).",
+        "explanation": "Simbol bendera hitam pada garis referensi gambar teknik menunjukkan \"Field Weld\" (Las Lapangan), artinya komponen dirakit dan dilas di lokasi konstruksi site, bukan di dalam bengkel fabrikasi."
+    },
+    {
+        "id": 43,
+        "category": "Workshop English",
+        "catColor": "bg-green-100 text-green-700",
+        "question": "On a welding symbol, a small circle (○) located at the junction where the arrow line meets the reference line signifies:",
+        "options": [
+            "Weld All Around (The joint must be welded completely around the entire perimeter of the connection)",
+            "Drill a round hole before welding",
+            "Use a circular non-consumable electrode",
+            "Circular weld pool inspection required"
+        ],
+        "correct": 0,
+        "hint": "Lingkaran pada sambungan garis panah berarti las keliling di sepanjang keliling bidang tumpang.",
+        "explanation": "Simbol lingkaran kecil (Weld-All-Around) memerintahkan juru las untuk mengelas penuh mengelilingi seluruh kontur sambungan komponen secara tertutup."
+    },
+    {
+        "id": 44,
+        "category": "Workshop English",
+        "catColor": "bg-green-100 text-green-700",
+        "question": "What is the meaning of the workshop instruction: \"Preheat the base metal to 150°C and check with a temperature-indicating crayon (Tempilstik)\"?",
+        "options": [
+            "Panaskan logam dasar hingga 150°C dan periksa suhunya menggunakan kapur indikator suhu (Tempilstik)",
+            "Warnai logam dengan krayon merah agar tidak berkarat",
+            "Dinginkan logam hingga 150°C di dalam lemari es",
+            "Ukur ketebalan pelat menggunakan mistar krayon"
+        ],
+        "correct": 0,
+        "hint": "Tempilstik adalah kapur khusus yang meleleh tepat saat permukaan logam mencapai suhu leleh kimianya.",
+        "explanation": "Tempilstik (temperature-indicating crayon) adalah kapur pengukur suhu permukaan praktis; coretan kapur akan mencair secara visual saat temperatur baja mencapai nilai derajat yang tertera pada kemasan kapur."
+    },
+    {
+        "id": 45,
+        "category": "Workshop English",
+        "catColor": "bg-green-100 text-green-700",
+        "question": "What is the correct English term for the specialized precision measuring tool used to measure fillet weld leg length and reinforcement height?",
+        "options": [
+            "Welding Gauge (Bridge Cam Gauge / Fillet Gauge)",
+            "Micrometer Outside",
+            "Spirit Level",
+            "Measuring Tape"
+        ],
+        "correct": 0,
+        "hint": "Alat ukur baja stainless dengan skala pengukur tebal leher (throat) dan tinggi penembusan/reinforcement.",
+        "explanation": "Welding gauge (seperti Bridge Cam Gauge atau Fillet Weld Gauge) dirancang khusus untuk mengukur tinggi reinforcement, ukuran kaki fillet (leg size), kedalaman undercut, dan sudut bevel secara presisi."
+    },
+    {
+        "id": 46,
+        "category": "Workshop English",
+        "catColor": "bg-green-100 text-green-700",
+        "question": "What does the blueprint drawing dimension note \"6 - 50 / 100\" beside a fillet weld symbol mean?",
+        "options": [
+            "Fillet weld with 6 mm size, 50 mm weld bead length, and 100 mm center-to-center pitch distance (intermittent weld)",
+            "6 welds with 50 amperes and 100 volts",
+            "6 mm diameter pipe with 50 kg weight",
+            "Plate thickness 6 mm with 50 bevel angle"
+        ],
+        "correct": 0,
+        "hint": "Ini adalah dimensi pengelasan selang-seling (intermittent fillet weld): Ukuran las - Panjang las / Jarak titik pusat antar las (Pitch).",
+        "explanation": "Notasi tersebut menunjukkan las sudut intermittent (berselang): ukuran kaki las 6 mm, panjang tiap manik las 50 mm, dan jarak antar pusat segmen las (pitch) adalah 100 mm."
+    },
+    {
+        "id": 47,
+        "category": "Workshop English",
+        "catColor": "bg-green-100 text-green-700",
+        "question": "What is the Indonesian meaning of the blueprint abbreviation \"N.D.T. REQ'D: 100% R.T.\"?",
+        "options": [
+            "Wajib Uji Tak Rusak: 100% Pemeriksaan Radiografi (Radiographic Testing / X-ray)",
+            "Tidak perlu pemeriksaan sama sekali",
+            "Wajib uji tarik di laboratorium 100 kali",
+            "Pengecatan tahan karat 100 lapis"
+        ],
+        "correct": 0,
+        "hint": "N.D.T = Non-Destructive Testing, R.T = Radiographic Testing (pemeriksaan foto rontgen sinar-X / gamma).",
+        "explanation": "Catatan tersebut menginstruksikan bahwa seluruh panjang sambungan las (100%) wajib diinspeksi secara internal menggunakan metode Uji Tak Rusak Radiografi (Radiographic X-Ray Film)."
+    },
+    {
+        "id": 48,
+        "category": "Workshop English",
+        "catColor": "bg-green-100 text-green-700",
+        "question": "Which tool is used to hold and clamp two pipe ends in perfect concentric alignment before tack welding?",
+        "options": [
+            "Pipe Alignment Clamp (External / Internal Line-up Clamp)",
+            "Bench Vise",
+            "Pipe Wrench",
+            "Hydraulic Jack"
+        ],
+        "correct": 0,
+        "hint": "Klem berbentuk sangkar melingkar yang mengikat kedua ujung pipa agar lurus sejajar (fit-up aligned).",
+        "explanation": "Pipe alignment clamp (klem penjepit pipa) digunakan untuk menyelaraskan kedua ujung pipa, memastikan keseragaman celah akar (root gap) dan mencegah ketidaksejajaran internal (hi-lo misalignment)."
+    },
+    {
+        "id": 49,
+        "category": "Workshop English",
+        "catColor": "bg-green-100 text-green-700",
+        "question": "Translate the following workshop command: \"Ensure the travel speed is consistent to avoid excessive heat input and warping of the plate.\"",
+        "options": [
+            "Pastikan kecepatan jalan pengelasan konstan agar tidak terjadi masukan panas berlebih dan distorsi pelat melengkung",
+            "Jalankan mesin secepat mungkin agar pelat tidak meleleh",
+            "Ukur jarak perjalanan kendaraan pengangkut pelat",
+            "Panaskan pelat hingga melengkung sebelum dilas"
+        ],
+        "correct": 0,
+        "hint": "\"Travel speed\" = kecepatan gerak ayunan las, \"warping\" = distorsi melengkung/deformasi.",
+        "explanation": "Instruksi tersebut mengingatkan welder agar menjaga kecepatan tangan tetap stabil demi mengontrol heat input dan mencegah pelat baja melengkung akibat pemuaian panas yang tidak merata."
+    },
+    {
+        "id": 50,
+        "category": "Workshop English",
+        "catColor": "bg-green-100 text-green-700",
+        "question": "What is the correct English term for \"kawat las tahan karat (stainless steel)\" used for welding AISI 304 material?",
+        "options": [
+            "Stainless Steel Filler Wire / Electrode (AWS ER308L / E308L)",
+            "Mild Steel Electrode (E6013)",
+            "Hardfacing Rod",
+            "Cast Iron Rod"
+        ],
+        "correct": 0,
+        "hint": "Material stainless steel seri 304 memerlukan bahan tambah las seri 308 dengan kadar karbon rendah (L).",
+        "explanation": "Untuk mengelas baja tahan karat AISI 304, filler metal standar internasional yang digunakan adalah ER308L (TIG/MIG) atau E308L (SMAW), di mana \"L\" menandakan Extra Low Carbon pencegah presipitasi karbida."
+    },
+    {
+        "id": 51,
+        "category": "Workshop English",
+        "catColor": "bg-green-100 text-green-700",
+        "question": "What does the term \"Feathering the tack welds\" mean in international piping workshop practice?",
+        "options": [
+            "Grinding the start and stop ends of each tack weld into a thin taper slope so the root pass blends smoothly",
+            "Attaching bird feathers to the welding gun",
+            "Cooling the tack welds with compressed air",
+            "Painting tack welds with yellow primer"
+        ],
+        "correct": 0,
+        "hint": "Meniruskan/melandaikan ujung las ikat dengan batu gerinda tipis.",
+        "explanation": "Feathering tack welds adalah teknik menggerinda kedua ujung las ikat sementara menjadi tirus miring seperti bulu agar kawat las lapisan pertama dapat menyatu tembus tanpa membentuk lubang atau ketebalan ganda."
+    },
+    {
+        "id": 52,
+        "category": "Workshop English",
+        "catColor": "bg-green-100 text-green-700",
+        "question": "What is the English name for the consumable copper tube inside a GMAW (MIG) gun nozzle that transfers electrical current to the moving wire?",
+        "options": [
+            "Contact Tip",
+            "Diffuser Nozzle",
+            "Insulator Sleeve",
+            "Liner Conduit"
+        ],
+        "correct": 0,
+        "hint": "Ujung tabung tembaga berlubang presisi tempat keluarnya kawat las di dalam nozzle stang MIG.",
+        "explanation": "Contact Tip adalah komponen tembaga habis pakai pada ujung torch GMAW yang berfungsi mentransmisikan arus listrik las langsung ke kawat las saat kawat didorong keluar feeder."
+    },
+    {
+        "id": 53,
+        "category": "Workshop English",
+        "catColor": "bg-green-100 text-green-700",
+        "question": "Translate to Indonesian: \"Purge the oxygen from the stainless steel pipe line until the oxygen analyzer reads below 50 ppm.\"",
+        "options": [
+            "Kuras oksigen dari dalam pipa stainless steel dengan gas pelindung hingga alat ukur oksigen menunjukkan di bawah 50 ppm",
+            "Isi pipa dengan oksigen bertekanan 50 bar",
+            "Bakar bagian dalam pipa hingga kadar gas mencapai 50 ppm",
+            "Cuci pipa menggunakan air sabun 50 liter"
+        ],
+        "correct": 0,
+        "hint": "\"Purge\" = menguras/mengusir gas pengotor, \"ppm\" = parts per million (kadar kemurnian).",
+        "explanation": "Instruksi pembersihan gas (purging) untuk pipa stainless steel kritis mensyaratkan kadar oksigen sisa di dalam rongga pipa di bawah 50 ppm agar penetrasi akar las tidak mengalami oksidasi korosi."
+    },
+    {
+        "id": 54,
+        "category": "Workshop English",
+        "catColor": "bg-green-100 text-green-700",
+        "question": "What is the meaning of the safety sign: \"DANGER: HIGH VOLTAGE - LOCKOUT BEFORE SERVICING\"?",
+        "options": [
+            "BAHAYA: TEGANGAN TINGGI - GEMBOK PENGAMAN SAKELAR SEBELUM MELAKUKAN PERBAIKAN",
+            "Hati-hati lantai licin dekat mesin las",
+            "Dilarang membawa kunci gembok ke workshop",
+            "Peringatan suara bising tinggi"
+        ],
+        "correct": 0,
+        "hint": "Prosedur LOTO (Lockout / Tagout) mematikan dan menggembok sumber energi listrik utama sebelum teknisi memperbaiki mesin.",
+        "explanation": "Tanda keselamatan tersebut mewajibkan prosedur Lockout/Tagout (LOTO) yaitu memutus aliran listrik panel dan memasang gembok pengaman fisik sebelum melakukan servis pada peralatan bertegangan tinggi."
+    },
+    {
+        "id": 55,
+        "category": "Workshop English",
+        "catColor": "bg-green-100 text-green-700",
+        "question": "What is the English term for \"lapisan penutup paling atas pada manik las pengelasan alur\"?",
+        "options": [
+            "Capping Pass (Cover Pass / Cap Pass)",
+            "Root Pass",
+            "Hot Pass",
+            "Tack Pass"
+        ],
+        "correct": 0,
+        "hint": "Lapisan mahkota paling akhir yang menutup permukaan sambungan las.",
+        "explanation": "Capping pass (atau cover pass) adalah lapisan las penutup paling akhir yang tampak di permukaan, berfungsi melengkapi ketebalan pengisian dan memberikan penguatan (reinforcement) yang rapi seragam."
+    },
+    {
+        "id": 56,
+        "category": "Workshop English",
+        "catColor": "bg-green-100 text-green-700",
+        "question": "What does the term \"Root Face\" (Land) represent on a V-groove weld joint preparation?",
+        "options": [
+            "The flat, un-beveled vertical portion of the groove edge at the root of the joint",
+            "The outer surface face of the plate",
+            "The width of the weld cap",
+            "The angle of the grinding disc"
+        ],
+        "correct": 0,
+        "hint": "Bagian bidang vertikal datar tegak (tanpa miring) di ujung paling bawah bibir alur pelat (biasanya setebal 1,5 - 2 mm).",
+        "explanation": "Root face (land) adalah bagian datar vertikal pada ujung bawah kampuh las yang berfungsi menahan busur api agar tidak langsung tembus jebol saat juru las melakukan root pass."
+    },
+    {
+        "id": 57,
+        "category": "Workshop English",
+        "catColor": "bg-green-100 text-green-700",
+        "question": "What is the correct English term for \"alat pembersih sikat kawat baja\" used to remove light surface rust and slag?",
+        "options": [
+            "Wire Brush",
+            "Paint Roller",
+            "Flap Disc",
+            "File Rasp"
+        ],
+        "correct": 0,
+        "hint": "Sikat bergagang kayu atau besi dengan bulu kawat baja karbon atau stainless steel.",
+        "explanation": "Wire brush (sikat kawat) adalah perkakas manual esensial untuk membersihkan sisa terak halus, karat tipis, dan kotoran debu sebelum dan sesudah setiap lintasan pengelasan."
+    },
+    {
+        "id": 58,
+        "category": "Workshop English",
+        "catColor": "bg-green-100 text-green-700",
+        "question": "Translate the instruction: \"Keep the welding cables straight and uncoiled during high-amperage welding to prevent inductance overheating.\"",
+        "options": [
+            "Luruskan kabel las dan jangan dibiarkan tergulung saat mengelas amper tinggi agar kabel tidak panas akibat induksi listrik",
+            "Gulung kabel las sekencang mungkin di tiang besi",
+            "Tarik kabel las hingga putus saat mengelas",
+            "Ikat kabel las bersama selang gas oksigen"
+        ],
+        "correct": 0,
+        "hint": "Kabel las beraliran arus besar yang digulung melingkar akan bekerja seperti kumparan trafo induksi penghasil panas berlebih.",
+        "explanation": "Menguraikan gulungan kabel las mencegah efek induktansi elektromagnetik yang dapat menyebabkan insulasi kabel meleleh dan menurunkan efisiensi voltase pada ujung stang las."
+    },
+    {
+        "id": 59,
+        "category": "Workshop English",
+        "catColor": "bg-green-100 text-green-700",
+        "question": "What is the English term for \"kacamata pelindung mata dari geram gerinda dan debu bengkel\"?",
+        "options": [
+            "Safety Glasses / Clear Impact Goggles",
+            "Welding Mask Shade #12",
+            "Sunglasses",
+            "Magnifying Glass"
+        ],
+        "correct": 0,
+        "hint": "Kacamata polikarbonat bening tahan benturan serpihan gram besi gerinda.",
+        "explanation": "Safety glasses / clear goggles adalah APD pelindung mata standar berlabel ANSI Z87.1 untuk melindungi mata dari percikan serpihan gram logam panas saat menggerinda atau membersihkan terak."
+    },
+    {
+        "id": 60,
+        "category": "Workshop English",
+        "catColor": "bg-green-100 text-green-700",
+        "question": "What does the term \"Crater\" mean at the end of a completed weld bead?",
+        "options": [
+            "The depression or cavity left at the termination point of a weld bead where the arc was extinguished",
+            "A hole drilled intentionally through the base metal",
+            "The spark produced during grinding",
+            "The gas cylinder pressure valve"
+        ],
+        "correct": 0,
+        "hint": "Cekungan kubangan di titik ujung akhir manik las tempat busur listrik dimatikan.",
+        "explanation": "Crater adalah cekungan di ujung akhir jalur las akibat penyusutan cairan saat busur api diputus tiba-tiba. Juru las wajib mengisi penuh kawah kawah (crater filling) agar tidak timbul retak bintang (crater crack)."
+    },
+    {
+        "id": 61,
+        "category": "Workshop English",
+        "catColor": "bg-green-100 text-green-700",
+        "question": "What does \"Weaving\" technique mean in technical welding vocabulary?",
+        "options": [
+            "Moving the electrode with a side-to-side oscillating pattern across the joint to deposit a wider weld bead",
+            "Sewing leather protective jackets",
+            "Rolling welding wire onto a spool",
+            "Mixing shielding gases manually"
+        ],
+        "correct": 0,
+        "hint": "Gerakan mengayunkan elektroda ke kiri dan ke kanan (zig-zag / bulan sabit) untuk menghasilkan manik las yang lebar.",
+        "explanation": "Weaving (teknik ayunan) adalah gerakan osilasi transversal elektroda melintasi celah kampuh untuk mengontrol masukan panas dan membentuk manik las penutup yang rata dan lebar pada posisi vertikal atau horizontal."
+    },
+    {
+        "id": 62,
+        "category": "Workshop English",
+        "catColor": "bg-green-100 text-green-700",
+        "question": "What is the meaning of \"Stringer Bead\" compared to a Weave Bead?",
+        "options": [
+            "A straight, narrow weld bead made with little or no side-to-side electrode oscillation",
+            "A weld bead tied with nylon strings",
+            "A weld made without electrical current",
+            "A circular pipe weld made underwater"
+        ],
+        "correct": 0,
+        "hint": "Manik las lurus tanpa ayunan menyamping, meminimalkan masukan panas pada baja paduan.",
+        "explanation": "Stringer bead adalah teknik penarikan elektroda secara lurus searah tanpa ayunan menyamping, sangat dianjurkan untuk stainless steel demi menjaga masukan panas (heat input) serendah mungkin."
+    },
+    {
+        "id": 63,
+        "category": "Workshop English",
+        "catColor": "bg-green-100 text-green-700",
+        "question": "What is the correct English term for \"alat penyedot asap beracun dan debu pengelasan\"?",
+        "options": [
+            "Fume Extraction System / Fume Extractor",
+            "Pneumatic Drill",
+            "Air Conditioner Compressor",
+            "Dust Collector Blower"
+        ],
+        "correct": 0,
+        "hint": "Sistem pipa belalai hisap yang menyedot partikel asap las berbahaya langsung dari sumbernya.",
+        "explanation": "Fume extractor adalah perangkat ventilasi hisap lokal (Local Exhaust Ventilation) dengan filter HEPA khusus untuk menangkap partikel gas beracun dan uap logam las sebelum terhirup pernapasan juru las."
+    },
+    {
+        "id": 64,
+        "category": "Workshop English",
+        "catColor": "bg-green-100 text-green-700",
+        "question": "Translate: \"Verify the bevel angle is precisely 37.5 degrees with a protractor before assembling the pipe joints.\"",
+        "options": [
+            "Periksa sudut kemiringan kampuh bevel tepat 37,5 derajat dengan busur derajat sebelum menyambung pipa",
+            "Potong pipa sepanjang 37,5 meter menggunakan gergaji",
+            "Panaskan pipa hingga 37,5 derajat Celcius",
+            "Isi pipa dengan 37,5 liter air bertekanan"
+        ],
+        "correct": 0,
+        "hint": "37,5° adalah sudut bevel standar pipa API untuk menghasilkan sudut total kampuh V sebesar 75° saat disatukan.",
+        "explanation": "Instruksi inspeksi persiapan sambungan untuk memastikan sudut bevel masing-masing pipa tepat 37,5° (sudut total kampuh V 75°) dengan alat ukur protractor agar penetrasi akar las presisi sesuai WPS."
+    },
+    {
+        "id": 65,
+        "category": "Workshop English",
+        "catColor": "bg-green-100 text-green-700",
+        "question": "What is the term for \"selisih perbedaan tinggi dinding bagian dalam antara dua pipa yang disambung\"?",
+        "options": [
+            "Hi-Lo (Internal Misalignment)",
+            "Bevel Slope",
+            "Root Gap Offset",
+            "Crown Elevation"
+        ],
+        "correct": 0,
+        "hint": "Dikenal dengan istilah \"Hi-Lo\" (tinggi-rendah) ketidaksejajaran diameter dalam dinding pipa.",
+        "explanation": "Hi-Lo (internal misalignment) adalah ketidakrataan bidang dalam antara dua ujung pipa yang disambung; toleransi maksimum biasanya dibatasi di bawah 1,5 mm agar tidak menghambat aliran fluida dan tidak memicu lack of penetration."
+    },
+    {
+        "id": 66,
+        "category": "K3 Safety Standards",
+        "catColor": "bg-amber-100 text-amber-700",
+        "question": "Tingkat kegelapan kaca filter (Shade Number) berapakah yang direkomendasikan standar ANSI Z87.1 untuk proses SMAW dengan arus kerja 100 – 150 Ampere?",
+        "options": [
+            "Shade #5 - #6",
+            "Shade #8",
+            "Shade #10",
+            "Shade #14"
+        ],
+        "correct": 2,
+        "hint": "Shade 5 untuk pemotongan oksi-asetilen, shade 8 untuk arus rendah < 75A, dan shade 10 adalah standar umum 100-150A.",
+        "explanation": "Standar ANSI / OSHA menetapkan filter shade #10 untuk pengelasan busur listrik elektroda terbungkus (SMAW) pada rentang arus 75 hingga 150 Ampere guna melindungi retina dari sinar ultraviolet dan inframerah."
+    },
+    {
+        "id": 67,
+        "category": "K3 Safety Standards",
+        "catColor": "bg-amber-100 text-amber-700",
+        "question": "Manakah tindakan keselamatan yang BENAR saat memindahkan dan menyimpan tabung gas bertekanan tinggi (Argon, CO2, Oksigen) di area workshop?",
+        "options": [
+            "Menggelindingkan tabung secara horizontal di atas lantai agar lebih cepat dipindahkan",
+            "Menyimpan tabung dalam posisi berdiri tegak dan diikat/dirantai kuat pada rak atau dinding pengaman",
+            "Membuka tutup pelindung katup (safety valve cap) saat tabung diangkat dengan forklift",
+            "Menempatkan tabung gas berdampingan tepat di sebelah sumber percikan api las agar selang tidak terlalu panjang"
+        ],
+        "correct": 1,
+        "hint": "Tabung bertekanan tidak boleh roboh atau terkena benturan katupnya karena dapat melesat seperti roket.",
+        "explanation": "Tabung gas bertekanan wajib disimpan dalam posisi tegak vertikal, diikat rantai pengaman, tutup pelindung terpasang saat tidak digunakan, dan dijauhkan minimal 6 meter dari sumber panas atau percikan api terbuka."
+    },
+    {
+        "id": 68,
+        "category": "K3 Safety Standards",
+        "catColor": "bg-amber-100 text-amber-700",
+        "question": "Kondisi iritasi mata akibat paparan langsung radiasi sinar ultraviolet (UV) busur las tanpa kacamata pelindung disebut secara medis:",
+        "options": [
+            "Astigmatisme Akut",
+            "Photokeratitis / Arc Eye (Flash Burn)",
+            "Katarak Traumatik",
+            "Presbiopia"
+        ],
+        "correct": 1,
+        "hint": "Dikenal di kalangan welder dengan istilah \"Welder's Flash\" atau rasa berpasir terbakar pada kornea mata.",
+        "explanation": "Arc Eye atau Welder's Flash (Photokeratitis) adalah luka bakar radiasi UV pada kornea mata. Gejalanya mata merah, berair, sangat perih dan terasa seperti ada pasir di mata beberapa jam setelah terpapar."
+    },
+    {
+        "id": 69,
+        "category": "K3 Safety Standards",
+        "catColor": "bg-amber-100 text-amber-700",
+        "question": "When welding inside a \"Confined Space\" (tangki tertutup, ruang sempit kapal), what critical safety measure is mandatory?",
+        "options": [
+            "Use only 100% pure oxygen ventilation to keep workers alert",
+            "Continuous atmospheric gas testing, proper exhaust ventilation, and a designated standby safety observer outside",
+            "Working alone in silence to avoid disturbing other personnel",
+            "Switching off all lighting to prevent short circuits"
+        ],
+        "correct": 1,
+        "hint": "Ruang terbatas rentan penumpukan gas beracun dan kekurangan oksigen, sehingga perlu pemantauan udara dan pengawas di pintu masuk.",
+        "explanation": "Pekerjaan di confined space mewajibkan tes udara berkala (kadar O2, LEL, H2S/CO), ventilasi blower keluar masuk udara, izin kerja ruang terbatas, dan petugas standby (safety watcher) di luar."
+    },
+    {
+        "id": 70,
+        "category": "K3 Safety Standards",
+        "catColor": "bg-amber-100 text-amber-700",
+        "question": "Bahan APD sarung tangan dan apron juru las yang paling aman terhadap percikan logam cair dan konduksi panas adalah terbuat dari:",
+        "options": [
+            "Kulit split sapi asli tahan panas (Heavy Duty Split Cowhide Leather)",
+            "Kain nilon sintetis elastis",
+            "Karet sintetis PVC tahan air",
+            "Kain poliester rajut tebal"
+        ],
+        "correct": 0,
+        "hint": "Bahan sintetis (nilon/poliester) akan meleleh saat terkena percikan panas dan menempel pada kulit, sehingga bahan alami kulit hewan adalah standar utama.",
+        "explanation": "Bahan kulit asli (cowhide leather) tidak mudah meleleh atau terbakar, memberikan isolasi termal yang baik dan melindungi kulit tangan dari tetesan terak serta spatter bersuhu tinggi."
+    },
+    {
+        "id": 71,
+        "category": "K3 Safety Standards",
+        "catColor": "bg-amber-100 text-amber-700",
+        "question": "Berapakah batas aman kadar Oksigen (O2) di udara dalam ruang kerja terbatas (Confined Space) menurut standar K3 internasional?",
+        "options": [
+            "19,5% hingga 23,5%",
+            "10% hingga 15%",
+            "30% hingga 50%",
+            "Tepat 100%"
+        ],
+        "correct": 0,
+        "hint": "Di bawah 19,5% terjadi bahaya asfiksia lemas kekurangan oksigen, di atas 23,5% udara menjadi sangat mudah terbakar/meledak.",
+        "explanation": "Standar OSHA menetapkan rentang aman kadar oksigen pernapasan di ruang terbatas adalah antara 19,5% (batas minimum pencegah sesak napas) dan 23,5% (batas maksimum pencegah pengayaan oksigen eksplosif)."
+    },
+    {
+        "id": 72,
+        "category": "K3 Safety Standards",
+        "catColor": "bg-amber-100 text-amber-700",
+        "question": "Mengapa tabung gas Asetilen (Acetylene) TIDAK BOLEH digunakan pada tekanan kerja regulator melebihi 15 psi (1 bar)?",
+        "options": [
+            "Gas asetilen menjadi sangat tidak stabil dan dapat meledak secara spontan akibat dekomposisi pada tekanan di atas 15 psi",
+            "Membuat api las menjadi terlalu dingin",
+            "Dapat membekukan selang karet",
+            "Menyebabkan regulator mengeluarkan cairan minyak"
+        ],
+        "correct": 0,
+        "hint": "Asetilen murni bertekanan bebas di atas 15 psi rentan mengalami reaksi eksotermik pelepasan atom yang memicu ledakan tanpa perlu pemicu api luar.",
+        "explanation": "Asetilen (C2H2) pada tekanan bebas di atas 15 psi (103 kPa) sangat tidak stabil secara kimiawi dan dapat mengalami dekomposisi eksplosif hebat; di dalam tabung, asetilen dilarutkan dalam cairan aseton berpori agar aman."
+    },
+    {
+        "id": 73,
+        "category": "K3 Safety Standards",
+        "catColor": "bg-amber-100 text-amber-700",
+        "question": "Alat keselamatan yang dipasang pada selang atau regulator las gas Oksi-Asetilen untuk mencegah api merambat balik ke dalam tabung disebut:",
+        "options": [
+            "Flashback Arrestor",
+            "Pressure Relief Valve",
+            "Needle Valve",
+            "Manometer Gauge"
+        ],
+        "correct": 0,
+        "hint": "Alat penahan api balik dengan saringan logam berpori (flame arrestor filter) dan katup satu arah (check valve).",
+        "explanation": "Flashback Arrestor adalah katup pengaman mutlak pada sistem gas oksi-asetilen yang mematikan dan memblokir rambatan lidah api balik (flashback) agar tidak meledakkan selang dan tabung gas."
+    },
+    {
+        "id": 74,
+        "category": "K3 Safety Standards",
+        "catColor": "bg-amber-100 text-amber-700",
+        "question": "Jenis alat pemadam api ringan (APAR) yang paling tepat untuk memadamkan kebakaran akibat korsleting peralatan listrik las adalah:",
+        "options": [
+            "APAR Karbon Dioksida (CO2) atau Dry Chemical Powder",
+            "Air bertekanan tinggi",
+            "Busa sabun cair (Foam water)",
+            "Kain basah berlumpur"
+        ],
+        "correct": 0,
+        "hint": "Kebakaran kelas C (kelistrikan) tidak boleh disiram air karena air menghantarkan listrik dan memicu sengatan maut.",
+        "explanation": "Kebakaran instalasi listrik (Kelas C) wajib dipadamkan dengan APAR CO2 atau bubuk kimia kering (Dry Chemical) yang bersifat non-konduktif dan tidak merusak komponen elektronik mesin las."
+    },
+    {
+        "id": 75,
+        "category": "K3 Safety Standards",
+        "catColor": "bg-amber-100 text-amber-700",
+        "question": "Berapa jarak radius minimum pembersihan bahan-bahan yang mudah terbakar (kayu, bensin, kertas) di sekitar area pengelasan panas (Hot Work)?",
+        "options": [
+            "Minimal 35 kaki (10,7 meter) / 11 meter",
+            "1 meter",
+            "50 sentimeter",
+            "Tidak perlu dibersihkan"
+        ],
+        "correct": 0,
+        "hint": "Standar NFPA 51B menetapkan radius \"35-Foot Rule\" untuk area bebas bahan mudah terbakar.",
+        "explanation": "Standar keselamatan kebakaran internasional (NFPA 51B) menetapkan aturan jarak 35 kaki (sekitar 11 meter) bebas dari semua material yang mudah terbakar di sekeliling titik pengelasan atau wajib ditutup selimut api (fire blanket)."
+    },
+    {
+        "id": 76,
+        "category": "K3 Safety Standards",
+        "catColor": "bg-amber-100 text-amber-700",
+        "question": "Berapa lama petugas pengawas api (Fire Watcher) wajib tetap berada di lokasi kerja setelah pengelasan selesai untuk memantau sisa bara api?",
+        "options": [
+            "Minimal 30 menit setelah pekerjaan las selesai",
+            "1 menit saja",
+            "Hanya sampai juru las mematikan mesin",
+            "Langsung pulang bersama pekerja lain"
+        ],
+        "correct": 0,
+        "hint": "Bara api terak spatter dapat membakar material tersembunyi secara lambat (smoldering fire) hingga puluhan menit setelah ditinggalkan.",
+        "explanation": "Standar OSHA mewajibkan Fire Watcher standby melakukan pengawasan di lokasi minimal 30 hingga 60 menit setelah operasi Hot Work selesai guna memastikan tidak timbul bara api sekunder yang tersembunyi."
+    },
+    {
+        "id": 77,
+        "category": "K3 Safety Standards",
+        "catColor": "bg-amber-100 text-amber-700",
+        "question": "Bahaya paparan asap logam berat beracun \"Hexavalent Chromium\" (Cr VI) paling berisiko terjadi saat juru las mengelas material:",
+        "options": [
+            "Baja Tahan Karat (Stainless Steel) dan Paduan Nikel-Krom",
+            "Baja Karbon Rendah",
+            "Kayu Tripleks",
+            "Tembaga Murni"
+        ],
+        "correct": 0,
+        "hint": "Stainless steel mengandung kromium 18% yang pada suhu busur las teroksidasi menjadi senyawa karsinogenik Kromium Heksavalen.",
+        "explanation": "Asap pengelasan stainless steel menghasilkan uap karsinogenik Hexavalent Chromium [Cr(VI)] yang berbahaya bagi paru-paru, sehingga wajib menggunakan masker respirator cartridge P100 atau PAPR."
+    },
+    {
+        "id": 78,
+        "category": "K3 Safety Standards",
+        "catColor": "bg-amber-100 text-amber-700",
+        "question": "Mengapa juru las dilarang keras memakai pakaian berbahan serat sintetis (seperti poliester, nilon, atau akrilik) saat bekerja?",
+        "options": [
+            "Kain sintetis sangat mudah meleleh saat terkena percikan spatter panas dan menempel erat membakar kulit daging",
+            "Kain sintetis terlalu berat dipakai",
+            "Kain sintetis memantulkan sinar X-ray",
+            "Kain sintetis membuat elektroda cepat habis"
+        ],
+        "correct": 0,
+        "hint": "Kain sintetis adalah turunan plastik yang akan mencair melekat pada luka bakar saat terkena percikan api.",
+        "explanation": "Kain poliester dan nilon akan meleleh seketika saat terkena butiran spatter 1500°C, menempel pada pori-pori kulit dan menimbulkan luka bakar derajat tiga yang parah. Juru las wajib memakai katun 100% tebal (jeans/denim) atau kulit."
+    },
+    {
+        "id": 79,
+        "category": "K3 Safety Standards",
+        "catColor": "bg-amber-100 text-amber-700",
+        "question": "Metode yang aman dan benar untuk mendeteksi kebocoran gas pada sambungan selang regulator oksi-asetilen adalah:",
+        "options": [
+            "Mengoleskan larutan air sabun atau cairan pendeteksi kebocoran non-minyak pada sambungan",
+            "Menyulutkan korek api gas di sekitar selang",
+            "Mendengarkan dengan telinga sedekat mungkin tanpa kacamata",
+            "Mencium bau gas langsung dengan hidung menempel di tabung"
+        ],
+        "correct": 0,
+        "hint": "Busa sabun akan menggelembung jika terdapat kebocoran gas bertekanan tanpa risiko pemicu api.",
+        "explanation": "Pemeriksaan kebocoran gas wajib menggunakan larutan busa air sabun bebas minyak (leak test solution) yang akan berbusa di titik kebocoran. Dilarang keras menggunakan nyala api terbuka atau minyak/gemuk pada tabung oksigen."
+    },
+    {
+        "id": 80,
+        "category": "K3 Safety Standards",
+        "catColor": "bg-amber-100 text-amber-700",
+        "question": "Tegangan tanpa beban (Open Circuit Voltage / OCV) pada mesin las stik SMAW yang berkisar 60 - 80 Volt berbahaya karena:",
+        "options": [
+            "Dapat menimbulkan sengatan listrik fatal (electrocution) jika juru las menyentuh elektroda dalam kondisi tubuh berkeringat atau basah",
+            "Dapat membuat kawat las meledak seketika",
+            "Membuat kabel mesin las terbakar dalam 1 detik",
+            "Menghilangkan radiasi sinar ultraviolet"
+        ],
+        "correct": 0,
+        "hint": "Keringat tubuh mengandung garam yang menjadi konduktor listrik kuat; tegangan 60V AC/DC cukup untuk menghentikan denyut jantung.",
+        "explanation": "OCV (tegangan saat mesin hidup tapi belum mengelas) sebesar 60-80V dapat mengalirkan arus listrik mematikan melalui tubuh manusia jika sarung tangan basah kuyup oleh keringat atau bekerja di tempat lembab tanpa isolasi."
+    },
+    {
+        "id": 81,
+        "category": "K3 Safety Standards",
+        "catColor": "bg-amber-100 text-amber-700",
+        "question": "Ujung ulir drat pada tabung gas bahan bakar yang mudah terbakar (seperti Asetilen dan LPG) dibuat dengan ulir kiri (Left-Hand Thread) dengan tujuan:",
+        "options": [
+            "Mencegah kesalahan pemasangan regulator gas oksigen atau gas inert yang berulir kanan ke tabung gas bahan bakar",
+            "Agar regulator lebih cepat dipasang teknisi kidal",
+            "Membuat tabung tidak bisa dibuka orang awam",
+            "Mengurangi tekanan gas di dalam tabung"
+        ],
+        "correct": 0,
+        "hint": "Ulir kiri (memutar berlawanan arah jarum jam untuk mengencangkan) memiliki tanda takik (notch) pada mur penghubungnya.",
+        "explanation": "Standar keselamatan membedakan drat tabung gas bahan bakar dengan ulir kiri (left-hand thread ber-notched nut) dan gas oksidator/inert dengan ulir kanan (right-hand thread) agar regulator tidak tertukar secara fatal."
+    },
+    {
+        "id": 82,
+        "category": "K3 Safety Standards",
+        "catColor": "bg-amber-100 text-amber-700",
+        "question": "Alat pelindung pendengaran (Earplugs atau Earmuffs) wajib digunakan di area workshop pengelasan apabila intensitas kebisingan telah mencapai:",
+        "options": [
+            "85 desibel (dBA) atau lebih dalam paparan 8 jam kerja",
+            "10 desibel",
+            "40 desibel",
+            "Hanya jika telinga terasa sakit"
+        ],
+        "correct": 0,
+        "hint": "Batas Nilai Ambang Batas (NAB) kebisingan di tempat kerja menurut regulasi K3 adalah 85 dBA.",
+        "explanation": "Paparan bising suara gerinda, pemotongan plasma, dan gouging yang melampaui 85 dBA secara kumulatif dapat merusak saraf pendengaran permanen (Noise-Induced Hearing Loss), sehingga pelindung telinga wajib dipakai."
+    },
+    {
+        "id": 83,
+        "category": "K3 Safety Standards",
+        "catColor": "bg-amber-100 text-amber-700",
+        "question": "Pertolongan pertama yang paling tepat saat tangan juru las terkena sengatan panas logam las (luka bakar termal derajat satu/dua) adalah:",
+        "options": [
+            "Mengalirkan air bersih bersuhu sejuk (bukan air es) pada luka bakar selama minimal 15–20 menit",
+            "Mengoleskan pasta gigi, mentega, atau kecap kental pada luka",
+            "Membalut luka kencang dengan kantong plastik sampah",
+            "Membiarkan luka terkena sinar matahari terik"
+        ],
+        "correct": 0,
+        "hint": "Air bersih sejuk mengalir menyerap sisa panas di lapisan kulit dan menghentikan kerusakan jaringan lebih dalam.",
+        "explanation": "Luka bakar termal wajib didinginkan di bawah air bersih mengalir bersuhu ruang selama 15-20 menit. Dilarang mengoleskan pasta gigi/mentega karena mengurung panas dan memicu infeksi bakteri."
+    },
+    {
+        "id": 84,
+        "category": "K3 Safety Standards",
+        "catColor": "bg-amber-100 text-amber-700",
+        "question": "Sepatu keselamatan (Safety Shoes) standar bengkel las wajib dilengkapi dengan fitur:",
+        "options": [
+            "Pelindung jari baja (Steel Toe Cap 200 Joule) dan sol tahan tusukan paku serta anti-licin tahan panas",
+            "Bahan kain jaring tanpa sol tebal",
+            "Tali sepatu dari kawat tembaga telanjang",
+            "Hak tinggi kayu untuk bergaya"
+        ],
+        "correct": 0,
+        "hint": "Melindungi kaki dari kejatuhan pelat baja berat dan tusukan sisa potongan kawat las tajam di lantai.",
+        "explanation": "Safety shoes juru las wajib memiliki pelindung baja pelindung jari (Steel Toe Cap), sol karet tahan minyak dan panas (oil & heat resistant), serta lapisan baja anti-tembus paku (puncture resistant midsole)."
+    },
+    {
+        "id": 85,
+        "category": "K3 Safety Standards",
+        "catColor": "bg-amber-100 text-amber-700",
+        "question": "Dokumen izin kerja resmi yang wajib diterbitkan dan ditandatangani oleh bagian Safety Officer sebelum memulai pekerjaan las di area kilang minyak berisiko tinggi disebut:",
+        "options": [
+            "Hot Work Permit (Izin Kerja Panas)",
+            "Surat Izin Mengemudi",
+            "Kuitansi Pembelian Gas",
+            "Kartu Tanda Penduduk"
+        ],
+        "correct": 0,
+        "hint": "Surat verifikasi bahwa area kerja telah diuji bebas gas eksplosif dan aman untuk menimbulkan percikan api.",
+        "explanation": "Hot Work Permit (Izin Kerja Panas) adalah dokumen kontrol K3 wajib di fasilitas industri untuk memastikan bahwa gas atmosfer telah diuji, APAR tersedia, dan risiko kebakaran telah dimitigasi sebelum menyalakan busur las."
+    },
+    {
+        "id": 86,
+        "category": "Regulasi & Logika",
+        "catColor": "bg-purple-100 text-purple-700",
+        "question": "Berdasarkan UU No. 18 Tahun 2017 tentang Pelindungan Pekerja Migran Indonesia, platform resmi satu pintu milik BP2MI untuk pendataan dan verifikasi dokumen calon PMI adalah:",
+        "options": [
+            "SIAPkerja Kemnaker",
+            "SISKOP2MI (Sistem Komputerisasi Pelayanan Penempatan dan Pelindungan PMI)",
+            "SIMDA Migran",
+            "Portal Paspor Ditjen Imigrasi"
+        ],
+        "correct": 1,
+        "hint": "Singkatan dari Sistem Komputerisasi Pelayanan Penempatan dan Pelindungan Pekerja Migran Indonesia.",
+        "explanation": "SISKOP2MI adalah basis data terpadu resmi BP2MI yang mencatat seluruh tahapan seleksi, verifikasi dokumen, perjanjian kerja, e-PMI, hingga kepulangan PMI guna menjamin penempatan secara prosedural dan terlindungi."
+    },
+    {
+        "id": 87,
+        "category": "Regulasi & Logika",
+        "catColor": "bg-purple-100 text-purple-700",
+        "question": "Tahapan wajib yang harus diikuti oleh calon Pekerja Migran Indonesia (PMI) setelah lulus medical check-up dan sebelum diberangkatkan ke negara tujuan penempatan adalah:",
+        "options": [
+            "Uji Kompetensi Ulang di Bandara Internasional",
+            "PAP (Pembekalan Akhir Pemberangkatan) / Orientasi Pra-Pemberangkatan",
+            "Wawancara Langsung di Kedutaan Besar Tanpa Dokumen",
+            "Pelatihan Bahasa Tambahan Mandiri Tanpa Pengawasan"
+        ],
+        "correct": 1,
+        "hint": "Program pembekalan resmi dari pemerintah mengenai regulasi, perlindungan hukum, dan hak-kewajiban sebelum terbang.",
+        "explanation": "PAP (Pembekalan Akhir Pemberangkatan) adalah orientasi pra-keberangkatan resmi yang diselenggarakan oleh BP3MI/BP2MI untuk memberikan pemahaman mengenai hak kewajiban, kebiasaan lokal negara tujuan, dan mitigasi masalah hukum."
+    },
+    {
+        "id": 88,
+        "category": "Regulasi & Logika",
+        "catColor": "bg-purple-100 text-purple-700",
+        "question": "Tes Logika Spasial: Sebuah pipa silinder dengan diameter 10 inci dipotong miring tepat bersudut 45 derajat. Bentuk penampang bidang potongan (cross-section surface) pipa tersebut adalah:",
+        "options": [
+            "Lingkaran sempurna (Perfect Circle)",
+            "Elips / Lonjong (Ellipse)",
+            "Segitiga siku-siku (Right Triangle)",
+            "Persegi panjang (Rectangle)"
+        ],
+        "correct": 1,
+        "hint": "Jika dipotong tegak lurus 90° menghasilkan lingkaran; jika dipotong miring miring menghasilkan bentuk oval/lonjong beraturan.",
+        "explanation": "Irisan kerucut atau silinder lingkaran yang dipotong miring oleh bidang datar membentuk bangun geometri Elips (lonjong beraturan)."
+    },
+    {
+        "id": 89,
+        "category": "Regulasi & Logika",
+        "catColor": "bg-purple-100 text-purple-700",
+        "question": "Manakah kombinasi dokumen mutlak yang wajib dipegang oleh Pekerja Migran Indonesia saat bekerja di luar negeri secara resmi (prosedural)?",
+        "options": [
+            "Hanya KTP dan Paspor Turis (Visa Kunjungan)",
+            "Paspor, Visa Kerja Resmi, Perjanjian Kerja (PK), dan Terdaftar di SISKOP2MI/e-PMI",
+            "Surat Rekomendasi dari Kepala Desa dan Tiket Pesawat Pulang-Pergi",
+            "Sertifikat Pelatihan Kursus Singkat tanpa Visa Kerja"
+        ],
+        "correct": 1,
+        "hint": "PMI wajib berangkat dengan visa kerja (bukan turis), perjanjian kerja resmi yang ditandatangani, dan perlindungan e-PMI.",
+        "explanation": "Bekerja ke luar negeri secara prosedural mewajibkan visa kerja legal (bukan visa wisata/ziarah), kontrak Perjanjian Kerja berkekuatan hukum, kepemilikan e-PMI BP2MI, serta jaminan BPJS Ketenagakerjaan Migran."
+    },
+    {
+        "id": 90,
+        "category": "Regulasi & Logika",
+        "catColor": "bg-purple-100 text-purple-700",
+        "question": "Ciri-ciri utama tawaran kerja luar negeri yang patut dicurigai sebagai sindikat penipuan / Tindak Pidana Perdagangan Orang (TPPO) adalah:",
+        "options": [
+            "Menggunakan visa kunjungan/turis, proses keberangkatan kilat tanpa pelatihan, dan tidak terdata di SISKOP2MI BP2MI",
+            "Diwajibkan mengikuti pelatihan bahasa 640 JPL di BLK resmi",
+            "Dilakukan verifikasi berkas di kantor BP3MI",
+            "Memiliki kontrak Perjanjian Kerja berkop resmi perusahaan"
+        ],
+        "correct": 0,
+        "hint": "Pemberangkatan non-prosedural selalu mengabaikan pelatihan resmi, memakai visa turis/ziarah, dan menghindari pencatatan dinas ketenagakerjaan.",
+        "explanation": "Sindikat penempatan non-prosedural kerap menjanjikan kerja cepat menggunakan visa wisata, tanpa kontrak kerja legal yang disahkan KBRI, dan menahan dokumen asli PMI secara sepihak."
+    },
+    {
+        "id": 91,
+        "category": "Regulasi & Logika",
+        "catColor": "bg-purple-100 text-purple-700",
+        "question": "Lembaga perwakilan resmi Republik Indonesia di luar negeri yang bertugas memberikan pendampingan hukum dan perlindungan darurat bagi PMI adalah:",
+        "options": [
+            "KBRI (Kedutaan Besar RI) / KJRI (Konsulat Jenderal RI)",
+            "Kantor Imigrasi Negara Setempat",
+            "Polres Daerah Asal",
+            "Dinas Pariwisata"
+        ],
+        "correct": 0,
+        "hint": "Perwakilan diplomatik dan konsuler negara Republik Indonesia di ibukota negara penempatan.",
+        "explanation": "KBRI (Kedutaan Besar Republik Indonesia) dan KJRI adalah garda terdepan perlindungan WNI/PMI di luar negeri yang memiliki Atase Ketenagakerjaan untuk advokasi hukum dan mediasi ketenagakerjaan."
+    },
+    {
+        "id": 92,
+        "category": "Regulasi & Logika",
+        "catColor": "bg-purple-100 text-purple-700",
+        "question": "Program jaminan sosial wajib yang melindungi Pekerja Migran Indonesia dari risiko kecelakaan kerja, kematian, dan masalah hukum pra-hingga purna penempatan adalah:",
+        "options": [
+            "BPJS Ketenagakerjaan Program Jaminan Sosial PMI",
+            "Asuransi Kendaraan Bermotor",
+            "Tabungan Haji Mandiri",
+            "Kartu Diskon Supermarket"
+        ],
+        "correct": 0,
+        "hint": "Badan Penyelenggara Jaminan Sosial resmi ketenagakerjaan dengan skema khusus jaminan PMI.",
+        "explanation": "BPJS Ketenagakerjaan skema PMI memberikan perlindungan komprehensif mencakup JKK (Jaminan Kecelakaan Kerja), JKM (Jaminan Kematian), santunan gagal berangkat akibat bukan kesalahan PMI, hingga perlindungan risiko PHK sepihak di luar negeri."
+    },
+    {
+        "id": 93,
+        "category": "Regulasi & Logika",
+        "catColor": "bg-purple-100 text-purple-700",
+        "question": "Jika terjadi situasi darurat kekerasan, upah tidak dibayar, atau penyekapan di negara penempatan, kanal aduan resmi 24 jam milik BP2MI adalah:",
+        "options": [
+            "Call Center Halo BP2MI (Telepon Dalam Negeri 08001000 / Luar Negeri +622129244800) & Portal Peduli WNI",
+            "Komentar di akun media sosial tidak resmi",
+            "Surat pos manual tanpa alamat jelas",
+            "Menghubungi calo pendaftaran"
+        ],
+        "correct": 0,
+        "hint": "Layanan bebas pulsa Halo BP2MI dan aplikasi terpadu Peduli WNI milik Kementerian Luar Negeri RI.",
+        "explanation": "Pusat bantuan Halo BP2MI dan sistem hotline KBRI/Kemlu terhubung langsung 24 jam untuk memproses koordinasi evakuasi, perlindungan shelter, dan bantuan hukum diplomatik bagi PMI yang menghadapi masalah."
+    },
+    {
+        "id": 94,
+        "category": "Regulasi & Logika",
+        "catColor": "bg-purple-100 text-purple-700",
+        "question": "Hak normatif paling mendasar yang wajib dicantumkan secara gamblang di dalam naskah Perjanjian Kerja (PK) juru las di luar negeri adalah:",
+        "options": [
+            "Besaran gaji pokok, jam kerja, jaminan asuransi, fasilitas akomodasi, tiket kepulangan, dan hari libur mingguan",
+            "Daftar makanan kesukaan staf kantor",
+            "Nomor rekening bank milik calo perantara",
+            "Foto liburan keluarga pemberi kerja"
+        ],
+        "correct": 0,
+        "hint": "Kontrak kerja wajib memuat hak finansial, jam kerja maksimal, tempat tinggal layak, dan asuransi kesehatan.",
+        "explanation": "Perjanjian Kerja (PK) yang sah wajib mencantumkan identitas kedua pihak, jabatan pekerjaan (Welder), besaran upah dan cara pembayaran, jam kerja (maksimal 40-48 jam/minggu), hak cuti, akomodasi layak, serta klausul biaya tiket kepulangan saat kontrak berakhir."
+    },
+    {
+        "id": 95,
+        "category": "Regulasi & Logika",
+        "catColor": "bg-purple-100 text-purple-700",
+        "question": "Tes Logika Geometri: Jika sebuah pipa silinder baja berlubang dibelah membujur lurus sepanjang sumbunya lalu dibentangkan mendatar di atas lantai, bentuk 2 dimensi yang dihasilkan adalah:",
+        "options": [
+            "Persegi Panjang (Rectangle)",
+            "Segitiga Sama Kaki",
+            "Setengah Lingkaran",
+            "Trapesium Siku-siku"
+        ],
+        "correct": 0,
+        "hint": "Keliling silinder (π × D) menjadi panjang bidang, dan tinggi silinder (L) menjadi lebar bidang.",
+        "explanation": "Bentangan selimut silinder tabung adalah bidang datar Persegi Panjang, dengan ukuran panjang sama dengan keliling lingkaran pipa (Keliling = π × Diameter) dan lebar sama dengan tinggi/panjang pipa."
+    },
+    {
+        "id": 96,
+        "category": "Regulasi & Logika",
+        "catColor": "bg-purple-100 text-purple-700",
+        "question": "Konversi Aritmatika Teknis: Ukuran kawat las standar Amerika tertulis 1/8 inci (1/8 inch). Berapakah ukuran diameter tersebut dalam satuan milimeter (mm)?",
+        "options": [
+            "3,18 mm (dibulatkan menjadi 3,2 mm)",
+            "1,50 mm",
+            "5,00 mm",
+            "8,00 mm"
+        ],
+        "correct": 0,
+        "hint": "1 inci = 25,4 mm. Hitung: (1 / 8) × 25,4 mm = ?",
+        "explanation": "1 inci setara dengan 25,4 mm. Maka 1/8 inci = 25,4 / 8 = 3,175 mm, yang dalam standardisasi internasional diklasifikasikan sebagai elektroda diameter 3,2 mm."
+    },
+    {
+        "id": 97,
+        "category": "Regulasi & Logika",
+        "catColor": "bg-purple-100 text-purple-700",
+        "question": "Tes Aritmatika Bengkel: Juru las mengelas sambungan pelat sepanjang 300 mm dengan kecepatan jalan las (travel speed) konstan 150 mm/menit. Waktu bersih yang dibutuhkan untuk menyelesaikan 1 lintasan tersebut adalah:",
+        "options": [
+            "2 menit (120 detik)",
+            "5 menit",
+            "30 detik",
+            "10 menit"
+        ],
+        "correct": 0,
+        "hint": "Waktu = Jarak panjang las / Kecepatan gerak (Waktu = 300 mm / 150 mm per menit).",
+        "explanation": "Waktu pengelasan = Panjang sambungan / Travel speed = 300 mm / 150 mm/menit = 2 menit (120 detik)."
+    },
+    {
+        "id": 98,
+        "category": "Regulasi & Logika",
+        "catColor": "bg-purple-100 text-purple-700",
+        "question": "Aritmatika Listrik Las: Berdasarkan rumus Hukum Ohm dan Daya Listrik (Daya P = Volt × Ampere), jika mesin las SMAW bekerja pada voltase busur 25 Volt dan arus 120 Ampere, berapakah daya listrik yang dikonsumsi busur api tersebut?",
+        "options": [
+            "3.000 Watt (3 kW)",
+            "500 Watt",
+            "145 Watt",
+            "12.000 Watt"
+        ],
+        "correct": 0,
+        "hint": "Daya (Watt) = Voltase (Volt) × Arus (Ampere) = 25 × 120 = ?",
+        "explanation": "Daya busur listrik las = Voltase × Arus = 25 V × 120 A = 3.000 Watt (3 kiloWatt)."
+    },
+    {
+        "id": 99,
+        "category": "Regulasi & Logika",
+        "catColor": "bg-purple-100 text-purple-700",
+        "question": "Tes Spasial Proyeksi Orthogonal: Diberikan sebuah benda sambungan pelat berbentuk huruf \"T\" (T-joint). Jika dilihat tepat dari pandangan atas (Top View), penampakan gambar teknik 2D yang tampak adalah:",
+        "options": [
+            "Sebuah bidang persegi panjang dengan sebuah garis lurus di tengah yang memanjang",
+            "Sebuah lingkaran bulat pejal",
+            "Dua buah segitiga berhadapan",
+            "Sebuah trapesium miring"
+        ],
+        "correct": 0,
+        "hint": "Pelat dasar horizontal terlihat sebagai persegi panjang utuh, dan pelat tegak terlihat sebagai garis lurus tebal di tengahnya.",
+        "explanation": "Pada proyeksi orthogonal tampak atas (Top View), pelat bawah T-joint terlihat sebagai bidang persegi panjang datar dan ketebalan pelat vertikal yang menancap tampak sebagai garis lurus di sumbu tengah."
+    },
+    {
+        "id": 100,
+        "category": "Regulasi & Logika",
+        "catColor": "bg-purple-100 text-purple-700",
+        "question": "Sikap etika profesional paling utama yang wajib dijunjung tinggi oleh seorang juru las bersertifikasi internasional di tempat kerja adalah:",
+        "options": [
+            "Selalu mematuhi instruksi WPS, mengutamakan keselamatan K3, dan tidak menyembunyikan cacat las demi keuntungan sesaat",
+            "Mengelas secepat mungkin tanpa membersihkan terak untuk mengejar bonus harian",
+            "Mengabaikan pemakaian kacamata pelindung jika cuaca terasa gerah",
+            "Menyalahkan juru las lain ketika terjadi cacat pada hasil kerjanya"
+        ],
+        "correct": 0,
+        "hint": "Integritas kualitas hasil pengelasan menyangkut keselamatan nyawa orang banyak (seperti pada jembatan, gedung, dan kapal).",
+        "explanation": "Integritas profesional juru las menuntut kepatuhan mutlak pada prosedur WPS yang telah terkualifikasi, disiplin K3, dan kejujuran teknis untuk memperbaiki setiap cacat las sesuai standar sebelum dilakukan inspeksi NDT."
     }
 ];
 
@@ -1159,15 +2447,42 @@ function renderQuestion() {
     document.getElementById('progressText').textContent = `${answered} / ${questions.length}`;
     document.getElementById('progressBar').style.width = `${(answered / questions.length) * 100}%`;
 
-    // Dot indicators
+    // Dot indicators (Windowed display for 100 questions)
     const dots = document.getElementById('dotIndicators');
     dots.innerHTML = '';
-    questions.forEach((_, i) => {
+    const totalQ = questions.length;
+    let startIdx = Math.max(0, currentQuestion - 4);
+    let endIdx = Math.min(totalQ - 1, currentQuestion + 4);
+    if (endIdx - startIdx < 8) {
+        if (startIdx === 0) endIdx = Math.min(totalQ - 1, 8);
+        else if (endIdx === totalQ - 1) startIdx = Math.max(0, totalQ - 9);
+    }
+
+    if (startIdx > 0) {
+        const firstDot = document.createElement('button');
+        firstDot.className = 'text-[11px] font-mono font-bold px-1.5 py-0.5 rounded text-charcoal-400 hover:text-charcoal-800';
+        firstDot.textContent = '1..';
+        firstDot.title = 'Soal 1';
+        firstDot.addEventListener('click', () => { currentQuestion = 0; renderQuestion(); });
+        dots.appendChild(firstDot);
+    }
+
+    for (let i = startIdx; i <= endIdx; i++) {
         const dot = document.createElement('button');
-        dot.className = `w-2.5 h-2.5 rounded-full transition-all ${i === currentQuestion ? 'bg-safety-500 scale-125' : userAnswers[i] !== -1 ? 'bg-charcoal-400' : 'bg-charcoal-200'}`;
+        dot.className = `w-2.5 h-2.5 rounded-full transition-all ${i === currentQuestion ? 'bg-safety-500 scale-125 ring-2 ring-safety-200' : userAnswers[i] !== -1 ? 'bg-charcoal-600' : 'bg-charcoal-200 hover:bg-charcoal-300'}`;
+        dot.title = `Soal ${i + 1}`;
         dot.addEventListener('click', () => { currentQuestion = i; renderQuestion(); });
         dots.appendChild(dot);
-    });
+    }
+
+    if (endIdx < totalQ - 1) {
+        const lastDot = document.createElement('button');
+        lastDot.className = 'text-[11px] font-mono font-bold px-1.5 py-0.5 rounded text-charcoal-400 hover:text-charcoal-800';
+        lastDot.textContent = `..${totalQ}`;
+        lastDot.title = `Soal ${totalQ}`;
+        lastDot.addEventListener('click', () => { currentQuestion = totalQ - 1; renderQuestion(); });
+        dots.appendChild(lastDot);
+    }
 }
 
 function selectAnswer(idx) {
