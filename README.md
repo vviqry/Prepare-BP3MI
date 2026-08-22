@@ -2,9 +2,10 @@
 
 > **Simulasi Seleksi Pelatihan SMK Go Global BP3MI — Bidang Welder & Bahasa Inggris**
 
-Aplikasi Single Page Application (SPA) modern dan interaktif yang dirancang khusus untuk persiapan calon Pekerja Migran Indonesia (PMI) bidang Pengelasan (Welder) dalam menghadapi tahapan seleksi program SMK Go Global BP3MI.
+Aplikasi Single Page Application (SPA) & Progressive Web App (PWA) modern dan interaktif yang dirancang khusus untuk persiapan calon Pekerja Migran Indonesia (PMI) bidang Pengelasan (Welder) dalam menghadapi tahapan seleksi program SMK Go Global BP3MI.
 
 ![Banner](https://img.shields.io/badge/BP3MI-SMK_Go_Global-orange?style=for-the-badge&logo=shield)
+![PWA](https://img.shields.io/badge/PWA-Ready-success?style=for-the-badge&logo=pwa)
 ![Status](https://img.shields.io/badge/Status-Production_Ready-success?style=for-the-badge)
 ![Tech Stack](https://img.shields.io/badge/Stack-HTML5_|_TailwindCSS_|_Vanilla_JS-blue?style=for-the-badge)
 
@@ -24,12 +25,21 @@ Aplikasi Single Page Application (SPA) modern dan interaktif yang dirancang khus
   * Pembahasan edukatif interaktif untuk setiap butir soal.
   * Fitur ulangi ujian (*retake*).
 
-### 2. 🎙️ English Interview Practice (8 Pertanyaan)
+### 2. 📖 Panduan Materi Wawancara BP2MI (5 Sesi Kunci)
+* Panduan taktis tanya-jawab resmi seleksi welder BP2MI/BP3MI:
+  * **Sesi 1: Komitmen Dasar & Motivasi** (Latar belakang kejuruan vokasi & motivasi jalur resmi).
+  * **Sesi 2: Kompetensi Teknis Pengelasan** (Penguasaan Las Listrik SMAW, baja karbon, posisi 1G & 2G).
+  * **Sesi 3: Ketahanan Kerja & Kesehatan** (Fisik prima, K3, kesiapan kacamata koreksi kedok las).
+  * **Sesi 4: Kesiapan Asrama & Bahasa** (Pengalaman mandiri di asrama & 640 JPL Bahasa Inggris).
+  * **Sesi 5: Adaptasi Budaya & Komunikasi** (Penempatan multi-negara & etika instruksi supervisor).
+* Accordion respon taktis, poin kunci strategi jawaban, dan fitur salin teks jawaban satu-klik.
+
+### 3. 🎙️ English Interview Practice (8 Pertanyaan)
 * Kumpulan 8 pertanyaan wawancara rekrutmen juru las global yang paling sering diujikan.
 * Fitur accordion interaktif **"Show Best Answer Guide"**.
 * Template jawaban profesional dalam bahasa Inggris teknis beserta terjemahan lengkap Bahasa Indonesia.
 
-### 3. 📋 Welder Readiness Checklist (28 Item)
+### 4. 📋 Welder Readiness Checklist (28 Item)
 * State-saving otomatis menggunakan `localStorage` browser.
 * 4 Kategori Kesiapan:
   * 📄 Kelengkapan Dokumen (Paspor, SKCK, Sertifikat BNSP, Surat Izin).
@@ -37,10 +47,14 @@ Aplikasi Single Page Application (SPA) modern dan interaktif yang dirancang khus
   * 🏋️ Kesiapan Fisik & Keterampilan Praktik.
   * 🧠 Kesiapan Mental & Penguasaan Bahasa.
 
-### 4. ⚡ Quick Cheat-Sheet
+### 5. ⚡ Quick Cheat-Sheet
 * **Simbol Pengelasan (Welding Symbols)**: Fillet, V-Groove, Bevel, Field Weld, Weld All-Around, dll.
 * **Posisi Pengelasan (Welding Positions)**: 1G s/d 6G lengkap dengan indikator tingkat kesulitan.
 * **Kosakata Bahasa Inggris Industri**: 28 istilah teknis terpenting lengkap dengan filter kategori (Process, Material, Equipment, Defect, PPE, Safety).
+
+### 6. 📱 Progressive Web App (PWA) Support
+* Dapat di-install langsung di smartphone Android, iOS, maupun desktop PC.
+* Dilengkapi icon maskable `BP3MI.png`, `manifest.json`, dan `service-worker.js` untuk offline caching.
 
 ---
 
@@ -52,16 +66,14 @@ Aplikasi ini bersifat **standalone** (tanpa perlu server/backend):
    ```bash
    git clone https://github.com/vviqry/Prepare-BP3MI.git
    ```
-2. Buka file `index.html` langsung di browser favorit Anda (Chrome, Edge, Firefox, Safari).
+2. Buka file `index.html` langsung di browser favorit Anda (Chrome, Edge, Firefox, Safari) atau jalankan local server seperti `npx serve .` atau VS Code Live Server.
 
 ---
 
-## 🌐 Deploy ke GitHub Pages
+## 🌐 Deploy ke GitHub Pages / Vercel
 
-1. Masuk ke **Settings** repository di GitHub.
-2. Pilih menu **Pages** di sidebar kiri.
-3. Pada bagian **Build and deployment** -> **Branch**, pilih `main` dan folder `/ (root)`.
-4. Klik **Save**. Website Anda akan live dalam hitungan detik!
+1. **GitHub Pages**: Masuk ke Settings repository -> Pages -> Source: branch `main` -> Save.
+2. **Vercel**: Import repository ke dashboard Vercel, file `vercel.json` sudah terkonfigurasi otomatis dengan PWA header caching.
 
 ---
 

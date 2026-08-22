@@ -2,9 +2,23 @@
 <html lang="id" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>BP3MI SMK Go Global — Simulasi Seleksi Welder & English</title>
-    <meta name="description" content="Aplikasi simulasi ujian seleksi pelatihan SMK Go Global BP3MI untuk bidang Welder dan Bahasa Inggris. Latihan soal, interview, checklist, dan cheat-sheet.">
+    <meta name="description" content="Aplikasi simulasi ujian seleksi pelatihan SMK Go Global BP3MI untuk bidang Welder dan Bahasa Inggris. Latihan soal, materi wawancara BP2MI, checklist, dan cheat-sheet.">
+
+    <!-- Favicon & PWA Icons -->
+    <link rel="icon" type="image/png" href="BP3MI.png">
+    <link rel="shortcut icon" type="image/png" href="BP3MI.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="BP3MI.png">
+    <link rel="manifest" href="manifest.json">
+
+    <!-- Mobile & PWA Meta Tags -->
+    <meta name="theme-color" content="#131419">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="BP3MI Welder">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -108,9 +122,7 @@
             <!-- Logo -->
             <div class="p-6 border-b border-charcoal-800">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-safety-500 to-safety-600 flex items-center justify-center shadow-lg">
-                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.879 16.121A3 3 0 1012.015 11L11 14H9c0 .768.293 1.536.879 2.121z"/></svg>
-                    </div>
+                    <img src="BP3MI.png" alt="Logo BP3MI" class="w-11 h-11 rounded-xl object-contain bg-white/5 p-1 border border-charcoal-700/60 shadow-lg shadow-black/40 ring-1 ring-safety-500/20">
                     <div>
                         <h1 class="text-sm font-bold tracking-wide">SMK GO GLOBAL</h1>
                         <p class="text-[10px] text-charcoal-400 tracking-widest uppercase">BP3MI · Welder Prep</p>
@@ -119,13 +131,20 @@
             </div>
 
             <!-- Navigation -->
-            <nav class="flex-1 p-4 space-y-1">
+            <nav class="flex-1 p-4 space-y-1 overflow-y-auto">
                 <button onclick="navigateTo('exam')" data-page="exam" class="nav-link active w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-charcoal-300">
                     <span class="nav-icon text-charcoal-500">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
                     </span>
                     Simulasi Ujian
-                    <span class="ml-auto bg-safety-500/20 text-safety-400 text-[10px] font-bold px-2 py-0.5 rounded-full">15 SOAL</span>
+                    <span class="ml-auto bg-safety-500/20 text-safety-400 text-[10px] font-bold px-2 py-0.5 rounded-full">100 SOAL</span>
+                </button>
+                <button onclick="navigateTo('materi-bp2mi')" data-page="materi-bp2mi" class="nav-link w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-charcoal-300">
+                    <span class="nav-icon text-charcoal-500">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                    </span>
+                    Materi BP2MI
+                    <span class="ml-auto bg-blue-500/20 text-blue-400 text-[10px] font-bold px-2 py-0.5 rounded-full">5 SESI</span>
                 </button>
                 <button onclick="navigateTo('interview')" data-page="interview" class="nav-link w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-charcoal-300">
                     <span class="nav-icon text-charcoal-500">
@@ -166,12 +185,12 @@
                 <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
                     <div class="pl-12 lg:pl-0">
                         <h2 class="text-lg font-bold text-charcoal-900" id="pageTitle">Simulasi Ujian Tertulis</h2>
-                        <p class="text-xs text-charcoal-400" id="pageSubtitle">Tes Juru Las & Bahasa Inggris — 15 Soal Pilihan Ganda</p>
+                        <p class="text-xs text-charcoal-400" id="pageSubtitle">Tes Juru Las & Bahasa Inggris — 100 Soal Simulasi (90 Menit)</p>
                     </div>
                     <div class="flex items-center gap-3">
                         <div id="timerDisplay" class="hidden items-center gap-2 bg-charcoal-900 text-white pl-3 pr-4 py-2 rounded-xl text-sm font-mono font-semibold">
                             <svg class="w-4 h-4 text-safety-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                            <span id="timerText">15:00</span>
+                            <span id="timerText">90:00</span>
                         </div>
                     </div>
                 </div>
@@ -200,11 +219,11 @@
                             <div class="p-8">
                                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
                                     <div class="text-center p-4 bg-charcoal-50 rounded-xl">
-                                        <div class="text-2xl font-bold text-charcoal-900">15</div>
+                                        <div class="text-2xl font-bold text-charcoal-900">100</div>
                                         <div class="text-xs text-charcoal-500 mt-1">Total Soal</div>
                                     </div>
                                     <div class="text-center p-4 bg-charcoal-50 rounded-xl">
-                                        <div class="text-2xl font-bold text-charcoal-900">15:00</div>
+                                        <div class="text-2xl font-bold text-charcoal-900 font-mono text-safety-600">90:00</div>
                                         <div class="text-xs text-charcoal-500 mt-1">Waktu (Menit)</div>
                                     </div>
                                     <div class="text-center p-4 bg-charcoal-50 rounded-xl">
@@ -236,7 +255,7 @@
                                 </div>
                                 <button onclick="startExam()" class="w-full sm:w-auto bg-gradient-to-r from-safety-500 to-safety-600 hover:from-safety-600 hover:to-safety-700 text-white font-bold py-3.5 px-8 rounded-xl transition-all duration-200 shadow-lg shadow-safety-500/20 pulse-glow flex items-center justify-center gap-2 mx-auto">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                                    Mulai Ujian Sekarang
+                                    Mulai Ujian Sekarang (90 Menit)
                                 </button>
                             </div>
                         </div>
@@ -248,7 +267,7 @@
                         <div class="mb-6">
                             <div class="flex items-center justify-between mb-2">
                                 <span class="text-sm font-semibold text-charcoal-700">Progres Ujian</span>
-                                <span class="text-sm font-mono font-semibold text-charcoal-500" id="progressText">0 / 15</span>
+                                <span class="text-sm font-mono font-semibold text-charcoal-500" id="progressText">0 / 20</span>
                             </div>
                             <div class="h-2 bg-charcoal-100 rounded-full overflow-hidden">
                                 <div id="progressBar" class="h-full bg-gradient-to-r from-safety-500 to-safety-400 rounded-full transition-all duration-500 ease-out" style="width:0%"></div>
@@ -261,14 +280,23 @@
                         <!-- Question Card -->
                         <div class="bg-white rounded-2xl border border-charcoal-100 overflow-hidden">
                             <div class="p-6 sm:p-8">
-                                <div class="flex items-start gap-4 mb-6">
+                                <div class="flex items-start gap-4 mb-4">
                                     <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-charcoal-900 text-white flex items-center justify-center font-bold text-sm" id="questionNumber">1</div>
                                     <div class="flex-1">
-                                        <span class="inline-block text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full mb-2" id="questionCategory">Technical Welding</span>
+                                        <div class="flex items-center justify-between gap-2 mb-2">
+                                            <span class="inline-block text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full" id="questionCategory">Technical Welding</span>
+                                            <button type="button" onclick="toggleHint()" id="hintBtn" class="inline-flex items-center gap-1.5 text-xs font-bold text-safety-600 hover:text-safety-700 bg-safety-50 hover:bg-safety-100 border border-safety-200 px-3 py-1 rounded-lg transition-all">
+                                                <span>💡</span> <span id="hintBtnText">Petunjuk (Hint)</span>
+                                            </button>
+                                        </div>
                                         <p class="text-base font-medium leading-relaxed text-charcoal-800" id="questionText"></p>
+                                        <div id="hintBox" class="hidden mt-3 p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900 leading-relaxed animate-fadeIn">
+                                            <span class="font-bold text-amber-700 block mb-0.5">🔍 Petunjuk Soal:</span>
+                                            <span id="hintText"></span>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="space-y-3" id="optionsContainer"></div>
+                                <div class="space-y-3 mt-4" id="optionsContainer"></div>
                             </div>
                             <div class="border-t border-charcoal-100 px-6 sm:px-8 py-4 flex items-center justify-between bg-charcoal-50/50">
                                 <button onclick="prevQuestion()" id="prevBtn" class="flex items-center gap-2 text-sm font-medium text-charcoal-500 hover:text-charcoal-800 transition-colors disabled:opacity-30 disabled:cursor-not-allowed" disabled>
@@ -408,6 +436,63 @@
                     <div id="cheatsheetContainer"></div>
                 </section>
 
+                <!-- ============ PAGE: MATERI BP2MI ============ -->
+                <section id="page-materi-bp2mi" class="page">
+                    <!-- Hero Banner -->
+                    <div class="mb-8">
+                        <div class="bg-gradient-to-r from-charcoal-950 via-charcoal-900 to-steel-900 rounded-2xl p-8 text-white relative overflow-hidden border border-charcoal-800 shadow-xl">
+                            <div class="absolute -top-12 -right-12 w-60 h-60 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                            <div class="absolute -bottom-10 -left-10 w-48 h-48 bg-safety-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                            <div class="relative">
+                                <div class="flex flex-wrap items-center gap-2 mb-4">
+                                    <span class="inline-flex items-center gap-1.5 bg-blue-500/20 text-blue-300 text-xs font-bold px-3 py-1.5 rounded-full border border-blue-400/30">
+                                        <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/></svg>
+                                        PANDUAN KHUSUS WAWANCARA
+                                    </span>
+                                    <span class="inline-flex items-center gap-1.5 bg-safety-500/20 text-safety-300 text-xs font-bold px-3 py-1.5 rounded-full border border-safety-400/30">
+                                        BP2MI / BP3MI
+                                    </span>
+                                </div>
+                                <h3 class="text-2xl sm:text-3xl font-bold mb-3 tracking-tight">Persiapan Wawancara Welder — SMK Go Global</h3>
+                                <p class="text-charcoal-300 text-sm max-w-2xl leading-relaxed">Panduan taktis menjawab 5 pertanyaan kunci interviewer seleksi pelatihan kerja luar negeri BP2MI. Disertai tips spesifik untuk calon peserta dari latar belakang kejuruan/vokasi.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Interviewer Opener Box -->
+                    <div class="bg-gradient-to-r from-blue-900/10 via-white to-blue-900/5 rounded-2xl border-2 border-blue-200/80 p-6 mb-8 shadow-sm">
+                        <div class="flex items-start gap-4">
+                            <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-md shadow-blue-500/20">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 100-6 3 3 0 000 6z"/></svg>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <h4 class="text-sm font-bold text-blue-950 uppercase tracking-wider">Sesi Pembuka (Interviewer)</h4>
+                                    <span class="bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-0.5 rounded-md">Verifikasi Awal</span>
+                                </div>
+                                <p class="text-sm text-charcoal-800 italic leading-relaxed bg-white/80 p-3.5 rounded-xl border border-blue-100">
+                                    "Selamat pagi/siang. Terima kasih sudah mendaftar di Program Pelatihan SMK Go Global untuk posisi Welder - Bahasa Inggris. Berkas administrasi dan Kartu AK-1 Anda sudah kami verifikasi dan sinkronisasi lewat QR-code. Sebelum kita masuk ke ruang praktik, ada beberapa hal penting yang ingin kami konfirmasi dari Anda. Tolong dijawab dengan jelas:"
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Filter Categories -->
+                    <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
+                        <div class="flex flex-wrap gap-2" id="bp2miFilterContainer">
+                            <button onclick="filterBP2MIMaterial('all', this)" class="bp2mi-filter active px-3.5 py-1.5 rounded-xl text-xs font-bold bg-charcoal-900 text-white transition-all shadow-sm">Semua (5 Sesi)</button>
+                            <button onclick="filterBP2MIMaterial('Motivasi', this)" class="bp2mi-filter px-3.5 py-1.5 rounded-xl text-xs font-bold bg-white text-charcoal-600 border border-charcoal-200 hover:border-charcoal-300 transition-all">Motivasi & Komitmen</button>
+                            <button onclick="filterBP2MIMaterial('Teknis Las', this)" class="bp2mi-filter px-3.5 py-1.5 rounded-xl text-xs font-bold bg-white text-charcoal-600 border border-charcoal-200 hover:border-charcoal-300 transition-all">Kompetensi Teknis</button>
+                            <button onclick="filterBP2MIMaterial('Kesehatan & K3', this)" class="bp2mi-filter px-3.5 py-1.5 rounded-xl text-xs font-bold bg-white text-charcoal-600 border border-charcoal-200 hover:border-charcoal-300 transition-all">Ketahanan & APD</button>
+                            <button onclick="filterBP2MIMaterial('Disiplin & Asrama', this)" class="bp2mi-filter px-3.5 py-1.5 rounded-xl text-xs font-bold bg-white text-charcoal-600 border border-charcoal-200 hover:border-charcoal-300 transition-all">Asrama & Bahasa</button>
+                            <button onclick="filterBP2MIMaterial('Adaptasi Global', this)" class="bp2mi-filter px-3.5 py-1.5 rounded-xl text-xs font-bold bg-white text-charcoal-600 border border-charcoal-200 hover:border-charcoal-300 transition-all">Adaptasi Global</button>
+                        </div>
+                    </div>
+
+                    <!-- Materials Container -->
+                    <div class="space-y-5" id="bp2miMaterialsContainer"></div>
+                </section>
+
             </div>
         </main>
     </div>
@@ -416,124 +501,217 @@
 // ==================== DATA ====================
 
 const questions = [
-    // === TECHNICAL WELDING (Q1-Q5) ===
+    // === TECHNICAL WELDING (Q1-Q6) ===
     {
         id: 1, category: 'Technical Welding', catColor: 'bg-blue-100 text-blue-700',
-        question: 'What does SMAW stand for in welding terminology?',
+        question: 'What does SMAW stand for in industrial welding terminology?',
         options: ['Submerged Metal Arc Welding', 'Shielded Metal Arc Welding', 'Standard Manual Arc Welding', 'Semi-Manual Alloy Welding'],
         correct: 1,
-        explanation: 'SMAW = Shielded Metal Arc Welding (Las busur listrik manual/elektroda terbungkus). Proses ini menggunakan elektroda terbungkus flux yang mencair bersama logam induk untuk membentuk lapisan pelindung dari kontaminasi atmosfer.'
+        hint: 'Proses ini sering disebut "Stick Welding" karena menggunakan elektroda stik terbungkus fluks pelindung (shielding flux).',
+        explanation: 'SMAW = Shielded Metal Arc Welding (Las Busur Listrik Terlindung / Las Stik). Fluks pada elektroda terbakar menghasilkan gas pelindung dan terak (slag) untuk melindungi kubangan las dari oksigen udara.'
     },
     {
         id: 2, category: 'Technical Welding', catColor: 'bg-blue-100 text-blue-700',
-        question: 'Posisi pengelasan "3G" mengacu pada pengelasan dalam posisi apa?',
-        options: ['Flat / Datar (horizontal plate)', 'Horizontal (sambungan horizontal)', 'Vertical / Tegak (vertikal naik/turun)', 'Overhead / Di atas kepala'],
+        question: 'Dalam standardisasi pengelasan pelat (plate), kode posisi pengelasan "3G" merujuk pada posisi apa?',
+        options: ['Posisi Datar / Flat (bawah tangan)', 'Posisi Horizontal (mendatar)', 'Posisi Vertikal / Tegak (naik/turun)', 'Posisi Overhead (di atas kepala)'],
         correct: 2,
-        explanation: '3G = Posisi pengelasan vertikal (Vertical Position). 1G=Flat, 2G=Horizontal, 3G=Vertical, 4G=Overhead. Semakin tinggi angkanya, semakin sulit posisi pengelasannya.'
+        hint: 'Angka 1 = Flat, 2 = Horizontal, 3 = Vertikal, 4 = Overhead. Huruf "G" merujuk pada sambungan alur (Groove).',
+        explanation: 'Posisi 3G adalah posisi pengelasan vertikal (Vertical Position) untuk sambungan alur pelat (Groove). Pengelasan dapat dilakukan dengan teknik vertical-up atau vertical-down.'
     },
     {
         id: 3, category: 'Technical Welding', catColor: 'bg-blue-100 text-blue-700',
-        question: 'Which welding process uses a non-consumable tungsten electrode with inert shielding gas?',
+        question: 'Which welding process utilizes a non-consumable tungsten electrode and a shielding gas such as 100% Argon?',
         options: ['SMAW (Stick Welding)', 'GMAW (MIG Welding)', 'GTAW (TIG Welding)', 'FCAW (Flux-Cored Arc Welding)'],
         correct: 2,
-        explanation: 'GTAW (Gas Tungsten Arc Welding) atau TIG welding menggunakan elektroda tungsten yang tidak ikut meleleh (non-consumable). Gas inert seperti Argon melindungi area las dari kontaminasi udara. Proses ini menghasilkan las berkualitas tinggi untuk material tipis dan logam khusus.'
+        hint: 'Huruf "T" pada singkatannya merujuk pada unsur logam tahan panas tinggi berikatan "Tungsten".',
+        explanation: 'GTAW (Gas Tungsten Arc Welding) atau TIG (Tungsten Inert Gas) menggunakan elektroda tungsten yang tidak ikut mencair (non-consumable) dan gas argon murni sebagai pelindung.'
     },
     {
         id: 4, category: 'Technical Welding', catColor: 'bg-blue-100 text-blue-700',
-        question: 'Cacat las berupa lubang-lubang kecil bulat yang terjebak dalam logam las disebut:',
-        options: ['Undercut', 'Porosity', 'Slag Inclusion', 'Spatter'],
+        question: 'Cacat las (welding defect) berupa lubang-lubang kecil atau rongga gas yang terperangkap di dalam deposit logam las disebut:',
+        options: ['Undercut', 'Porosity (Porositas)', 'Slag Inclusion', 'Lack of Fusion'],
         correct: 1,
-        explanation: 'Porosity (porositas) adalah cacat las berupa rongga/lubang gas yang terjebak dalam logam las. Penyebabnya antara lain: elektroda lembab, permukaan kotor, gas pelindung tidak cukup, atau arc length terlalu panjang.'
+        hint: 'Cacat ini menyerupai rongga spons/busa berpori yang disebabkan oleh kelembaban fluks atau aliran gas pelindung yang terganggu angin.',
+        explanation: 'Porosity (porositas) terbentuk akibat gas yang terperangkap saat logam las membeku cepat. Penyebab utamanya adalah elektroda lembab, kontaminasi minyak/karat, atau hembusan angin pada gas pelindung.'
     },
     {
         id: 5, category: 'Technical Welding', catColor: 'bg-blue-100 text-blue-700',
-        question: 'In GMAW (MIG welding), what is the primary function of the shielding gas?',
-        options: ['To increase the arc temperature', 'To protect the weld pool from atmospheric contamination', 'To preheat the base metal', 'To accelerate cooling of the weld joint'],
+        question: 'In GMAW (MIG/MAG welding), what is the primary function of the shielding gas cylinder mixture (e.g., Ar + CO2)?',
+        options: [
+            'To increase electrical resistance and melt the wire faster',
+            'To isolate and protect the molten weld pool from oxygen and nitrogen atmospheric contamination',
+            'To cool down the welding gun handle continuously',
+            'To add alloy elements to the steel base metal'
+        ],
         correct: 1,
-        explanation: 'Gas pelindung pada GMAW (CO₂ atau campuran Argon-CO₂) berfungsi melindungi genangan las (weld pool) dari kontaminasi udara (oksigen, nitrogen, hidrogen) yang dapat menyebabkan cacat las seperti porosity dan embrittlement.'
+        hint: 'Udara luar mengandung oksigen dan nitrogen yang dapat merusak kualitas ikatan logam cair jika tidak diselimuti (shielded).',
+        explanation: 'Fungsi utama gas pelindung pada GMAW adalah menyelimuti dan mengisolasi cairan logam las (molten weld pool) agar tidak teroksidasi oleh oksigen atau terkontaminasi nitrogen dari atmosfer bebas.'
     },
-    // === WORKSHOP ENGLISH (Q6-Q8) ===
     {
-        id: 6, category: 'Workshop English', catColor: 'bg-green-100 text-green-700',
-        question: 'What is the correct English term for "palu terak" used to clean slag from a weld bead?',
-        options: ['Ball-peen hammer', 'Chipping hammer', 'Sledge hammer', 'Claw hammer'],
-        correct: 1,
-        explanation: 'Chipping hammer (palu terak/palu chip) digunakan untuk membersihkan slag (terak) dari permukaan hasil las. Alat ini memiliki ujung lancip dan ujung pahat untuk memudahkan pengangkatan kerak las tanpa merusak hasil lasan.'
+        id: 6, category: 'Technical Welding', catColor: 'bg-blue-100 text-blue-700',
+        question: 'Posisi pengelasan pipa tetap dengan sumbu kemiringan 45 derajat tanpa boleh diputar (fixed position) diklasifikasikan sebagai:',
+        options: ['Posisi 1G Pipe', 'Posisi 2G Pipe', 'Posisi 5G Pipe', 'Posisi 6G Pipe'],
+        correct: 3,
+        hint: 'Ini adalah kualifikasi tingkat tertinggi untuk sertifikasi juru las pipa dengan sudut kemiringan 45°.',
+        explanation: 'Posisi 6G adalah posisi pengujian pipa paling komprehensif di mana pipa dipasang pada sudut kemiringan 45° dan tidak boleh diputar. Welder yang lulus 6G umumnya terkualifikasi untuk semua posisi lainnya.'
     },
+
+    // === WORKSHOP ENGLISH (Q7-Q11) ===
     {
         id: 7, category: 'Workshop English', catColor: 'bg-green-100 text-green-700',
-        question: '"Keep clear of the welding area and do not look directly at the arc." — Kalimat ini merupakan contoh:',
-        options: ['Blueprint instruction', 'Safety command / warning', 'Quality inspection report', 'Material requisition form'],
+        question: 'What is the correct English term for "palu terak" used to chip away solidified flux slag after completing a weld bead?',
+        options: ['Ball-peen hammer', 'Chipping hammer', 'Sledge hammer', 'Claw hammer'],
         correct: 1,
-        explanation: 'Kalimat tersebut adalah contoh safety command/warning (perintah/peringatan keselamatan). "Keep clear" = menjauh, "do not look directly at the arc" = jangan melihat langsung ke busur las. Perintah keselamatan di workshop selalu menggunakan imperative form.'
+        hint: 'Kata dasarnya adalah "chip" (mengelupas/memecah kerak kecil).',
+        explanation: 'Chipping hammer (palu ketok terak) memiliki ujung runcing dan ujung pipih pahat untuk membersihkan terak sisa pembakaran fluks pada las SMAW atau FCAW.'
     },
     {
         id: 8, category: 'Workshop English', catColor: 'bg-green-100 text-green-700',
-        question: 'On a welding blueprint, "WPS" stands for:',
+        question: 'On an engineering blueprint and welding drawing, what does the technical abbreviation "WPS" stand for?',
         options: ['Welding Procedure Specification', 'Weld Position Standard', 'Workshop Production Schedule', 'Wire Processing System'],
         correct: 0,
-        explanation: 'WPS = Welding Procedure Specification, dokumen yang berisi parameter detail prosedur pengelasan: jenis proses, posisi, jenis & ukuran elektroda/kawat, arus, voltase, kecepatan travel, preheat, dan PWHT. WPS wajib diikuti oleh setiap welder di lapangan.'
+        hint: 'Dokumen panduan parameter resmi yang mengatur voltase, amper, kawat las, dan suhu kerja.',
+        explanation: 'WPS (Welding Procedure Specification) adalah dokumen acuan tertulis yang merinci seluruh parameter teknis pengelasan yang telah diuji dan disetujui (PQR) untuk memastikan kualitas hasil sambungan.'
     },
-    // === K3 SAFETY (Q9-Q12) ===
     {
-        id: 9, category: 'K3 Safety', catColor: 'bg-amber-100 text-amber-700',
-        question: 'Shade number berapa yang direkomendasikan untuk welding helmet saat proses SMAW dengan arus 100-150 Ampere?',
-        options: ['Shade #8', 'Shade #10', 'Shade #12', 'Shade #14'],
+        id: 9, category: 'Workshop English', catColor: 'bg-green-100 text-green-700',
+        question: '"Adjust the wire feed speed and ensure proper gas flow rate before striking the arc." — Kalimat instruksi tersebut paling sering digunakan pada proses:',
+        options: ['Manual Oxy-Acetylene Cutting (OAW)', 'Gas Metal Arc Welding (GMAW / MIG)', 'Shielded Metal Arc Welding (SMAW)', 'Submerged Arc Welding (SAW)'],
         correct: 1,
-        explanation: 'Untuk SMAW dengan arus 100-150A, shade #10 adalah rekomendasi standar (ANSI Z87.1). Semakin tinggi arus las, semakin tinggi shade yang diperlukan. Shade terlalu rendah = risiko kerusakan mata (arc eye/welder\'s flash). Shade terlalu tinggi = sulit melihat weld pool.'
+        hint: 'Kata kunci: "wire feed speed" (kecepatan pengumpanan kawat gulung otomatis) dan "gas flow rate".',
+        explanation: 'Instruksi "wire feed speed" dan "gas flow rate" sangat spesifik untuk mesin las semi-otomatis GMAW (MIG/MAG) atau FCAW yang menggunakan feeder kawat roll.'
     },
     {
-        id: 10, category: 'K3 Safety', catColor: 'bg-amber-100 text-amber-700',
-        question: 'Which PPE item is NOT typically required when performing overhead (4G) welding?',
-        options: ['Welding helmet with proper shade lens', 'Leather welding jacket/cape', 'Safety sandals with open toes', 'Fire-resistant welding gloves'],
-        correct: 2,
-        explanation: 'Safety sandals/open-toe footwear TIDAK PERNAH diperbolehkan di area welding! Welder wajib menggunakan safety boots/shoes tertutup penuh (steel-toe). Pada posisi 4G (overhead), risiko percikan api dan tetesan logam cair jatuh ke bawah sangat tinggi — perlindungan lengkap dari kepala hingga kaki wajib.'
+        id: 10, category: 'Workshop English', catColor: 'bg-green-100 text-green-700',
+        question: 'What is the Indonesian equivalent for the industrial safety instruction: "Inspect the ground clamp connection to prevent stray current"?',
+        options: [
+            'Periksa regulator gas untuk mencegah kebocoran selang',
+            'Periksa koneksi klem massa (ground clamp) untuk mencegah arus liar',
+            'Ganti stang las elektroda agar tidak terjadi sengatan listrik',
+            'Matikan sakelar utama ketika kabel las mulai memanas'
+        ],
+        correct: 1,
+        hint: '"Ground clamp" = klem massa (arde/penjepit ke benda kerja), "stray current" = arus bocor/arus liar.',
+        explanation: 'Ground clamp adalah penjepit massa ke logam kerja. Sambungan yang longgar dapat memicu percikan berbahaya, panas berlebih, dan arus liar (stray current) yang merusak mesin las.'
     },
     {
-        id: 11, category: 'K3 Safety', catColor: 'bg-amber-100 text-amber-700',
-        question: 'Saat menangani tabung gas Argon/CO₂ untuk GTAW/GMAW, tindakan mana yang BENAR?',
-        options: ['Menggelindingkan tabung di lantai untuk memindahkannya', 'Menyimpan tabung dalam posisi rebah/horizontal', 'Merantai/mengikat tabung pada troli atau dinding secara vertikal', 'Melepas safety cap saat tidak digunakan agar mudah dipasang'],
-        correct: 2,
-        explanation: 'Tabung gas bertekanan tinggi WAJIB disimpan dan ditransportasi dalam posisi tegak (vertikal) dan diikat/dirantai ke troli, dinding, atau rak agar tidak jatuh. Safety cap harus terpasang saat tidak digunakan. JANGAN menggelindingkan, melempar, atau menyimpan secara horizontal.'
+        id: 11, category: 'Workshop English', catColor: 'bg-green-100 text-green-700',
+        question: 'Which English phrase correctly describes the defect where the weld metal fails to penetrate completely through the root of the joint?',
+        options: ['Excessive Spatter', 'Incomplete Root Penetration', 'Root Concavity', 'Overfill Crown'],
+        correct: 1,
+        hint: 'Perhatikan kata "penetrate" dan bagian akar sambungan "root".',
+        explanation: 'Incomplete Root Penetration (kurang penembusan akar) terjadi ketika logam las tidak menembus hingga bagian dasar/akar celah sambungan.'
     },
+
+    // === K3 SAFETY STANDARDS (Q12-Q16) ===
     {
         id: 12, category: 'K3 Safety', catColor: 'bg-amber-100 text-amber-700',
-        question: 'Before starting any welding operation, the first safety step is to:',
-        options: ['Strike the arc immediately to test the machine', 'Check all PPE, inspect equipment, and ensure proper ventilation', 'Ask a colleague to hold the workpiece by hand', 'Disconnect the ground clamp to avoid electric shock'],
-        correct: 1,
-        explanation: 'Langkah pertama sebelum pengelasan: (1) Periksa semua APD lengkap, (2) Inspeksi peralatan las, kabel, dan koneksi, (3) Pastikan ventilasi/exhaust memadai, (4) Periksa area kerja dari bahan mudah terbakar. Tidak pernah langsung menyalakan arc tanpa persiapan keselamatan!'
+        question: 'Tingkat kegelapan kaca filter (Shade Number) berapakah yang direkomendasikan standar ANSI Z87.1 untuk proses SMAW dengan arus kerja 100 – 150 Ampere?',
+        options: ['Shade #5 - #6', 'Shade #8', 'Shade #10', 'Shade #14'],
+        correct: 2,
+        hint: 'Shade 5 untuk pemotongan oksi-asetilen, shade 8 untuk arus rendah < 75A, dan shade 10 adalah standar umum 100-150A.',
+        explanation: 'Standar ANSI / OSHA menetapkan filter shade #10 untuk pengelasan busur listrik elektroda terbungkus (SMAW) pada rentang arus 75 hingga 150 Ampere guna melindungi retina dari sinar ultraviolet dan inframerah.'
     },
-    // === REGULATIONS & LOGIC (Q13-Q15) ===
     {
-        id: 13, category: 'Regulasi & Logika', catColor: 'bg-purple-100 text-purple-700',
-        question: 'Dalam prosedur resmi BP2MI, urutan yang BENAR untuk penempatan Pekerja Migran Indonesia (PMI) adalah:',
+        id: 13, category: 'K3 Safety', catColor: 'bg-amber-100 text-amber-700',
+        question: 'Manakah tindakan keselamatan yang BENAR saat memindahkan dan menyimpan tabung gas bertekanan tinggi (Argon, CO2, Oksigen) di area workshop?',
         options: [
-            'Paspor → Medical → PAP → Penempatan',
-            'Pendaftaran SISKOP2MI → Seleksi → Pelatihan/Sertifikasi → Medical → PAP (Pembekalan Akhir Pemberangkatan) → Penempatan',
-            'Medical → Paspor → Berangkat → Pelatihan di negara tujuan',
-            'Seleksi → Berangkat → Pelatihan → Medical'
+            'Menggelindingkan tabung secara horizontal di atas lantai agar lebih cepat dipindahkan',
+            'Menyimpan tabung dalam posisi berdiri tegak dan diikat/dirantai kuat pada rak atau dinding pengaman',
+            'Membuka tutup pelindung katup (safety valve cap) saat tabung diangkat dengan forklift',
+            'Menempatkan tabung gas berdampingan tepat di sebelah sumber percikan api las agar selang tidak terlalu panjang'
         ],
         correct: 1,
-        explanation: 'Prosedur resmi BP2MI: Pendaftaran online di SISKOP2MI → Seleksi oleh pemberi kerja → Pelatihan kerja & sertifikasi kompetensi → Pemeriksaan kesehatan (Medical Check-Up) → PAP (Pembekalan Akhir Pemberangkatan) → Penandatangan Perjanjian Kerja → Penerbitan Visa → Pemberangkatan. Semua tahapan WAJIB dilalui secara berurutan.'
+        hint: 'Tabung bertekanan tidak boleh roboh atau terkena benturan katupnya karena dapat melesat seperti roket.',
+        explanation: 'Tabung gas bertekanan wajib disimpan dalam posisi tegak vertikal, diikat rantai pengaman, tutup pelindung terpasang saat tidak digunakan, dan dijauhkan minimal 6 meter dari sumber panas atau percikan api terbuka.'
     },
     {
-        id: 14, category: 'Regulasi & Logika', catColor: 'bg-purple-100 text-purple-700',
-        question: 'Jika sebuah kubus memiliki 6 sisi dan setiap sisi diberi warna berbeda, berapa minimum warna yang diperlukan agar tidak ada dua sisi yang bersebelahan memiliki warna sama?',
-        options: ['2 warna', '3 warna', '4 warna', '6 warna'],
+        id: 14, category: 'K3 Safety', catColor: 'bg-amber-100 text-amber-700',
+        question: 'Kondisi iritasi mata akibat paparan langsung radiasi sinar ultraviolet (UV) busur las tanpa kacamata pelindung disebut secara medis:',
+        options: ['Astigmatisme Akut', 'Photokeratitis / Arc Eye (Flash Burn)', 'Katarak Traumatik', 'Presbiopia'],
         correct: 1,
-        explanation: 'Minimum 3 warna diperlukan. Kubus memiliki 3 pasang sisi berlawanan. Sisi berlawanan tidak bersebelahan, sehingga bisa diwarnai sama. Dengan 3 warna, setiap pasangan sisi berlawanan mendapat warna yang sama, dan tidak ada sisi bersebelahan yang berwarna sama. Ini soal logika spasial dasar.'
+        hint: 'Dikenal di kalangan welder dengan istilah "Welder\'s Flash" atau rasa berpasir terbakar pada kornea mata.',
+        explanation: 'Arc Eye atau Welder\'s Flash (Photokeratitis) adalah luka bakar radiasi UV pada kornea mata. Gejalanya mata merah, berair, sangat perih dan terasa seperti ada pasir di mata beberapa jam setelah terpapar.'
     },
     {
-        id: 15, category: 'Regulasi & Logika', catColor: 'bg-purple-100 text-purple-700',
-        question: 'Menurut peraturan, dokumen mana yang WAJIB dimiliki oleh calon PMI sebelum berangkat ke luar negeri?',
+        id: 15, category: 'K3 Safety', catColor: 'bg-amber-100 text-amber-700',
+        question: 'When welding inside a "Confined Space" (tangki tertutup, ruang sempit kapal), what critical safety measure is mandatory?',
         options: [
-            'Hanya Paspor saja sudah cukup',
-            'Paspor, Visa Kerja, Perjanjian Kerja, Sertifikat Kompetensi, Surat Keterangan Sehat',
-            'KTP dan Ijazah terakhir',
-            'Rekomendasi dari kepala desa saja'
+            'Use only 100% pure oxygen ventilation to keep workers alert',
+            'Continuous atmospheric gas testing, proper exhaust ventilation, and a designated standby safety observer outside',
+            'Working alone in silence to avoid disturbing other personnel',
+            'Switching off all lighting to prevent short circuits'
         ],
         correct: 1,
-        explanation: 'Calon PMI wajib memiliki: (1) Paspor, (2) Visa Kerja yang sesuai, (3) Perjanjian Kerja yang ditandatangani kedua belah pihak, (4) Sertifikat kompetensi/keahlian, (5) Surat keterangan sehat dari rumah sakit yang ditunjuk. Semua dokumen ini diperlukan untuk perlindungan hukum pekerja.'
+        hint: 'Ruang terbatas rentan penumpukan gas beracun dan kekurangan oksigen, sehingga perlu pemantauan udara dan pengawas di pintu masuk.',
+        explanation: 'Pekerjaan di confined space mewajibkan tes udara berkala (kadar O2, LEL, H2S/CO), ventilasi blower keluar masuk udara, izin kerja ruang terbatas, dan petugas standby (safety watcher) di luar.'
+    },
+    {
+        id: 16, category: 'K3 Safety', catColor: 'bg-amber-100 text-amber-700',
+        question: 'Bahan APD sarung tangan dan apron juru las yang paling aman terhadap percikan logam cair dan konduksi panas adalah terbuat dari:',
+        options: [
+            'Kulit split sapi asli tahan panas (Heavy Duty Split Cowhide Leather)',
+            'Kain nilon sintetis elastis',
+            'Karet sintetis PVC tahan air',
+            'Kain poliester rajut tebal'
+        ],
+        correct: 0,
+        hint: 'Bahan sintetis (nilon/poliester) akan meleleh saat terkena percikan panas dan menempel pada kulit, sehingga bahan alami kulit hewan adalah standar utama.',
+        explanation: 'Bahan kulit asli (cowhide leather) tidak mudah meleleh atau terbakar, memberikan isolasi termal yang baik dan melindungi kulit tangan dari tetesan terak serta spatter bersuhu tinggi.'
+    },
+
+    // === REGULASI MIGRAN & LOGIKA (Q17-Q20) ===
+    {
+        id: 17, category: 'Regulasi & Logika', catColor: 'bg-purple-100 text-purple-700',
+        question: 'Berdasarkan UU No. 18 Tahun 2017 tentang Pelindungan Pekerja Migran Indonesia, platform resmi satu pintu milik BP2MI untuk pendataan dan verifikasi dokumen calon PMI adalah:',
+        options: [
+            'SIAPkerja Kemnaker',
+            'SISKOP2MI (Sistem Komputerisasi Pelayanan Penempatan dan Pelindungan PMI)',
+            'SIMDA Migran',
+            'Portal Paspor Ditjen Imigrasi'
+        ],
+        correct: 1,
+        hint: 'Singkatan dari Sistem Komputerisasi Pelayanan Penempatan dan Pelindungan Pekerja Migran Indonesia.',
+        explanation: 'SISKOP2MI adalah basis data terpadu resmi BP2MI yang mencatat seluruh tahapan seleksi, verifikasi dokumen, perjanjian kerja, e-PMI, hingga kepulangan PMI guna menjamin penempatan secara prosedural dan terlindungi.'
+    },
+    {
+        id: 18, category: 'Regulasi & Logika', catColor: 'bg-purple-100 text-purple-700',
+        question: 'Tahapan wajib yang harus diikuti oleh calon Pekerja Migran Indonesia (PMI) setelah lulus medical check-up dan sebelum diberangkatkan ke negara tujuan penempatan adalah:',
+        options: [
+            'Uji Kompetensi Ulang di Bandara Internasional',
+            'PAP (Pembekalan Akhir Pemberangkatan) / OPP',
+            'Wawancara Langsung di Kedutaan Besar Tanpa Dokumen',
+            'Pelatihan Bahasa Tambahan Mandiri Tanpa Pengawasan'
+        ],
+        correct: 1,
+        hint: 'Program pembekalan resmi dari pemerintah mengenai regulasi, perlindungan hukum, dan hak-kewajiban sebelum terbang.',
+        explanation: 'PAP (Pembekalan Akhir Pemberangkatan) adalah orientasi pra-keberangkatan resmi yang diselenggarakan oleh BP3MI/BP2MI untuk memberikan pemahaman mengenai hak kewajiban, kebiasaan lokal negara tujuan, dan mitigasi masalah hukum.'
+    },
+    {
+        id: 19, category: 'Regulasi & Logika', catColor: 'bg-purple-100 text-purple-700',
+        question: 'Tes Logika Spasial: Sebuah pipa silinder dengan diameter 10 inci dipotong miring tepat bersudut 45 derajat. Bentuk penampang bidang potongan (cross-section surface) pipa tersebut adalah:',
+        options: [
+            'Lingkaran sempurna (Perfect Circle)',
+            'Elips / Lonjong (Ellipse)',
+            'Segitiga siku-siku (Right Triangle)',
+            'Persegi panjang (Rectangle)'
+        ],
+        correct: 1,
+        hint: 'Jika dipotong tegak lurus 90° menghasilkan lingkaran; jika dipotong miring miring menghasilkan bentuk oval/lonjong beraturan.',
+        explanation: 'Irisan kerucut atau silinder lingkaran yang dipotong miring oleh bidang datar membentuk bangun geometri Elips (lonjong beraturan).'
+    },
+    {
+        id: 20, category: 'Regulasi & Logika', catColor: 'bg-purple-100 text-purple-700',
+        question: 'Manakah kombinasi dokumen mutlak yang wajib dipegang oleh Pekerja Migran Indonesia saat bekerja di luar negeri secara resmi (non-unprocedural)?',
+        options: [
+            'Hanya KTP dan Paspor Turis (Visa Kunjungan)',
+            'Paspor, Visa Kerja Resmi, Perjanjian Kerja (PK), dan Terdaftar di SISKOP2MI/e-PMI',
+            'Surat Rekomendasi dari Kepala Desa dan Tiket Pesawat Pulang-Pergi',
+            'Sertifikat Pelatihan Kursus Singkat tanpa Visa Kerja'
+        ],
+        correct: 1,
+        hint: 'PMI wajib berangkat dengan visa kerja (bukan turis), perjanjian kerja resmi yang ditandatangani, dan perlindungan e-PMI.',
+        explanation: 'Bekerja ke luar negeri secara prosedural mewajibkan visa kerja legal (bukan visa wisata/ziarah), kontrak Perjanjian Kerja berkekuatan hukum, kepemilikan e-PMI BP2MI, serta jaminan BPJS Ketenagakerjaan Migran.'
     }
 ];
 
@@ -698,11 +876,12 @@ const cheatSheetData = {
 // ==================== STATE ====================
 let currentPage = 'exam';
 let currentQuestion = 0;
-let userAnswers = new Array(15).fill(-1);
+let userAnswers = new Array(20).fill(-1);
 let examTimer = null;
-let timeLeft = 15 * 60; // 15 minutes in seconds
+let timeLeft = 90 * 60; // 90 minutes in seconds
 let examStarted = false;
 let examSubmitted = false;
+let hintRevealed = false;
 
 // ==================== NAVIGATION ====================
 function navigateTo(page) {
@@ -715,7 +894,8 @@ function navigateTo(page) {
     document.getElementById(`page-${page}`).classList.add('active');
     // Update header
     const titles = {
-        exam: ['Simulasi Ujian Tertulis', 'Tes Juru Las & Bahasa Inggris — 15 Soal Pilihan Ganda'],
+        exam: ['Simulasi Ujian Tertulis', 'Tes Juru Las & Bahasa Inggris — Target 100 Soal (90 Menit)'],
+        'materi-bp2mi': ['Materi Wawancara BP2MI', 'Sesi Tanya-Jawab Terarah Seleksi Welder BP2MI / BP3MI'],
         interview: ['Latihan Interview Bahasa Inggris', 'Top 8 Pertanyaan Interview Rekrutmen Welder Global'],
         checklist: ['Checklist Kesiapan Pekerja', 'Persiapan Fisik, Dokumen & Mental — BP3MI Sumbar'],
         cheatsheet: ['Quick Cheat-Sheet', 'Simbol Las, Posisi Pengelasan & Kosakata Inggris Industri']
@@ -774,12 +954,28 @@ function showToast(message, type = 'info') {
 }
 
 // ==================== EXAM FUNCTIONS ====================
+function toggleHint() {
+    hintRevealed = !hintRevealed;
+    const hintBox = document.getElementById('hintBox');
+    const hintBtnText = document.getElementById('hintBtnText');
+    const hintBtn = document.getElementById('hintBtn');
+    if (hintRevealed) {
+        hintBox.classList.remove('hidden');
+        hintBtnText.textContent = 'Tutup Hint';
+        hintBtn.className = 'inline-flex items-center gap-1.5 text-xs font-bold text-white bg-safety-500 hover:bg-safety-600 border border-safety-600 px-3 py-1 rounded-lg transition-all shadow-sm';
+    } else {
+        hintBox.classList.add('hidden');
+        hintBtnText.textContent = 'Petunjuk (Hint)';
+        hintBtn.className = 'inline-flex items-center gap-1.5 text-xs font-bold text-safety-600 hover:text-safety-700 bg-safety-50 hover:bg-safety-100 border border-safety-200 px-3 py-1 rounded-lg transition-all';
+    }
+}
+
 function startExam() {
     examStarted = true;
     examSubmitted = false;
     currentQuestion = 0;
-    userAnswers = new Array(15).fill(-1);
-    timeLeft = 15 * 60;
+    userAnswers = new Array(questions.length).fill(-1);
+    timeLeft = 90 * 60; // 90 Menit
 
     document.getElementById('examIntro').classList.add('hidden');
     document.getElementById('examActive').classList.remove('hidden');
@@ -789,7 +985,7 @@ function startExam() {
 
     renderQuestion();
     startTimer();
-    showToast('Ujian dimulai! Waktu Anda 15 menit.', 'info');
+    showToast('Ujian Simulasi dimulai! Waktu pengerjaan 90 Menit.', 'info');
     document.getElementById('statusText').textContent = 'Ujian sedang berlangsung...';
 }
 
@@ -802,7 +998,7 @@ function startTimer() {
         const timerText = document.getElementById('timerText');
         timerText.textContent = `${min}:${sec}`;
 
-        if (timeLeft <= 60) {
+        if (timeLeft <= 300) {
             timerText.classList.add('timer-danger');
         } else {
             timerText.classList.remove('timer-danger');
@@ -824,6 +1020,13 @@ function renderQuestion() {
     const catBadge = document.getElementById('questionCategory');
     catBadge.textContent = q.category;
     catBadge.className = `inline-block text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full mb-2 ${q.catColor}`;
+
+    // Reset Hint
+    hintRevealed = false;
+    document.getElementById('hintBox').classList.add('hidden');
+    document.getElementById('hintBtnText').textContent = 'Petunjuk (Hint)';
+    document.getElementById('hintBtn').className = 'inline-flex items-center gap-1.5 text-xs font-bold text-safety-600 hover:text-safety-700 bg-safety-50 hover:bg-safety-100 border border-safety-200 px-3 py-1 rounded-lg transition-all';
+    document.getElementById('hintText').textContent = q.hint || 'Perhatikan detail pertanyaan dan standar industri terkait.';
 
     // Render options
     const container = document.getElementById('optionsContainer');
@@ -1253,11 +1456,204 @@ function filterVocab(cat, btn) {
     });
 }
 
+// ==================== MATERI BP2MI ====================
+const bp2miMaterials = [
+    {
+        id: 1,
+        sessionNumber: "Sesi 1",
+        title: "1. Komitmen Dasar & Motivasi",
+        category: "Motivasi",
+        badgeColor: "bg-blue-100 text-blue-700 border-blue-200",
+        interviewerQuestion: "Dari data Anda, Anda adalah lulusan dari MAN 1 Payakumbuh, bukan dari SMK jurusan Teknik Pengelasan seperti mayoritas pendaftar lainnya. Kenapa Anda begitu yakin memilih posisi Welder? Apa motivasi terbesar Anda ingin bekerja ke luar negeri melalui program ini?",
+        recommendedAnswer: "Meskipun dari MAN, MAN 1 Payakumbuh memiliki program keterampilan vokasi khusus. Setiap minggu kami praktik langsung di workshop pengelasan sekolah, jadi dasar-dasar memegang stang las, menyalakan busur, dan menyambung besi sudah sangat familiar bagi saya. Motivasi terbesar saya adalah ingin mandiri secara finansial di usia muda, membantu ekonomi keluarga, dan mengembangkan karier serta keahlian pengelasan saya di kancah internasional melalui jalur resmi negara.",
+        keyPoints: [
+            "Jelaskan bahwa MAN memiliki program vokasi dan praktik rutin mingguan di workshop sekolah.",
+            "Sampaikan familiaritas teknis dasar (memegang stang las, menyalakan busur, menyambung besi).",
+            "Tegaskan motivasi kuat: mandiri finansial, mengangkat ekonomi keluarga, dan memanfaatkan jalur resmi negara BP2MI."
+        ]
+    },
+    {
+        id: 2,
+        sessionNumber: "Sesi 2",
+        title: "2. Kompetensi Teknis Pengelasan",
+        category: "Teknis Las",
+        badgeColor: "bg-amber-100 text-amber-700 border-amber-200",
+        interviewerQuestion: "Anda tidak melampirkan sertifikat pengelasan resmi, namun menyebutkan memiliki pengalaman praktik vokasi selama di sekolah. Bisa Anda jelaskan secara mendetail: Apa saja jenis pengelasan (misal: SMAW, GMAW/MIG, GTAW/TIG) yang pernah Anda praktikkan? Jenis material apa yang biasa Anda las, dan posisi pengelasan apa saja (misal: 1G, 2G, 3G) yang sudah Anda kuasai?",
+        recommendedAnswer: "Mohon maaf Pak, di sekolah kami lebih fokus pada praktik langsung di lapangan daripada teori kelas. Namun, saya sangat menguasai penggunaan Las Listrik Stik (SMAW). Saya sudah biasa menyambung material besi baja karbon ringan, membersihkan terak las (slag), dan melakukan penyambungan dasar posisi mendatar (flat/1G) maupun horizontal (2G) untuk membuat pagar atau tralis.",
+        keyPoints: [
+            "Jawab jujur dan spesifik mengenai kompetensi yang benar-benar dikuasai: Las Listrik Stik (SMAW).",
+            "Sebutkan material konkret yang sering dikerjakan: besi baja karbon ringan.",
+            "Tunjukkan kebiasaan kerja baik: pembersihan terak (slag) dan kemampuan posisi dasar 1G (flat) serta 2G (horizontal)."
+        ]
+    },
+    {
+        id: 3,
+        sessionNumber: "Sesi 3",
+        title: "3. Ketahanan Kerja & Kesehatan",
+        category: "Kesehatan & K3",
+        badgeColor: "bg-red-100 text-red-700 border-red-200",
+        interviewerQuestion: "Pekerjaan sebagai Welder di luar negeri itu berat. Anda akan menghadapi panas, percikan api, asap, dan dituntut fokus berjam-jam dengan menggunakan APD lengkap. Bagaimana Anda meyakinkan kami bahwa fisik Anda sanggup menghadapi tekanan kerja tersebut? Apakah Anda memiliki riwayat penyakit pernapasan atau mata (seperti silindris/buta warna)?",
+        recommendedAnswer: "Alhamdulillah, saya memiliki gaya hidup sehat dan tidak merokok, sehingga kondisi fisik dan pernapasan saya prima untuk menghadapi lingkungan kerja Welder. Mengenai mata, saya memiliki sedikit silindris ringan, namun selama ini tidak mengganggu fokus saya saat mengelas di workshop sekolah. Jika nanti dari hasil medical check-up resmi diharuskan menggunakan kacamata koreksi atau lensa khusus di dalam kedok las, saya siap menyediakannya demi keselamatan dan akurasi kerja.",
+        keyPoints: [
+            "Tegaskan pola hidup sehat & bebas rokok sebagai modal utama daya tahan pernapasan.",
+            "Transparan mengenai mata silindris ringan tanpa membuat interviewer ragu atas fokus kerja.",
+            "Berikan solusi proaktif: siap menggunakan lensa koreksi khusus di kedok las sesuai anjuran medis resmi."
+        ]
+    },
+    {
+        id: 4,
+        sessionNumber: "Sesi 4",
+        title: "4. Kesiapan Pelatihan Asrama & Bahasa",
+        category: "Disiplin & Asrama",
+        badgeColor: "bg-purple-100 text-purple-700 border-purple-200",
+        interviewerQuestion: "Di brosur tertera bahwa posisi Welder ini mewajibkan Pelatihan Bahasa Inggris sebanyak 640 Jam Pelajaran (JPL), sedangkan pelatihan teknis lasnya hanya 180 JPL. Kelas bahasa ini akan sangat padat, melelahkan, dan berjalan berbulan-bulan di dalam asrama dengan disiplin tinggi. Bagaimana kesiapan Anda untuk belajar bahasa Inggris dari nol secara intensif di asrama? Apakah Anda tipe orang yang mudah jenuh atau rindu rumah (homesick) jika harus jauh dari keluarga di Payakumbuh?",
+        recommendedAnswer: "Sistem kehidupan asrama sudah sangat familiar bagi saya, karena saya sudah berpengalaman selama 3 tahun asrama di Bukittinggi dan 3 tahun merantau di asrama Jogja. Jadi, masalah adaptasi lingkungan baru, kedisiplinan asrama, dan kemandirian sudah menjadi bagian dari keseharian saya. Bagi saya, rasa jenuh atau rindu rumah adalah hal yang manusiawi, namun tujuan utama saya menjadi seorang Welder profesional jauh lebih besar dari semua itu. Saya siap mendedikasikan fokus saya sepenuhnya untuk program ini.",
+        keyPoints: [
+            "Gunakan rekam jejak nyata: 3 tahun asrama di Bukittinggi & 3 tahun merantau di Jogja sebagai bukti kemandirian.",
+            "Tunjukkan kedewasaan sikap dalam menyikapi rasa rindu keluarga (homesick).",
+            "Tegaskan tekad bulat mendedikasikan fokus penuh pada 640 JPL Bahasa Inggris & pelatihan asrama."
+        ]
+    },
+    {
+        id: 5,
+        sessionNumber: "Sesi 5",
+        title: "5. Adaptasi Budaya & Komunikasi",
+        category: "Adaptasi Global",
+        badgeColor: "bg-green-100 text-green-700 border-green-200",
+        interviewerQuestion: "Karena program ini menggunakan jalur Welder - Bahasa Inggris, penempatan kerja Anda nantinya bisa mengarah ke negara-negara Eropa, Timur Tengah, atau wilayah Asia pasifik. Apakah Anda siap jika nantinya ditempatkan di negara yang budayanya sangat berbeda jauh dengan Indonesia? Dan apa yang akan Anda lakukan jika di awal bekerja nanti, Anda mengalami kendala komunikasi dengan supervisor asing di tempat kerja?",
+        recommendedAnswer: "Saya sangat siap untuk ditempatkan di negara mana pun dengan budaya yang berbeda, karena bagi saya perbedaan itu adalah ruang untuk belajar. Jika nanti di tempat kerja saya menghadapi kendala komunikasi atau situasi baru yang membingungkan, prinsip saya adalah tetap tenang dan tidak mengambil keputusan secara impulsif demi menghindari risiko kesalahan fatal. Saya akan mengedepankan komunikasi profesional dengan meminta kejelasan ulang kepada supervisor, atau meminta bimbingan dari kolega senior di atas saya agar pekerjaan tetap berjalan aman dan sesuai standar perusahaan.",
+        keyPoints: [
+            "Tunjukkan keterbukaan pola pikir terhadap keberagaman budaya di berbagai negara penempatan.",
+            "Terapkan prinsip K3 & keselamatan: tidak gegabah/impulsif saat menghadapi instruksi yang ambigu.",
+            "Utamakan etika profesional: aktif meminta klarifikasi ke supervisor atau bimbingan dari teknisi senior."
+        ]
+    }
+];
+
+function renderBP2MIMaterials() {
+    const container = document.getElementById('bp2miMaterialsContainer');
+    if (!container) return;
+    container.innerHTML = '';
+
+    bp2miMaterials.forEach((mat) => {
+        const card = document.createElement('div');
+        card.className = 'bp2mi-card bg-white rounded-2xl border border-charcoal-100 overflow-hidden card-hover';
+        card.dataset.cat = mat.category;
+
+        card.innerHTML = `
+            <div class="p-6">
+                <div class="flex items-start gap-4">
+                    <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-blue-800 text-white flex items-center justify-center font-bold text-sm shadow-md shadow-blue-600/20">
+                        ${mat.id}
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex flex-wrap items-center gap-2 mb-1.5">
+                            <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border ${mat.badgeColor}">${mat.category}</span>
+                            <span class="text-[11px] font-semibold text-charcoal-400 font-mono">${mat.sessionNumber}</span>
+                        </div>
+                        <h4 class="text-base font-bold text-charcoal-900 mb-2">${mat.title}</h4>
+                        <div class="bg-charcoal-50/80 border border-charcoal-100 rounded-xl p-3.5 text-sm text-charcoal-800 leading-relaxed font-medium">
+                            <div class="flex items-start gap-2">
+                                <span class="text-blue-600 font-bold flex-shrink-0">Q:</span>
+                                <span>"${mat.interviewerQuestion}"</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Accordion Section -->
+                <div class="mt-4 sm:ml-14">
+                    <button onclick="toggleAccordion(this)" class="w-full flex items-center justify-between bg-blue-50/60 hover:bg-blue-50 transition-colors rounded-xl px-4 py-3 text-sm font-bold text-blue-900 border border-blue-100/80">
+                        <span class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            Buka Panduan Respon Taktis
+                        </span>
+                        <svg class="w-4 h-4 accordion-icon text-blue-700 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                    <div class="accordion-content px-2 sm:px-4">
+                        <div class="space-y-4 pt-2">
+                            <!-- Rekomendasi Jawaban -->
+                            <div>
+                                <div class="flex items-center justify-between mb-2">
+                                    <h5 class="text-xs font-bold uppercase tracking-wider text-green-700 flex items-center gap-1.5">
+                                        <svg class="w-3.5 h-3.5 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                                        Rekomendasi Respon Terbaik (Bahasa Indonesia)
+                                    </h5>
+                                    <button onclick="copyAnswerText(this, ${JSON.stringify(mat.recommendedAnswer).replace(/"/g, '&quot;')})" class="inline-flex items-center gap-1 text-[11px] font-semibold text-charcoal-600 hover:text-charcoal-900 bg-white border border-charcoal-200 hover:border-charcoal-300 px-2.5 py-1 rounded-lg transition-colors">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                                        Salin Teks
+                                    </button>
+                                </div>
+                                <div class="bg-gradient-to-r from-emerald-50/80 to-green-50/50 border border-emerald-200/80 rounded-xl p-4 text-sm text-emerald-950 leading-relaxed font-medium">
+                                    "${mat.recommendedAnswer}"
+                                </div>
+                            </div>
+
+                            <!-- Poin Kunci & Strategi -->
+                            <div class="bg-charcoal-50 border border-charcoal-200/70 rounded-xl p-4">
+                                <h5 class="text-xs font-bold uppercase tracking-wider text-charcoal-700 mb-2 flex items-center gap-1.5">
+                                    <svg class="w-3.5 h-3.5 text-amber-500" fill="currentColor" viewBox="0 0 20 20"><path d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM15.657 5.757a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM5.05 6.464A1 1 0 106.464 5.05l-.707-.707a1 1 0 00-1.414 1.414l.707.707zM5 10a1 1 0 01-1 1H3a1 1 0 110-2h1a1 1 0 011 1zM8 16v-1h4v1a2 2 0 11-4 0zM12 14H8a4 4 0 01-.8-7.92A4.002 4.002 0 0112 14z"/></svg>
+                                    Poin Kunci & Strategi Respon
+                                </h5>
+                                <ul class="space-y-1.5 text-xs text-charcoal-600">
+                                    ${mat.keyPoints.map(pt => `
+                                        <li class="flex items-start gap-2">
+                                            <span class="text-safety-500 font-bold mt-0.5">•</span>
+                                            <span>${pt}</span>
+                                        </li>
+                                    `).join('')}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        container.appendChild(card);
+    });
+}
+
+function filterBP2MIMaterial(cat, btn) {
+    document.querySelectorAll('.bp2mi-filter').forEach(f => {
+        f.className = 'bp2mi-filter px-3.5 py-1.5 rounded-xl text-xs font-bold bg-white text-charcoal-600 border border-charcoal-200 hover:border-charcoal-300 transition-all';
+    });
+    btn.className = 'bp2mi-filter active px-3.5 py-1.5 rounded-xl text-xs font-bold bg-charcoal-900 text-white transition-all shadow-sm';
+
+    document.querySelectorAll('.bp2mi-card').forEach(card => {
+        if (cat === 'all' || card.dataset.cat === cat) {
+            card.style.display = '';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+}
+
+function copyAnswerText(btn, text) {
+    navigator.clipboard.writeText(text).then(() => {
+        showToast('✓ Teks jawaban berhasil disalin ke clipboard!', 'success');
+        const origHTML = btn.innerHTML;
+        btn.innerHTML = '<span class="text-green-600 font-bold">✓ Tersalin</span>';
+        setTimeout(() => { btn.innerHTML = origHTML; }, 2000);
+    }).catch(() => {
+        showToast('Gagal menyalin teks ke clipboard.', 'error');
+    });
+}
+
 // ==================== INIT ====================
 document.addEventListener('DOMContentLoaded', () => {
     renderInterview();
     renderChecklist();
     renderCheatSheet();
+    renderBP2MIMaterials();
+
+    // Register Service Worker for PWA
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./service-worker.js')
+                .then(reg => console.log('[PWA] Service Worker registered with scope:', reg.scope))
+                .catch(err => console.error('[PWA] Service Worker registration failed:', err));
+        });
+    }
 });
 </script>
 </body>
