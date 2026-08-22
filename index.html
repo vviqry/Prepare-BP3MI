@@ -101,6 +101,66 @@
         /* Timer danger */
         .timer-danger { animation: timerPulse .8s infinite; }
         @keyframes timerPulse { 0%,100% { color: #ef4444; } 50% { color: #fca5a5; } }
+
+        /* ===== MOBILE BOTTOM NAV ===== */
+        .bottom-nav { display: none; }
+        @media (max-width: 1023px) {
+            .bottom-nav {
+                display: flex;
+                position: fixed;
+                bottom: 0; left: 0; right: 0;
+                background: #131419;
+                border-top: 1px solid #2e3038;
+                z-index: 50;
+                padding-bottom: env(safe-area-inset-bottom, 0px);
+            }
+            /* Push content above bottom nav */
+            main { padding-bottom: 72px; }
+        }
+        .bottom-nav-btn {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            padding: 10px 4px;
+            font-size: 9px;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: #7a7e89;
+            transition: color .2s ease;
+            border: none;
+            background: none;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .bottom-nav-btn svg { width: 22px; height: 22px; transition: transform .2s cubic-bezier(.16,1,.3,1); }
+        .bottom-nav-btn.active { color: #ff8310; }
+        .bottom-nav-btn.active svg { transform: scale(1.1); }
+
+        /* ===== GENERAL MOBILE FIXES ===== */
+        @media (max-width: 639px) {
+            /* Tighter content padding on mobile */
+            .mobile-px { padding-left: 1rem !important; padding-right: 1rem !important; }
+            /* Hero banners: less vertical padding on mobile */
+            .hero-banner { padding: 1.25rem !important; }
+            /* Stat grid: 2-col on xs, don't force 4-col */
+            .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+            /* Question meta row: stack on very narrow screens */
+            .question-meta { flex-wrap: wrap; gap: 6px !important; }
+            .question-meta .hint-btn { margin-left: 0 !important; width: 100%; justify-content: center; }
+            /* Hide many dot indicators, show counter instead */
+            #dotIndicators { display: none !important; }
+            #dotCounter { display: flex !important; }
+            /* Option text slightly smaller */
+            .opt-btn { font-size: 13px !important; }
+            /* Header subtitle: hide on very small screens */
+            #pageSubtitle { display: none; }
+            /* toast: full width on mobile */
+            #toastContainer { left: 1rem !important; right: 1rem !important; }
+        }
     </style>
 </head>
 <body class="bg-charcoal-50 text-charcoal-900 min-h-screen">
@@ -108,12 +168,7 @@
     <!-- Toast Container -->
     <div id="toastContainer" class="fixed top-4 right-4 z-[100] flex flex-col gap-2"></div>
 
-    <!-- Mobile Menu Toggle -->
-    <button id="mobileMenuBtn" class="lg:hidden fixed top-4 left-4 z-50 bg-charcoal-900 text-white p-2.5 rounded-xl shadow-lg hover:bg-charcoal-800 transition-colors">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
-    </button>
-
-    <!-- Sidebar Overlay -->
+    <!-- Mobile Sidebar Overlay -->
     <div id="sidebarOverlay" class="sidebar-overlay"></div>
 
     <div class="flex min-h-screen">
@@ -183,14 +238,20 @@
         <main class="flex-1 min-h-screen">
             <!-- Top Bar -->
             <header class="sticky top-0 z-30 bg-white/80 backdrop-blur-xl border-b border-charcoal-100">
-                <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-                    <div class="pl-12 lg:pl-0">
-                        <h2 class="text-lg font-bold text-charcoal-900" id="pageTitle">Simulasi Ujian Tertulis</h2>
-                        <p class="text-xs text-charcoal-400" id="pageSubtitle">Tes Juru Las & Bahasa Inggris — 100 Soal Simulasi (90 Menit)</p>
+                <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-2">
+                    <div class="flex items-center gap-2 min-w-0">
+                        <!-- Hamburger (mobile only) -->
+                        <button id="mobileMenuBtn" class="lg:hidden flex-shrink-0 bg-charcoal-900 text-white p-2 rounded-xl shadow hover:bg-charcoal-800 transition-colors" aria-label="Buka menu">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                        </button>
+                        <div class="min-w-0">
+                            <h2 class="text-sm sm:text-lg font-bold text-charcoal-900 truncate" id="pageTitle">Simulasi Ujian Tertulis</h2>
+                            <p class="text-[10px] sm:text-xs text-charcoal-400 truncate hidden sm:block" id="pageSubtitle">Tes Juru Las & Bahasa Inggris — 100 Soal (90 Menit)</p>
+                        </div>
                     </div>
-                    <div class="flex items-center gap-3">
-                        <div id="timerDisplay" class="hidden items-center gap-2 bg-charcoal-900 text-white pl-3 pr-4 py-2 rounded-xl text-sm font-mono font-semibold">
-                            <svg class="w-4 h-4 text-safety-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    <div class="flex items-center gap-2 flex-shrink-0">
+                        <div id="timerDisplay" class="hidden items-center gap-1.5 bg-charcoal-900 text-white pl-2.5 pr-3 py-1.5 rounded-xl text-xs sm:text-sm font-mono font-semibold">
+                            <svg class="w-3.5 h-3.5 text-safety-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                             <span id="timerText">90:00</span>
                         </div>
                     </div>
@@ -198,7 +259,7 @@
             </header>
 
             <!-- Content Area -->
-            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="max-w-6xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8">
 
                 <!-- ============ PAGE: EXAM ============ -->
                 <section id="page-exam" class="page active">
@@ -206,57 +267,57 @@
                     <!-- Exam Intro -->
                     <div id="examIntro">
                         <div class="bg-white rounded-2xl border border-charcoal-100 overflow-hidden card-hover">
-                            <div class="bg-gradient-to-r from-charcoal-900 via-charcoal-800 to-charcoal-900 p-8 text-white relative overflow-hidden">
+                            <div class="hero-banner bg-gradient-to-r from-charcoal-900 via-charcoal-800 to-charcoal-900 p-5 sm:p-8 text-white relative overflow-hidden">
                                 <div class="absolute top-0 right-0 w-64 h-64 bg-safety-500/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
                                 <div class="relative">
-                                    <div class="inline-flex items-center gap-2 bg-safety-500/20 text-safety-300 text-xs font-bold px-3 py-1.5 rounded-full mb-4">
+                                    <div class="inline-flex items-center gap-2 bg-safety-500/20 text-safety-300 text-xs font-bold px-3 py-1.5 rounded-full mb-3">
                                         <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2L3 7l7 5 7-5-7-5zM3 17l7 5 7-5M3 12l7 5 7-5"/></svg>
                                         SIMULASI RESMI
                                     </div>
-                                    <h3 class="text-2xl font-bold mb-2">Tes Tertulis Juru Las & Bahasa Inggris</h3>
-                                    <p class="text-charcoal-300 text-sm max-w-xl">Simulasi ujian seleksi pelatihan SMK Go Global BP3MI. Uji pengetahuan Anda di bidang pengelasan, K3, bahasa Inggris teknis, dan regulasi pekerja migran.</p>
+                                    <h3 class="text-lg sm:text-2xl font-bold mb-2">Tes Tertulis Juru Las & Bahasa Inggris</h3>
+                                    <p class="text-charcoal-300 text-xs sm:text-sm max-w-xl">Simulasi ujian seleksi pelatihan SMK Go Global BP3MI. Uji pengetahuan Anda di bidang pengelasan, K3, bahasa Inggris teknis, dan regulasi pekerja migran.</p>
                                 </div>
                             </div>
-                            <div class="p-8">
-                                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
-                                    <div class="text-center p-4 bg-charcoal-50 rounded-xl">
-                                        <div class="text-2xl font-bold text-charcoal-900">100</div>
-                                        <div class="text-xs text-charcoal-500 mt-1">Total Soal</div>
+                            <div class="p-4 sm:p-8">
+                                <div class="stats-grid grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+                                    <div class="text-center p-3 sm:p-4 bg-charcoal-50 rounded-xl">
+                                        <div class="text-xl sm:text-2xl font-bold text-charcoal-900">100</div>
+                                        <div class="text-[11px] sm:text-xs text-charcoal-500 mt-1">Total Soal</div>
                                     </div>
-                                    <div class="text-center p-4 bg-charcoal-50 rounded-xl">
-                                        <div class="text-2xl font-bold text-charcoal-900 font-mono text-safety-600">90:00</div>
-                                        <div class="text-xs text-charcoal-500 mt-1">Waktu (Menit)</div>
+                                    <div class="text-center p-3 sm:p-4 bg-charcoal-50 rounded-xl">
+                                        <div class="text-xl sm:text-2xl font-bold text-charcoal-900 font-mono text-safety-600">90:00</div>
+                                        <div class="text-[11px] sm:text-xs text-charcoal-500 mt-1">Waktu (Menit)</div>
                                     </div>
-                                    <div class="text-center p-4 bg-charcoal-50 rounded-xl">
-                                        <div class="text-2xl font-bold text-charcoal-900">4</div>
-                                        <div class="text-xs text-charcoal-500 mt-1">Kategori</div>
+                                    <div class="text-center p-3 sm:p-4 bg-charcoal-50 rounded-xl">
+                                        <div class="text-xl sm:text-2xl font-bold text-charcoal-900">4</div>
+                                        <div class="text-[11px] sm:text-xs text-charcoal-500 mt-1">Kategori</div>
                                     </div>
-                                    <div class="text-center p-4 bg-charcoal-50 rounded-xl">
-                                        <div class="text-2xl font-bold text-safety-600">70%</div>
-                                        <div class="text-xs text-charcoal-500 mt-1">Nilai Min. Lulus</div>
+                                    <div class="text-center p-3 sm:p-4 bg-charcoal-50 rounded-xl">
+                                        <div class="text-xl sm:text-2xl font-bold text-safety-600">70%</div>
+                                        <div class="text-[11px] sm:text-xs text-charcoal-500 mt-1">Min. Lulus</div>
                                     </div>
                                 </div>
-                                <div class="grid sm:grid-cols-2 gap-3 mb-8">
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 mb-6">
                                     <div class="flex items-start gap-3 p-3 rounded-lg bg-blue-50 border border-blue-100">
-                                        <span class="mt-0.5 text-blue-500"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg></span>
+                                        <span class="mt-0.5 text-blue-500 flex-shrink-0"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg></span>
                                         <div><h4 class="text-xs font-semibold text-blue-800">Technical Welding</h4><p class="text-[11px] text-blue-600 mt-0.5">SMAW, GTAW, GMAW, posisi las 1G-4G, cacat las</p></div>
                                     </div>
                                     <div class="flex items-start gap-3 p-3 rounded-lg bg-green-50 border border-green-100">
-                                        <span class="mt-0.5 text-green-500"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg></span>
+                                        <span class="mt-0.5 text-green-500 flex-shrink-0"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg></span>
                                         <div><h4 class="text-xs font-semibold text-green-800">Workshop English</h4><p class="text-[11px] text-green-600 mt-0.5">Welding tools, safety commands, blueprint vocab</p></div>
                                     </div>
                                     <div class="flex items-start gap-3 p-3 rounded-lg bg-amber-50 border border-amber-100">
-                                        <span class="mt-0.5 text-amber-500"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg></span>
+                                        <span class="mt-0.5 text-amber-500 flex-shrink-0"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg></span>
                                         <div><h4 class="text-xs font-semibold text-amber-800">K3 Safety Standards</h4><p class="text-[11px] text-amber-600 mt-0.5">APD, pemilihan shade helm, penanganan tabung gas</p></div>
                                     </div>
                                     <div class="flex items-start gap-3 p-3 rounded-lg bg-purple-50 border border-purple-100">
-                                        <span class="mt-0.5 text-purple-500"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg></span>
+                                        <span class="mt-0.5 text-purple-500 flex-shrink-0"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg></span>
                                         <div><h4 class="text-xs font-semibold text-purple-800">Regulasi & Logika</h4><p class="text-[11px] text-purple-600 mt-0.5">Prosedur BP2MI & logika spasial dasar</p></div>
                                     </div>
                                 </div>
-                                <button onclick="startExam()" class="w-full sm:w-auto bg-gradient-to-r from-safety-500 to-safety-600 hover:from-safety-600 hover:to-safety-700 text-white font-bold py-3.5 px-8 rounded-xl transition-all duration-200 shadow-lg shadow-safety-500/20 pulse-glow flex items-center justify-center gap-2 mx-auto">
+                                <button onclick="startExam()" class="w-full bg-gradient-to-r from-safety-500 to-safety-600 hover:from-safety-600 hover:to-safety-700 text-white font-bold py-3.5 px-8 rounded-xl transition-all duration-200 shadow-lg shadow-safety-500/20 pulse-glow flex items-center justify-center gap-2">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                                    Mulai Ujian Sekarang (90 Menit)
+                                    Mulai Ujian (90 Menit)
                                 </button>
                             </div>
                         </div>
@@ -280,33 +341,38 @@
 
                         <!-- Question Card -->
                         <div class="bg-white rounded-2xl border border-charcoal-100 overflow-hidden">
-                            <div class="p-6 sm:p-8">
-                                <div class="flex items-start gap-4 mb-4">
-                                    <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-charcoal-900 text-white flex items-center justify-center font-bold text-sm" id="questionNumber">1</div>
-                                    <div class="flex-1">
-                                        <div class="flex items-center justify-between gap-2 mb-2">
-                                            <span class="inline-block text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full" id="questionCategory">Technical Welding</span>
-                                            <button type="button" onclick="toggleHint()" id="hintBtn" class="inline-flex items-center gap-1.5 text-xs font-bold text-safety-600 hover:text-safety-700 bg-safety-50 hover:bg-safety-100 border border-safety-200 px-3 py-1 rounded-lg transition-all">
-                                                <span>💡</span> <span id="hintBtnText">Petunjuk (Hint)</span>
+                            <div class="p-4 sm:p-6 lg:p-8">
+                                <div class="flex items-start gap-3 mb-4">
+                                    <div class="flex-shrink-0 w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-charcoal-900 text-white flex items-center justify-center font-bold text-sm" id="questionNumber">1</div>
+                                    <div class="flex-1 min-w-0">
+                                        <!-- Category + Hint row — wraps on narrow screens -->
+                                        <div class="question-meta flex flex-wrap items-center gap-2 mb-2">
+                                            <span class="inline-block text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full flex-shrink-0" id="questionCategory">Technical Welding</span>
+                                            <button type="button" onclick="toggleHint()" id="hintBtn" class="hint-btn inline-flex items-center gap-1.5 text-xs font-bold text-safety-600 hover:text-safety-700 bg-safety-50 hover:bg-safety-100 border border-safety-200 px-3 py-1 rounded-lg transition-all ml-auto">
+                                                <span>💡</span> <span id="hintBtnText">Hint</span>
                                             </button>
                                         </div>
-                                        <p class="text-base font-medium leading-relaxed text-charcoal-800" id="questionText"></p>
+                                        <p class="text-sm sm:text-base font-medium leading-relaxed text-charcoal-800" id="questionText"></p>
                                         <div id="hintBox" class="hidden mt-3 p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900 leading-relaxed animate-fadeIn">
                                             <span class="font-bold text-amber-700 block mb-0.5">🔍 Petunjuk Soal:</span>
                                             <span id="hintText"></span>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="space-y-3 mt-4" id="optionsContainer"></div>
+                                <div class="space-y-2.5 mt-4" id="optionsContainer"></div>
                             </div>
-                            <div class="border-t border-charcoal-100 px-6 sm:px-8 py-4 flex items-center justify-between bg-charcoal-50/50">
-                                <button onclick="prevQuestion()" id="prevBtn" class="flex items-center gap-2 text-sm font-medium text-charcoal-500 hover:text-charcoal-800 transition-colors disabled:opacity-30 disabled:cursor-not-allowed" disabled>
+                            <div class="border-t border-charcoal-100 px-4 sm:px-6 lg:px-8 py-3 sm:py-4 flex items-center justify-between bg-charcoal-50/50">
+                                <button onclick="prevQuestion()" id="prevBtn" class="flex items-center gap-1.5 text-sm font-medium text-charcoal-500 hover:text-charcoal-800 transition-colors disabled:opacity-30 disabled:cursor-not-allowed" disabled>
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-                                    Sebelumnya
+                                    <span class="hidden xs:inline">Sebelumnya</span>
                                 </button>
-                                <div class="flex gap-1.5" id="dotIndicators"></div>
-                                <button onclick="nextQuestion()" id="nextBtn" class="flex items-center gap-2 text-sm font-bold text-safety-600 hover:text-safety-700 transition-colors">
-                                    Selanjutnya
+                                <!-- Dots (desktop) / Counter (mobile) -->
+                                <div class="flex gap-1" id="dotIndicators"></div>
+                                <div id="dotCounter" class="hidden items-center gap-1 text-xs font-mono font-bold text-charcoal-500 bg-charcoal-100 px-3 py-1.5 rounded-lg">
+                                    <span id="dotCounterText">1 / 20</span>
+                                </div>
+                                <button onclick="nextQuestion()" id="nextBtn" class="flex items-center gap-1.5 text-sm font-bold text-safety-600 hover:text-safety-700 transition-colors">
+                                    <span class="hidden xs:inline">Selanjutnya</span>
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                                 </button>
                             </div>
@@ -374,16 +440,16 @@
 
                 <!-- ============ PAGE: INTERVIEW ============ -->
                 <section id="page-interview" class="page">
-                    <div class="mb-8">
-                        <div class="bg-gradient-to-r from-charcoal-900 via-charcoal-800 to-charcoal-900 rounded-2xl p-8 text-white relative overflow-hidden">
+                    <div class="mb-6">
+                        <div class="hero-banner bg-gradient-to-r from-charcoal-900 via-charcoal-800 to-charcoal-900 rounded-2xl p-5 sm:p-8 text-white relative overflow-hidden">
                             <div class="absolute bottom-0 right-0 w-48 h-48 bg-safety-500/10 rounded-full translate-y-1/2 translate-x-1/4 blur-3xl"></div>
                             <div class="relative">
-                                <div class="inline-flex items-center gap-2 bg-safety-500/20 text-safety-300 text-xs font-bold px-3 py-1.5 rounded-full mb-4">
+                                <div class="inline-flex items-center gap-2 bg-safety-500/20 text-safety-300 text-xs font-bold px-3 py-1.5 rounded-full mb-3">
                                     <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7 4a3 3 0 016 0v4a3 3 0 11-6 0V4zm4 10.93A7.001 7.001 0 0017 8a1 1 0 10-2 0A5 5 0 015 8a1 1 0 00-2 0 7.001 7.001 0 006 6.93V17H6a1 1 0 100 2h8a1 1 0 100-2h-3v-2.07z" clip-rule="evenodd"/></svg>
                                     INTERVIEW PRACTICE
                                 </div>
-                                <h3 class="text-2xl font-bold mb-2">English Interview Simulator</h3>
-                                <p class="text-charcoal-300 text-sm max-w-xl">Latihan menjawab 8 pertanyaan interview yang paling umum ditanyakan dalam rekrutmen welder global. Lengkap dengan panduan jawaban terbaik dalam Bahasa Inggris teknis dan terjemahan Indonesia.</p>
+                                <h3 class="text-lg sm:text-2xl font-bold mb-2">English Interview Simulator</h3>
+                                <p class="text-charcoal-300 text-xs sm:text-sm max-w-xl">Latihan menjawab 8 pertanyaan interview yang paling umum ditanyakan dalam rekrutmen welder global. Lengkap dengan panduan jawaban terbaik dalam Bahasa Inggris teknis dan terjemahan Indonesia.</p>
                             </div>
                         </div>
                     </div>
@@ -392,16 +458,16 @@
 
                 <!-- ============ PAGE: CHECKLIST ============ -->
                 <section id="page-checklist" class="page">
-                    <div class="mb-8">
-                        <div class="bg-gradient-to-r from-charcoal-900 via-charcoal-800 to-charcoal-900 rounded-2xl p-8 text-white relative overflow-hidden">
+                    <div class="mb-6">
+                        <div class="hero-banner bg-gradient-to-r from-charcoal-900 via-charcoal-800 to-charcoal-900 rounded-2xl p-5 sm:p-8 text-white relative overflow-hidden">
                             <div class="absolute top-0 left-0 w-40 h-40 bg-green-500/10 rounded-full -translate-y-1/2 -translate-x-1/4 blur-3xl"></div>
                             <div class="relative">
-                                <div class="inline-flex items-center gap-2 bg-green-500/20 text-green-300 text-xs font-bold px-3 py-1.5 rounded-full mb-4">
+                                <div class="inline-flex items-center gap-2 bg-green-500/20 text-green-300 text-xs font-bold px-3 py-1.5 rounded-full mb-3">
                                     <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
                                     CHECKLIST KESIAPAN
                                 </div>
-                                <h3 class="text-2xl font-bold mb-2">Checklist Kesiapan Pekerja Migran</h3>
-                                <p class="text-charcoal-300 text-sm max-w-xl">Pastikan semua persiapan fisik, dokumen, dan mental Anda sudah lengkap berdasarkan persyaratan BP3MI Sumbar. Progres tersimpan otomatis di browser Anda.</p>
+                                <h3 class="text-lg sm:text-2xl font-bold mb-2">Checklist Kesiapan Pekerja Migran</h3>
+                                <p class="text-charcoal-300 text-xs sm:text-sm max-w-xl">Pastikan semua persiapan fisik, dokumen, dan mental Anda sudah lengkap berdasarkan persyaratan BP3MI Sumbar. Progres tersimpan otomatis di browser Anda.</p>
                             </div>
                         </div>
                     </div>
@@ -421,16 +487,16 @@
 
                 <!-- ============ PAGE: CHEATSHEET ============ -->
                 <section id="page-cheatsheet" class="page">
-                    <div class="mb-8">
-                        <div class="bg-gradient-to-r from-charcoal-900 via-charcoal-800 to-charcoal-900 rounded-2xl p-8 text-white relative overflow-hidden">
+                    <div class="mb-6">
+                        <div class="hero-banner bg-gradient-to-r from-charcoal-900 via-charcoal-800 to-charcoal-900 rounded-2xl p-5 sm:p-8 text-white relative overflow-hidden">
                             <div class="absolute bottom-0 left-1/2 w-56 h-56 bg-industrial-500/10 rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl"></div>
                             <div class="relative">
-                                <div class="inline-flex items-center gap-2 bg-industrial-500/20 text-industrial-300 text-xs font-bold px-3 py-1.5 rounded-full mb-4">
+                                <div class="inline-flex items-center gap-2 bg-industrial-500/20 text-industrial-300 text-xs font-bold px-3 py-1.5 rounded-full mb-3">
                                     <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z"/></svg>
                                     QUICK REFERENCE
                                 </div>
-                                <h3 class="text-2xl font-bold mb-2">Quick Cheat-Sheet</h3>
-                                <p class="text-charcoal-300 text-sm max-w-xl">Ringkasan visual simbol las, posisi pengelasan, dan kosakata Bahasa Inggris frekuensi tinggi untuk pekerja industri. Hafalkan sebelum ujian!</p>
+                                <h3 class="text-lg sm:text-2xl font-bold mb-2">Quick Cheat-Sheet</h3>
+                                <p class="text-charcoal-300 text-xs sm:text-sm max-w-xl">Ringkasan visual simbol las, posisi pengelasan, dan kosakata Bahasa Inggris frekuensi tinggi untuk pekerja industri. Hafalkan sebelum ujian!</p>
                             </div>
                         </div>
                     </div>
@@ -440,38 +506,38 @@
                 <!-- ============ PAGE: MATERI BP2MI ============ -->
                 <section id="page-materi-bp2mi" class="page">
                     <!-- Hero Banner -->
-                    <div class="mb-8">
-                        <div class="bg-gradient-to-r from-charcoal-950 via-charcoal-900 to-steel-900 rounded-2xl p-8 text-white relative overflow-hidden border border-charcoal-800 shadow-xl">
+                    <div class="mb-6">
+                        <div class="hero-banner bg-gradient-to-r from-charcoal-950 via-charcoal-900 to-steel-900 rounded-2xl p-5 sm:p-8 text-white relative overflow-hidden border border-charcoal-800 shadow-xl">
                             <div class="absolute -top-12 -right-12 w-60 h-60 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
                             <div class="absolute -bottom-10 -left-10 w-48 h-48 bg-safety-500/10 rounded-full blur-3xl pointer-events-none"></div>
                             <div class="relative">
-                                <div class="flex flex-wrap items-center gap-2 mb-4">
+                                <div class="flex flex-wrap items-center gap-2 mb-3">
                                     <span class="inline-flex items-center gap-1.5 bg-blue-500/20 text-blue-300 text-xs font-bold px-3 py-1.5 rounded-full border border-blue-400/30">
                                         <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/></svg>
-                                        PANDUAN KHUSUS WAWANCARA
+                                        PANDUAN WAWANCARA
                                     </span>
                                     <span class="inline-flex items-center gap-1.5 bg-safety-500/20 text-safety-300 text-xs font-bold px-3 py-1.5 rounded-full border border-safety-400/30">
                                         BP2MI / BP3MI
                                     </span>
                                 </div>
-                                <h3 class="text-2xl sm:text-3xl font-bold mb-3 tracking-tight">Persiapan Wawancara Welder — SMK Go Global</h3>
-                                <p class="text-charcoal-300 text-sm max-w-2xl leading-relaxed">Panduan taktis menjawab 5 pertanyaan kunci interviewer seleksi pelatihan kerja luar negeri BP2MI. Disertai tips spesifik untuk calon peserta dari latar belakang kejuruan/vokasi.</p>
+                                <h3 class="text-lg sm:text-2xl font-bold mb-2 tracking-tight">Persiapan Wawancara Welder</h3>
+                                <p class="text-charcoal-300 text-xs sm:text-sm max-w-2xl leading-relaxed">Panduan taktis menjawab 5 pertanyaan kunci interviewer seleksi pelatihan kerja luar negeri BP2MI. Disertai tips spesifik untuk calon peserta dari latar belakang kejuruan/vokasi.</p>
                             </div>
                         </div>
                     </div>
 
                     <!-- Interviewer Opener Box -->
-                    <div class="bg-gradient-to-r from-blue-900/10 via-white to-blue-900/5 rounded-2xl border-2 border-blue-200/80 p-6 mb-8 shadow-sm">
-                        <div class="flex items-start gap-4">
-                            <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-md shadow-blue-500/20">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 100-6 3 3 0 000 6z"/></svg>
+                    <div class="bg-gradient-to-r from-blue-900/10 via-white to-blue-900/5 rounded-2xl border-2 border-blue-200/80 p-4 sm:p-6 mb-6 shadow-sm">
+                        <div class="flex items-start gap-3 sm:gap-4">
+                            <div class="flex-shrink-0 w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-md shadow-blue-500/20">
+                                <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 100-6 3 3 0 000 6z"/></svg>
                             </div>
-                            <div class="flex-1">
-                                <div class="flex items-center gap-2 mb-1">
-                                    <h4 class="text-sm font-bold text-blue-950 uppercase tracking-wider">Sesi Pembuka (Interviewer)</h4>
+                            <div class="flex-1 min-w-0">
+                                <div class="flex flex-wrap items-center gap-2 mb-1">
+                                    <h4 class="text-xs sm:text-sm font-bold text-blue-950 uppercase tracking-wider">Sesi Pembuka (Interviewer)</h4>
                                     <span class="bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-0.5 rounded-md">Verifikasi Awal</span>
                                 </div>
-                                <p class="text-sm text-charcoal-800 italic leading-relaxed bg-white/80 p-3.5 rounded-xl border border-blue-100">
+                                <p class="text-xs sm:text-sm text-charcoal-800 italic leading-relaxed bg-white/80 p-3 sm:p-3.5 rounded-xl border border-blue-100">
                                     "Selamat pagi/siang. Terima kasih sudah mendaftar di Program Pelatihan SMK Go Global untuk posisi Welder - Bahasa Inggris. Berkas administrasi dan Kartu AK-1 Anda sudah kami verifikasi dan sinkronisasi lewat QR-code. Sebelum kita masuk ke ruang praktik, ada beberapa hal penting yang ingin kami konfirmasi dari Anda. Tolong dijawab dengan jelas:"
                                 </p>
                             </div>
@@ -479,24 +545,48 @@
                     </div>
 
                     <!-- Filter Categories -->
-                    <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
-                        <div class="flex flex-wrap gap-2" id="bp2miFilterContainer">
-                            <button onclick="filterBP2MIMaterial('all', this)" class="bp2mi-filter active px-3.5 py-1.5 rounded-xl text-xs font-bold bg-charcoal-900 text-white transition-all shadow-sm">Semua (5 Sesi)</button>
-                            <button onclick="filterBP2MIMaterial('Motivasi', this)" class="bp2mi-filter px-3.5 py-1.5 rounded-xl text-xs font-bold bg-white text-charcoal-600 border border-charcoal-200 hover:border-charcoal-300 transition-all">Motivasi & Komitmen</button>
-                            <button onclick="filterBP2MIMaterial('Teknis Las', this)" class="bp2mi-filter px-3.5 py-1.5 rounded-xl text-xs font-bold bg-white text-charcoal-600 border border-charcoal-200 hover:border-charcoal-300 transition-all">Kompetensi Teknis</button>
-                            <button onclick="filterBP2MIMaterial('Kesehatan & K3', this)" class="bp2mi-filter px-3.5 py-1.5 rounded-xl text-xs font-bold bg-white text-charcoal-600 border border-charcoal-200 hover:border-charcoal-300 transition-all">Ketahanan & APD</button>
-                            <button onclick="filterBP2MIMaterial('Disiplin & Asrama', this)" class="bp2mi-filter px-3.5 py-1.5 rounded-xl text-xs font-bold bg-white text-charcoal-600 border border-charcoal-200 hover:border-charcoal-300 transition-all">Asrama & Bahasa</button>
-                            <button onclick="filterBP2MIMaterial('Adaptasi Global', this)" class="bp2mi-filter px-3.5 py-1.5 rounded-xl text-xs font-bold bg-white text-charcoal-600 border border-charcoal-200 hover:border-charcoal-300 transition-all">Adaptasi Global</button>
+                    <div class="mb-5 overflow-x-auto pb-1">
+                        <div class="flex gap-2 min-w-max sm:flex-wrap sm:min-w-0" id="bp2miFilterContainer">
+                            <button onclick="filterBP2MIMaterial('all', this)" class="bp2mi-filter active px-3.5 py-1.5 rounded-xl text-xs font-bold bg-charcoal-900 text-white transition-all shadow-sm whitespace-nowrap">Semua (5 Sesi)</button>
+                            <button onclick="filterBP2MIMaterial('Motivasi', this)" class="bp2mi-filter px-3.5 py-1.5 rounded-xl text-xs font-bold bg-white text-charcoal-600 border border-charcoal-200 hover:border-charcoal-300 transition-all whitespace-nowrap">Motivasi</button>
+                            <button onclick="filterBP2MIMaterial('Teknis Las', this)" class="bp2mi-filter px-3.5 py-1.5 rounded-xl text-xs font-bold bg-white text-charcoal-600 border border-charcoal-200 hover:border-charcoal-300 transition-all whitespace-nowrap">Teknis Las</button>
+                            <button onclick="filterBP2MIMaterial('Kesehatan & K3', this)" class="bp2mi-filter px-3.5 py-1.5 rounded-xl text-xs font-bold bg-white text-charcoal-600 border border-charcoal-200 hover:border-charcoal-300 transition-all whitespace-nowrap">Kesehatan & K3</button>
+                            <button onclick="filterBP2MIMaterial('Disiplin & Asrama', this)" class="bp2mi-filter px-3.5 py-1.5 rounded-xl text-xs font-bold bg-white text-charcoal-600 border border-charcoal-200 hover:border-charcoal-300 transition-all whitespace-nowrap">Asrama & Bahasa</button>
+                            <button onclick="filterBP2MIMaterial('Adaptasi Global', this)" class="bp2mi-filter px-3.5 py-1.5 rounded-xl text-xs font-bold bg-white text-charcoal-600 border border-charcoal-200 hover:border-charcoal-300 transition-all whitespace-nowrap">Adaptasi Global</button>
                         </div>
                     </div>
 
                     <!-- Materials Container -->
-                    <div class="space-y-5" id="bp2miMaterialsContainer"></div>
+                    <div class="space-y-4" id="bp2miMaterialsContainer"></div>
                 </section>
 
             </div>
         </main>
     </div>
+
+    <!-- ===== MOBILE BOTTOM NAV ===== -->
+    <nav class="bottom-nav" id="bottomNav" aria-label="Navigasi bawah">
+        <button class="bottom-nav-btn active" id="bnav-exam" onclick="navigateTo('exam')">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+            Ujian
+        </button>
+        <button class="bottom-nav-btn" id="bnav-materi-bp2mi" onclick="navigateTo('materi-bp2mi')">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+            Materi
+        </button>
+        <button class="bottom-nav-btn" id="bnav-interview" onclick="navigateTo('interview')">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
+            Interview
+        </button>
+        <button class="bottom-nav-btn" id="bnav-checklist" onclick="navigateTo('checklist')">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            Checklist
+        </button>
+        <button class="bottom-nav-btn" id="bnav-cheatsheet" onclick="navigateTo('cheatsheet')">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            Cheat-Sheet
+        </button>
+    </nav>
 
 <script>
 // ==================== DATA ====================
@@ -887,12 +977,17 @@ let hintRevealed = false;
 // ==================== NAVIGATION ====================
 function navigateTo(page) {
     currentPage = page;
-    // Update nav links
+    // Update sidebar nav links
     document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-    document.querySelector(`[data-page="${page}"]`).classList.add('active');
+    const sidebarLink = document.querySelector(`[data-page="${page}"]`);
+    if (sidebarLink) sidebarLink.classList.add('active');
     // Update pages
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.getElementById(`page-${page}`).classList.add('active');
+    // Update bottom nav
+    document.querySelectorAll('.bottom-nav-btn').forEach(b => b.classList.remove('active'));
+    const bnavBtn = document.getElementById(`bnav-${page}`);
+    if (bnavBtn) bnavBtn.classList.add('active');
     // Update header
     const titles = {
         exam: ['Simulasi Ujian Tertulis', 'Tes Juru Las & Bahasa Inggris — Target 100 Soal (90 Menit)'],
@@ -913,6 +1008,8 @@ function navigateTo(page) {
     }
     // Close mobile sidebar
     closeSidebar();
+    // Scroll to top on mobile
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 // ==================== MOBILE SIDEBAR ====================
@@ -1025,9 +1122,12 @@ function renderQuestion() {
     // Reset Hint
     hintRevealed = false;
     document.getElementById('hintBox').classList.add('hidden');
-    document.getElementById('hintBtnText').textContent = 'Petunjuk (Hint)';
-    document.getElementById('hintBtn').className = 'inline-flex items-center gap-1.5 text-xs font-bold text-safety-600 hover:text-safety-700 bg-safety-50 hover:bg-safety-100 border border-safety-200 px-3 py-1 rounded-lg transition-all';
+    document.getElementById('hintBtnText').textContent = 'Hint';
+    document.getElementById('hintBtn').className = 'hint-btn inline-flex items-center gap-1.5 text-xs font-bold text-safety-600 hover:text-safety-700 bg-safety-50 hover:bg-safety-100 border border-safety-200 px-3 py-1 rounded-lg transition-all ml-auto';
     document.getElementById('hintText').textContent = q.hint || 'Perhatikan detail pertanyaan dan standar industri terkait.';
+
+    // Update dot counter (mobile)
+    document.getElementById('dotCounterText').textContent = `${currentQuestion + 1} / ${questions.length}`;
 
     // Render options
     const container = document.getElementById('optionsContainer');
@@ -1049,9 +1149,9 @@ function renderQuestion() {
     document.getElementById('prevBtn').disabled = currentQuestion === 0;
     const nextBtn = document.getElementById('nextBtn');
     if (currentQuestion === questions.length - 1) {
-        nextBtn.innerHTML = 'Selesai <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4"/></svg>';
+        nextBtn.innerHTML = '<span class="hidden xs:inline">Selesai</span><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4"/></svg>';
     } else {
-        nextBtn.innerHTML = 'Selanjutnya <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>';
+        nextBtn.innerHTML = '<span class="hidden xs:inline">Selanjutnya</span><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>';
     }
 
     // Progress
