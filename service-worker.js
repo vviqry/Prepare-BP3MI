@@ -1,4 +1,4 @@
-const CACHE_NAME = 'bp3mi-welder-v2';
+const CACHE_NAME = 'bp3mi-welder-v3';
 const ASSETS_TO_CACHE = [
     './',
     './index.html',
@@ -23,7 +23,7 @@ const ASSETS_TO_CACHE = [
 self.addEventListener('install', (event) => {
     event.waitUntil(
         caches.open(CACHE_NAME).then((cache) => {
-            console.log('[Service Worker] Pre-caching offline assets');
+            console.log('[Service Worker] Pre-caching offline assets v3');
             return cache.addAll(ASSETS_TO_CACHE).catch((err) => {
                 console.warn('[Service Worker] Pre-caching warning:', err);
             });
@@ -47,42 +47,45 @@ self.addEventListener('activate', (event) => {
     );
 });
 
-// Fetch Event - Cache first with network fallback & dynamic cache update
+// Fetch Event - Network first for HTML documents, Cache first for static assets
 self.addEventListener('fetch', (event) => {
-    // Only handle GET requests
     if (event.request.method !== 'GET') return;
 
-    event.respondWith(
-        caches.match(event.request).then((cachedResponse) => {
-            if (cachedResponse) {
-                // Fetch in background to update cache (Stale-While-Revalidate)
-                fetch(event.request).then((networkResponse) => {
+    const isHTML = event.request.mode === 'navigate' || event.request.headers.get('accept')?.includes('text/html');
+
+    if (isHTML) {
+        // Network First for HTML to ensure latest 100 questions are loaded immediately
+        event.respondWith(
+            fetch(event.request)
+                .then((networkResponse) => {
                     if (networkResponse && networkResponse.status === 200) {
+                        const responseToCache = networkResponse.clone();
                         caches.open(CACHE_NAME).then((cache) => {
-                            cache.put(event.request, networkResponse.clone());
+                            cache.put(event.request, responseToCache);
                         });
                     }
-                }).catch(() => {
-                    // Offline or network error - cached response was already served
-                });
-                return cachedResponse;
-            }
-
-            // If not in cache, fetch from network and cache
-            return fetch(event.request).then((networkResponse) => {
-                if (!networkResponse || networkResponse.status !== 200 || networkResponse.type !== 'basic') {
                     return networkResponse;
+                })
+                .catch(() => {
+                    return caches.match(event.request).then((cached) => cached || caches.match('./index.html'));
+                })
+        );
+        return;
+    }
+
+    // Cache First for static media / fonts
+    event.respondWith(
+        caches.match(event.request).then((cachedResponse) => {
+            if (cachedResponse) return cachedResponse;
+
+            return fetch(event.request).then((networkResponse) => {
+                if (networkResponse && networkResponse.status === 200) {
+                    const responseToCache = networkResponse.clone();
+                    caches.open(CACHE_NAME).then((cache) => {
+                        cache.put(event.request, responseToCache);
+                    });
                 }
-                const responseToCache = networkResponse.clone();
-                caches.open(CACHE_NAME).then((cache) => {
-                    cache.put(event.request, responseToCache);
-                });
                 return networkResponse;
-            }).catch(() => {
-                // Fallback for HTML documents if offline
-                if (event.request.headers.get('accept')?.includes('text/html')) {
-                    return caches.match('./index.html');
-                }
             });
         })
     );
