@@ -705,6 +705,157 @@
                                         </div>
                                     </div>
 
+                                    <!-- 4. Fisika Busur, Polaritas Listrik & Fenomena Magnetic Arc Blow -->
+                                    <div class="bg-charcoal-50/70 border border-charcoal-200/80 rounded-2xl p-4 sm:p-5">
+                                        <div class="flex items-center justify-between gap-2 mb-3">
+                                            <div class="flex items-center gap-2">
+                                                <span class="w-2.5 h-2.5 rounded-full bg-safety-500"></span>
+                                                <h5 class="text-sm sm:text-base font-bold text-charcoal-900">4. Polaritas Listrik (DCEP vs DCEN vs AC) & Karakteristik Panas</h5>
+                                            </div>
+                                            <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-blue-100 text-blue-800">Fisika Pengelasan</span>
+                                        </div>
+                                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs mb-4">
+                                            <div class="p-3 bg-white rounded-xl border border-blue-200 shadow-sm">
+                                                <strong class="text-blue-800 block text-xs font-bold mb-1">DCEP (Reverse Polarity / Stang Positif +)</strong>
+                                                <p class="text-charcoal-600 leading-relaxed">
+                                                    Stang elektroda dihubungkan ke <strong>kutub positif (+)</strong> dan benda kerja ke kutub negatif (-). Aliran elektron menuju elektroda, menghasilkan <strong>70% panas terkonsentrasi di elektroda</strong> dan <strong>penetrasi las sangat dalam</strong> pada logam induk. Standar untuk SMAW pipa & GMAW.
+                                                </p>
+                                            </div>
+                                            <div class="p-3 bg-white rounded-xl border border-emerald-200 shadow-sm">
+                                                <strong class="text-emerald-800 block text-xs font-bold mb-1">DCEN (Straight Polarity / Stang Negatif -)</strong>
+                                                <p class="text-charcoal-600 leading-relaxed">
+                                                    Stang elektroda dihubungkan ke <strong>kutub negatif (-)</strong> dan benda kerja ke positif (+). <strong>70% panas di benda kerja</strong>, menghasilkan laju peleburan kawat elektroda sangat cepat (*high deposition rate*), penetrasi lebih dangkal. Standar untuk GTAW/TIG baja karbon & pelat tipis.
+                                                </p>
+                                            </div>
+                                            <div class="p-3 bg-white rounded-xl border border-amber-200 shadow-sm">
+                                                <strong class="text-amber-800 block text-xs font-bold mb-1">AC (Alternating Current / Arus Bolak-Balik)</strong>
+                                                <p class="text-charcoal-600 leading-relaxed">
+                                                    Polaritas berganti 50/60 kali per detik. Distribusi panas seimbang <strong>50% elektroda : 50% benda kerja</strong>. Penetrasi menengah. Solusi utama untuk mengatasi gangguan <strong>Magnetic Arc Blow</strong> dan pengelasan TIG pada aluminium.
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <!-- Sub-Bab Khusus: MAGNETIC ARC BLOW -->
+                                        <div class="bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent border-l-4 border-amber-500 p-4 rounded-r-xl my-4">
+                                            <div class="flex items-center gap-2 mb-1.5">
+                                                <span class="text-base">🧲</span>
+                                                <h6 class="text-xs sm:text-sm font-bold text-amber-900 uppercase tracking-wide">Fenomena "Magnetic Arc Blow" & Solusi Mengatasinya</h6>
+                                            </div>
+                                            <p class="text-xs text-charcoal-800 leading-relaxed mb-3">
+                                                <strong>Definisi:</strong> <em>Magnetic Arc Blow</em> adalah <strong>fenomena penyimpangan busur nyala las dari jalurnya</strong> akibat <strong>gaya medan magnetik yang tidak seimbang (asimetris)</strong> di sekitar benda kerja baja feromagnetik saat menggunakan pengelasan arus searah (DC). Sering terjadi di dekat sudut tajam, ujung sambungan pelat, atau di sekitar klem massa arde satu sisi.
+                                            </p>
+                                            <div class="bg-white/90 rounded-xl p-3 border border-amber-200 text-xs">
+                                                <strong class="text-amber-900 block font-bold mb-1.5">💡 5 Cara Efektif Mengatasi & Menghilangkan Arc Blow (Standar Industri):</strong>
+                                                <ol class="space-y-1.5 list-decimal list-inside text-charcoal-700">
+                                                    <li><strong>Beralih ke Arus Bolak-Balik (AC):</strong> Arus AC membalik arah medan magnet terus-menerus sehingga medan magnet tidak terkumpul ke satu arah.</li>
+                                                    <li><strong>Memperpendek Panjang Busur Nyala (*Short Arc Length*):</strong> Mengurangi jarak elektroda ke cairan las agar busur lebih kaku dan tidak mudah terbelokkan gaya magnet.</li>
+                                                    <li><strong>Memindahkan Posisi Klem Massa Arde (*Ground Clamp*):</strong> Pindahkan klem massa ke ujung sambungan berlawanan atau gunakan dua klem massa ganda (*balanced grounding*).</li>
+                                                    <li><strong>Melilitkan Kabel Massa di Sekitar Benda Kerja:</strong> Lilitan kabel menciptakan medan magnet penyeimbang yang menetralkan gaya magnet pembelok.</li>
+                                                    <li><strong>Mengelas Menjauhi Titik Klem Massa:</strong> Arahkan pengelasan menjauh dari lokasi jepitan massa atau gunakan teknik <em>backstep welding</em>.</li>
+                                                </ol>
+                                            </div>
+                                        </div>
+
+                                        <!-- Duty Cycle & Perlakuan Panas -->
+                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4 text-xs">
+                                            <div class="p-3 bg-white rounded-xl border border-charcoal-200">
+                                                <strong class="text-charcoal-900 block font-bold mb-1 font-mono">⏱️ Duty Cycle 10 Menit</strong>
+                                                <p class="text-charcoal-600 leading-relaxed">
+                                                    <strong>Duty Cycle 60% @ 200A</strong> berarti mesin las aman dipakai mengelas terus-menerus selama <strong>6 menit</strong> pada beban 200 Ampere, kemudian wajib <strong>istirahat pendinginan selama 4 menit</strong> dalam periode total 10 menit agar trafo inverter tidak rusak karena *overheating*.
+                                                </p>
+                                            </div>
+                                            <div class="p-3 bg-white rounded-xl border border-charcoal-200">
+                                                <strong class="text-charcoal-900 block font-bold mb-1 font-mono">🔥 Preheating & Interpass Temperature</strong>
+                                                <p class="text-charcoal-600 leading-relaxed">
+                                                    <strong>Preheating:</strong> Pemanasan awal (100°-250°C) memperlambat laju pendinginan, mencegah struktur getas martensit, dan membebaskan gas hidrogen pencegah retak dingin. <strong>Interpass Temp:</strong> Suhu antar lapisan las maksimum dijaga (misal &lt;250°C) agar butir kristal HAZ tidak membesar dan ketangguhan (*toughness*) tidak turun.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- 5. Klasifikasi Elektroda AWS A5.1 & Elektroda Tungsten -->
+                                    <div class="bg-charcoal-50/70 border border-charcoal-200/80 rounded-2xl p-4 sm:p-5">
+                                        <div class="flex items-center justify-between gap-2 mb-3">
+                                            <div class="flex items-center gap-2">
+                                                <span class="w-2.5 h-2.5 rounded-full bg-safety-500"></span>
+                                                <h5 class="text-sm sm:text-base font-bold text-charcoal-900">5. Klasifikasi Elektroda AWS A5.1 / A5.5 & Tungsten GTAW</h5>
+                                            </div>
+                                            <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-green-100 text-green-800">Kode Standar</span>
+                                        </div>
+                                        
+                                        <!-- Cara Membaca E7018 -->
+                                        <div class="bg-charcoal-950 text-white rounded-xl p-4 mb-4 border border-charcoal-800 font-mono text-xs">
+                                            <div class="text-safety-400 font-bold mb-2">Contoh Membaca Kode: AWS E7018</div>
+                                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center text-[11px]">
+                                                <div class="p-2 bg-charcoal-900 rounded border border-charcoal-700">
+                                                    <span class="text-safety-400 font-bold block text-sm">E</span>
+                                                    <span class="text-charcoal-300">Elektroda Stik</span>
+                                                </div>
+                                                <div class="p-2 bg-charcoal-900 rounded border border-charcoal-700">
+                                                    <span class="text-blue-400 font-bold block text-sm">70</span>
+                                                    <span class="text-charcoal-300">70.000 psi Min. Kuat Tarik</span>
+                                                </div>
+                                                <div class="p-2 bg-charcoal-900 rounded border border-charcoal-700">
+                                                    <span class="text-amber-400 font-bold block text-sm">1</span>
+                                                    <span class="text-charcoal-300">Semua Posisi Las (1=All, 2=Flat/HF)</span>
+                                                </div>
+                                                <div class="p-2 bg-charcoal-900 rounded border border-charcoal-700">
+                                                    <span class="text-emerald-400 font-bold block text-sm">8</span>
+                                                    <span class="text-charcoal-300">Rendah Hidrogen + Serbuk Besi (DCEP/AC)</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- 4 Elektroda Populer & Tungsten Grid -->
+                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                                            <div class="p-3 bg-white rounded-xl border border-charcoal-200">
+                                                <strong class="text-blue-700 block mb-1">E6010 / E6011 (Fluks Selulosa)</strong>
+                                                <p class="text-charcoal-600 leading-relaxed">Fluks selulosa organik menghasilkan semburan busur kencang dan <strong>penetrasi akar sangat dalam (*deep root pass*)</strong> pada pengelasan pipa saluran migas.</p>
+                                            </div>
+                                            <div class="p-3 bg-white rounded-xl border border-charcoal-200">
+                                                <strong class="text-emerald-700 block mb-1">E7018 (Rendah Hidrogen / Low-Hydrogen)</strong>
+                                                <p class="text-charcoal-600 leading-relaxed">Fluks serbuk besi rendah hidrogen mencegah retak dingin (HIC). <strong>Wajib di-oven pada suhu 150°–300°C</strong> sebelum digunakan pada struktur jembatan & bejana tekan.</p>
+                                            </div>
+                                            <div class="p-3 bg-white rounded-xl border border-charcoal-200">
+                                                <strong class="text-amber-700 block mb-1">E6013 (Fluks Rutil / Titanium Dioksida)</strong>
+                                                <p class="text-charcoal-600 leading-relaxed">Busur halus, sangat mudah dinyalakan kembali, spatter minim, dan kerak terak mudah terkelupas. Standar fabrikasi umum & pelat tipis.</p>
+                                            </div>
+                                            <div class="p-3 bg-white rounded-xl border border-charcoal-200">
+                                                <strong class="text-purple-700 block mb-1">Tungsten GTAW (AWS A5.12)</strong>
+                                                <p class="text-charcoal-600 leading-relaxed"><strong>Ujung Hijau (Pure):</strong> AC Aluminium. <strong>Ujung Merah (Thoriated 2%):</strong> DCEN Baja/Stainless. <strong>Ujung Abu/Emas (Ceriated/Lanthanated):</strong> AC/DC serbaguna.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- 6. Proses Pengelasan Khusus: FCAW, SAW, PAW, Gouging CAC-A -->
+                                    <div class="bg-charcoal-50/70 border border-charcoal-200/80 rounded-2xl p-4 sm:p-5">
+                                        <div class="flex items-center justify-between gap-2 mb-3">
+                                            <div class="flex items-center gap-2">
+                                                <span class="w-2.5 h-2.5 rounded-full bg-safety-500"></span>
+                                                <h5 class="text-sm sm:text-base font-bold text-charcoal-900">6. Proses Pengelasan Khusus di Industri Berat</h5>
+                                            </div>
+                                            <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-purple-100 text-purple-800">Advanced Welding</span>
+                                        </div>
+                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                                            <div class="p-3 bg-white rounded-xl border border-charcoal-200">
+                                                <strong class="text-charcoal-900 block font-bold mb-1">FCAW-S (Self-Shielded) vs FCAW-G</strong>
+                                                <p class="text-charcoal-600 leading-relaxed">FCAW-S tidak memerlukan tabung gas eksternal karena inti fluks kawat tubular menghasilkan gas pelindung mandiri saat terbakar (sangat tahan hembusan angin outdoor). FCAW-G memerlukan tabung gas Ar-CO2 eksternal.</p>
+                                            </div>
+                                            <div class="p-3 bg-white rounded-xl border border-charcoal-200">
+                                                <strong class="text-charcoal-900 block font-bold mb-1">SAW (Submerged Arc Welding / Busur Terendam)</strong>
+                                                <p class="text-charcoal-600 leading-relaxed">Busur listrik tertimbun di bawah lapisan serbuk fluks granular tanpa radiasi sinar terbuka (*no visible arc*). Memiliki laju deposisi logam tertinggi untuk pelat baja tebal.</p>
+                                            </div>
+                                            <div class="p-3 bg-white rounded-xl border border-charcoal-200">
+                                                <strong class="text-charcoal-900 block font-bold mb-1">CAC-A (Air Carbon Arc Gouging)</strong>
+                                                <p class="text-charcoal-600 leading-relaxed">Menggunakan elektroda karbon berbalut tembaga dan hembusan angin kompresor bertekanan untuk mencungkil akar las (*back gouging*) dan membuang cacat las secara cepat.</p>
+                                            </div>
+                                            <div class="p-3 bg-white rounded-xl border border-charcoal-200">
+                                                <strong class="text-charcoal-900 block font-bold mb-1">Gas Pelindung: Ar, CO2, Ar-Mix, Helium</strong>
+                                                <p class="text-charcoal-600 leading-relaxed"><strong>Argon (Ar):</strong> Inert, stabil (TIG/Alu/Stainless). <strong>CO2:</strong> Aktif, penetrasi dalam baja karbon. <strong>Mix Ar 80% + CO2 20%:</strong> Transfer spray mulus tanpa spatter. <strong>Helium:</strong> Masukan panas sangat tinggi untuk pelat tebal.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <!-- Tombol Tandai Selesai Modul 1 -->
                                     <div class="pt-3 flex items-center justify-between border-t border-charcoal-100">
                                         <button onclick="toggleWelderModuleCheck(1, event)" class="module-check-btn inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all bg-charcoal-100 hover:bg-charcoal-200 text-charcoal-700">
@@ -906,6 +1057,41 @@
                                             <p class="text-xs text-charcoal-700 leading-relaxed mt-2">Posisi "Raja Sertifikasi" internasional. Pipa miring 45° terkunci mati, menguji kombinasi keterampilan kedua tangan dan seluruh posisi las.</p>
                                         </div>
 
+                                    </div>
+
+                                    <!-- Anatomi Sambungan Kampuh & Geometri Las -->
+                                    <div class="bg-charcoal-50/70 border border-charcoal-200/80 rounded-2xl p-4 sm:p-5">
+                                        <div class="flex items-center justify-between gap-2 mb-3">
+                                            <div class="flex items-center gap-2">
+                                                <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+                                                <h5 class="text-sm sm:text-base font-bold text-charcoal-900">Anatomi Kampuh (Groove Geometry) & Teknik Pengelasan Pipa</h5>
+                                            </div>
+                                            <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-amber-100 text-amber-800">Geometri Sambungan</span>
+                                        </div>
+                                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs mb-3">
+                                            <div class="p-3 bg-white rounded-xl border border-charcoal-200">
+                                                <strong class="text-amber-800 block mb-1">Bevel Angle (Sudut Kampuh)</strong>
+                                                <p class="text-charcoal-600 leading-relaxed">Kemiringan bevel <strong>30°–35° per pelat</strong> (total <em>included angle</em> 60°–70°). Membuka akses ujung elektroda agar busur mencapai dasar akar tanpa menempel di dinding atas.</p>
+                                            </div>
+                                            <div class="p-3 bg-white rounded-xl border border-charcoal-200">
+                                                <strong class="text-blue-800 block mb-1">Root Gap (Celah Akar)</strong>
+                                                <p class="text-charcoal-600 leading-relaxed">Celah renggang selebar <strong>2.0 – 3.2 mm</strong> di antara pelat/pipa untuk memberi ruang bagi cairan elektroda menembus membentuk penetrasi akar (*root penetration*).</p>
+                                            </div>
+                                            <div class="p-3 bg-white rounded-xl border border-charcoal-200">
+                                                <strong class="text-emerald-800 block mb-1">Root Face (Muka Akar / Ambang)</strong>
+                                                <p class="text-charcoal-600 leading-relaxed">Bagian bibir datar tegak di dasar bevel setebal <strong>1.5 – 2.5 mm</strong>. Berfungsi menahan tekanan busur agar cairan las tidak langsung ambrol jebol (*burn-through*).</p>
+                                            </div>
+                                        </div>
+                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                                            <div class="p-3 bg-white rounded-xl border border-charcoal-200">
+                                                <strong class="text-purple-800 block mb-1">🗝️ Keyhole Technique (Teknik Lubang Kunci)</strong>
+                                                <p class="text-charcoal-600 leading-relaxed">Saat mengelas lapisan akar (*root pass*), juru las menjaga lubang bundar kecil (*keyhole*) tetap terbuka di depan kubangan las. Ini menjamin logam menembus 100% dan terikat sempurna di kedua sisi akar.</p>
+                                            </div>
+                                            <div class="p-3 bg-white rounded-xl border border-charcoal-200">
+                                                <strong class="text-safety-800 block mb-1">⚓ Posisi 6GR (Restricted Ring Test)</strong>
+                                                <p class="text-charcoal-600 leading-relaxed">Pipa posisi 6G yang dipasangi cincin penghalang (*restriction ring*) dengan jarak hanya 12.5 mm dari kampuh las. Mensimulasikan pengelasan sambungan TKY pada struktur anjungan lepas pantai (*offshore rig*).</p>
+                                            </div>
+                                        </div>
                                     </div>
 
                                     <!-- Tombol Tandai Selesai Modul 2 -->
@@ -1147,6 +1333,80 @@
 
                                     </div>
 
+                                    <!-- 9. Retak Las (Weld Cracks) & Metode Pengendalian Distorsi -->
+                                    <div class="bg-charcoal-50/70 border border-charcoal-200/80 rounded-2xl p-4 sm:p-5">
+                                        <div class="flex items-center justify-between gap-2 mb-3">
+                                            <div class="flex items-center gap-2">
+                                                <span class="w-2.5 h-2.5 rounded-full bg-red-500"></span>
+                                                <h5 class="text-sm sm:text-base font-bold text-charcoal-900">9. Jenis-Jenis Retak Las (Weld Cracks) & Pengendalian Distorsi</h5>
+                                            </div>
+                                            <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-red-100 text-red-800">Cacat Kritis</span>
+                                        </div>
+                                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs mb-3">
+                                            <div class="p-3 bg-white rounded-xl border border-red-200">
+                                                <strong class="text-red-800 block mb-1">🔥 Hot Cracking (Retak Panas)</strong>
+                                                <p class="text-charcoal-600 leading-relaxed">Terjadi saat logam las sedang membeku pada suhu tinggi (>1.000°C), biasanya berupa retakan memanjang di tengah manik las (*centerline crack*). Dipicu oleh kadar belerang (S) atau fosfor (P) tinggi.</p>
+                                            </div>
+                                            <div class="p-3 bg-white rounded-xl border border-blue-200">
+                                                <strong class="text-blue-800 block mb-1">❄️ Cold Cracking (Retak Dingin / HIC)</strong>
+                                                <p class="text-charcoal-600 leading-relaxed">Terjadi di zona HAZ beberapa jam/hari setelah dingin (*delayed crack*). Terjadi akibat kombinasi: <strong>mikrostruktur martensit getas, tegangan sisa tinggi, dan gas hidrogen terperangkap</strong>. Dicegah dengan elektroda E7018 low-hydrogen & preheating.</p>
+                                            </div>
+                                            <div class="p-3 bg-white rounded-xl border border-amber-200">
+                                                <strong class="text-amber-800 block mb-1">🌋 Crater Crack (Retak Kawah)</strong>
+                                                <p class="text-charcoal-600 leading-relaxed">Retakan berbentuk bintang di cekungan ujung akhir penghentian busur las. Dicegah dengan teknik <em>crater filling</em> (mengisi kawah dengan sedikit ayunan mundur sebelum memutus busur).</p>
+                                            </div>
+                                        </div>
+                                        <!-- Distorsi & Solusinya -->
+                                        <div class="p-3.5 bg-white rounded-xl border border-charcoal-200 text-xs">
+                                            <strong class="text-charcoal-900 block font-bold mb-1">📐 4 Cara Mengendalikan Distorsi / Deformasi Bentuk Las:</strong>
+                                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-charcoal-600">
+                                                <div>• <strong>Backstep Welding:</strong> Mengelas dalam segmen pendek berlawanan arah maju umum untuk mendistribusikan panas merata.</div>
+                                                <div>• <strong>Presetting:</strong> Memberi sudut kemiringan awal yang berlawanan dengan arah tarikan susut las.</div>
+                                                <div>• <strong>Clamping / Fixture:</strong> Mengunci pelat dengan klem penjepit yang kokoh sampai sambungan dingin.</div>
+                                                <div>• <strong>Balanced Sequence:</strong> Mengelas bergantian antara sisi kiri-kanan atau atas-bawah sambungan.</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- 10. Pengujian NDT (Non-Destructive Testing) & Destructive Testing -->
+                                    <div class="bg-charcoal-50/70 border border-charcoal-200/80 rounded-2xl p-4 sm:p-5">
+                                        <div class="flex items-center justify-between gap-2 mb-3">
+                                            <div class="flex items-center gap-2">
+                                                <span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
+                                                <h5 class="text-sm sm:text-base font-bold text-charcoal-900">10. Metode Uji Tak Rusak (NDT) & Kualifikasi Mutu Las</h5>
+                                            </div>
+                                            <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-blue-100 text-blue-800">Quality Control</span>
+                                        </div>
+                                        
+                                        <!-- 5 Metode NDT Grid -->
+                                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs mb-3">
+                                            <div class="p-3 bg-white rounded-xl border border-charcoal-200">
+                                                <strong class="text-charcoal-900 block font-mono font-bold mb-1 text-xs">1. VT (Visual Testing)</strong>
+                                                <p class="text-charcoal-600 leading-relaxed">Pemeriksaan pertama dan paling ekonomis dengan mata, senter, kaca pembesar, dan <em>welding gauge</em> untuk cacat permukaan (undercut, porositas luar, retak).</p>
+                                            </div>
+                                            <div class="p-3 bg-white rounded-xl border border-charcoal-200">
+                                                <strong class="text-red-700 block font-mono font-bold mb-1 text-xs">2. PT (Liquid Penetrant Testing)</strong>
+                                                <p class="text-charcoal-600 leading-relaxed">Menggunakan daya kapilaritas cairan merah peresap (penetrant), cairan pembersih, dan developer bubuk putih untuk <strong>mendeteksi retak halus terbuka di permukaan logam</strong>.</p>
+                                            </div>
+                                            <div class="p-3 bg-white rounded-xl border border-charcoal-200">
+                                                <strong class="text-amber-700 block font-mono font-bold mb-1 text-xs">3. MT (Magnetic Particle)</strong>
+                                                <p class="text-charcoal-600 leading-relaxed">Memakai medan magnet dan serbuk besi untuk mendeteksi cacat permukaan & bawah permukaan (*subsurface*) <strong>khusus pada baja feromagnetik</strong>.</p>
+                                            </div>
+                                            <div class="p-3 bg-white rounded-xl border border-charcoal-200">
+                                                <strong class="text-blue-700 block font-mono font-bold mb-1 text-xs">4. UT (Ultrasonic Testing)</strong>
+                                                <p class="text-charcoal-600 leading-relaxed">Memancarkan <strong>gelombang suara frekuensi tinggi</strong> ke dalam logam. Pantulan gelombang mendeteksi cacat internal di dalam ketebalan pelat tanpa radiasi berbahaya.</p>
+                                            </div>
+                                            <div class="p-3 bg-white rounded-xl border border-charcoal-200">
+                                                <strong class="text-purple-700 block font-mono font-bold mb-1 text-xs">5. RT (Radiographic Testing)</strong>
+                                                <p class="text-charcoal-600 leading-relaxed">Menggunakan radiasi <strong>sinar-X atau sinar gamma (Iridium-192)</strong> untuk memproyeksikan citra cacat volumetrik internal (porositas dalam, slag inclusion) ke lembar film.</p>
+                                            </div>
+                                            <div class="p-3 bg-white rounded-xl border border-charcoal-200">
+                                                <strong class="text-emerald-700 block font-mono font-bold mb-1 text-xs">6. Dokumen WPS & PQR</strong>
+                                                <p class="text-charcoal-600 leading-relaxed"><strong>WPS:</strong> Lembar instruksi prosedur pengelasan standar. <strong>PQR:</strong> Rekaman hasil uji laboratorium resmi yang memvalidasi kualifikasi dokumen WPS.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <!-- Tombol Tandai Selesai Modul 3 -->
                                     <div class="pt-3 flex items-center justify-between border-t border-charcoal-100">
                                         <button onclick="toggleWelderModuleCheck(3, event)" class="module-check-btn inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all bg-charcoal-100 hover:bg-charcoal-200 text-charcoal-700">
@@ -1314,7 +1574,7 @@
                                         </div>
                                     </div>
 
-                                    <!-- 3. K3 Tabung Gas -->
+                                    <!-- 3. SOP Penanganan Tabung Gas Bertekanan (Oksigen & Asetilen/LPG) -->
                                     <div class="bg-charcoal-50/80 border border-charcoal-200/80 rounded-2xl p-4 sm:p-5">
                                         <h5 class="text-xs sm:text-sm font-bold text-charcoal-900 mb-3 flex items-center gap-2">
                                             <span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
@@ -1332,7 +1592,7 @@
                                                 <strong class="text-amber-700 block mb-1 font-mono">2. PENYIMPANAN TEGAK</strong>
                                                 <ul class="space-y-1 text-charcoal-600 list-disc list-inside">
                                                     <li>Wajib berdiri tegak (*upright*) dan diikat rantai pengaman ke dinding/troli.</li>
-                                                    <li>Jauhkan dari sumber api minimal 6 meter atau disekat dinding tahan api.</li>
+                                                    <li>Jauhkan tabung O2 dari tabung bahan bakar minimal <strong>6 meter (20 kaki)</strong> atau disekat dinding tahan api.</li>
                                                 </ul>
                                             </div>
                                             <div class="p-3 bg-white rounded-xl border border-charcoal-200">
@@ -1341,6 +1601,32 @@
                                                     <li>Wajib terpasang di regulator tabung dan di torch pemotong.</li>
                                                     <li>Uji kebocoran hanya dengan <strong>air sabun</strong> (dilarang korek api!).</li>
                                                 </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- 4. Bahaya Khusus Pengelasan & Standar Keselamatan OSHA -->
+                                    <div class="bg-charcoal-50/80 border border-charcoal-200/80 rounded-2xl p-4 sm:p-5">
+                                        <h5 class="text-xs sm:text-sm font-bold text-charcoal-900 mb-3 flex items-center gap-2">
+                                            <span class="w-2.5 h-2.5 rounded-full bg-red-500"></span>
+                                            4. Identifikasi Bahaya Khusus & Prosedur Tanggap K3
+                                        </h5>
+                                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
+                                            <div class="p-3 bg-white rounded-xl border border-charcoal-200">
+                                                <strong class="text-amber-800 block mb-1">👀 Arc Eye / Flash Burn</strong>
+                                                <p class="text-charcoal-600 leading-relaxed">Peradangan kornea mata akibat radiasi sinar ultraviolet (UV). Gejala mata perih berpasir muncul 6-12 jam kemudian. Wajib kedok las ADF & partisi tirai las.</p>
+                                            </div>
+                                            <div class="p-3 bg-white rounded-xl border border-charcoal-200">
+                                                <strong class="text-blue-800 block mb-1">🫁 Metal Fume Fever</strong>
+                                                <p class="text-charcoal-600 leading-relaxed">Keracunan asap oksida seng (*zinc oxide*) saat mengelas pelat galvanis. Memicu demam & menggigil. Wajib masker respirator partikel & blower hisap.</p>
+                                            </div>
+                                            <div class="p-3 bg-white rounded-xl border border-charcoal-200">
+                                                <strong class="text-red-800 block mb-1">⚡ Sengatan Listrik OCV</strong>
+                                                <p class="text-charcoal-600 leading-relaxed">Tegangan tanpa beban (*Open Circuit Voltage* 50-80V) saat ganti elektroda. Selalu pastikan sarung tangan kering dan lantai kerja memiliki karpet isolator.</p>
+                                            </div>
+                                            <div class="p-3 bg-white rounded-xl border border-charcoal-200">
+                                                <strong class="text-purple-800 block mb-1">🚪 Confined Space Permit</strong>
+                                                <p class="text-charcoal-600 leading-relaxed">Pengelasan di tangki/ruang sempit wajib izin resmi, cek kadar O2 (19.5%-23.5%), dan blower udara segar (DILARANG mengalirkan O2 murni untuk ventilasi!).</p>
                                             </div>
                                         </div>
                                     </div>
@@ -1373,8 +1659,8 @@
                                                 <span class="text-[11px] font-semibold text-charcoal-400 font-mono">15 Menit Baca</span>
                                                 <span class="module-status-badge text-[10px] font-bold px-2 py-0.5 rounded-full bg-charcoal-100 text-charcoal-500">Belum Selesai</span>
                                             </div>
-                                            <h4 class="text-base sm:text-lg font-bold text-charcoal-900">Modul 5: Kosakata Bahasa Inggris Bengkel (Workshop English)</h4>
-                                            <p class="text-xs text-charcoal-500 mt-1">Flashcard interaktif 3 kategori: Tools (alat), Safety Commands (instruksi keselamatan), dan Blueprint.</p>
+                                            <h4 class="text-base sm:text-lg font-bold text-charcoal-900">Modul 5: Kosakata Bahasa Inggris Bengkel & Simbol AWS A2.4</h4>
+                                            <p class="text-xs text-charcoal-500 mt-1">Flashcard interaktif 24 kosakata, panduan membaca simbol gambar teknik las (blueprint), dan instruksi keselamatan.</p>
                                         </div>
                                     </div>
                                     <div class="flex items-center gap-2 flex-shrink-0">
@@ -1398,6 +1684,41 @@
                                     <!-- Vocab Flashcards Grid Container -->
                                     <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3" id="welderVocabGrid">
                                         <!-- Flashcards injected via JS/HTML below -->
+                                    </div>
+
+                                    <!-- Sub-Bab Khusus: Simbol Pengelasan Standar AWS A2.4 -->
+                                    <div class="bg-charcoal-50/80 border border-charcoal-200 rounded-2xl p-4 sm:p-5 mt-4">
+                                        <div class="flex items-center justify-between gap-2 mb-3">
+                                            <div class="flex items-center gap-2">
+                                                <span class="w-2.5 h-2.5 rounded-full bg-safety-500"></span>
+                                                <h5 class="text-sm sm:text-base font-bold text-charcoal-900">Panduan Membaca Simbol Las Standar AWS A2.4 (Welding Symbols)</h5>
+                                            </div>
+                                            <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-blue-100 text-blue-800">Blueprint Standard</span>
+                                        </div>
+                                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs mb-3">
+                                            <div class="p-3 bg-white rounded-xl border border-charcoal-200">
+                                                <strong class="text-blue-800 block mb-1">Arrow Side (Sisi Panah)</strong>
+                                                <p class="text-charcoal-600 leading-relaxed">Jika simbol las diletakkan di <strong>BAWAH garis referensi</strong>, pengelasan dilakukan tepat pada sisi sambungan yang ditunjuk panah (*Arrow Side*).</p>
+                                            </div>
+                                            <div class="p-3 bg-white rounded-xl border border-charcoal-200">
+                                                <strong class="text-purple-800 block mb-1">Other Side (Sisi Sebaliknya)</strong>
+                                                <p class="text-charcoal-600 leading-relaxed">Jika simbol las diletakkan di <strong>ATAS garis referensi</strong>, pengelasan dilakukan pada sisi berlawanan/di balik arah yang ditunjuk panah (*Other Side*).</p>
+                                            </div>
+                                            <div class="p-3 bg-white rounded-xl border border-charcoal-200">
+                                                <strong class="text-emerald-800 block mb-1">Both Sides (Kedua Sisi)</strong>
+                                                <p class="text-charcoal-600 leading-relaxed">Jika simbol las ada di atas DAN di bawah garis referensi, pengelasan wajib dilakukan pada kedua belah sisi sambungan (misal double fillet).</p>
+                                            </div>
+                                        </div>
+                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                                            <div class="p-3 bg-white rounded-xl border border-charcoal-200">
+                                                <strong class="text-amber-800 block mb-1">🚩 Simbol Bendera Hitam (Field Weld Flag)</strong>
+                                                <p class="text-charcoal-600 leading-relaxed">Simbol bendera hitam di persimpangan panah dan garis referensi menandakan bahwa pengelasan harus dikerjakan <strong>di lokasi proyek/lapangan (*on site*)</strong>, bukan di dalam bengkel/workshop.</p>
+                                            </div>
+                                            <div class="p-3 bg-white rounded-xl border border-charcoal-200">
+                                                <strong class="text-green-800 block mb-1">⭕ Simbol Lingkaran (Weld All Around)</strong>
+                                                <p class="text-charcoal-600 leading-relaxed">Lingkaran penuh di persimpangan garis panah berarti pengelasan dilakukan <strong>mengelilingi seluruh kontur/sekeliling profil sambungan secara penuh</strong>.</p>
+                                            </div>
+                                        </div>
                                     </div>
 
                                     <!-- Tombol Tandai Selesai Modul 5 -->
@@ -1651,28 +1972,29 @@
                                 </div>
                                 <div class="space-y-2.5 mt-4" id="optionsContainer"></div>
                             </div>
-                            <div class="border-t border-charcoal-100 px-4 sm:px-6 lg:px-8 py-3 sm:py-4 flex items-center justify-between bg-charcoal-50/50">
-                                <button onclick="prevQuestion()" id="prevBtn" class="flex items-center gap-1.5 text-sm font-medium text-charcoal-500 hover:text-charcoal-800 transition-colors disabled:opacity-30 disabled:cursor-not-allowed" disabled>
+                            <div class="border-t border-charcoal-100 px-4 sm:px-6 lg:px-8 py-3 sm:py-4 flex items-center justify-between bg-charcoal-50/50 gap-2">
+                                <button onclick="prevQuestion()" id="prevBtn" class="flex items-center gap-1.5 px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold text-charcoal-600 hover:text-charcoal-900 bg-charcoal-100 hover:bg-charcoal-200 transition-colors disabled:opacity-30 disabled:cursor-not-allowed" disabled>
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-                                    <span class="hidden xs:inline">Sebelumnya</span>
+                                    <span>Prev</span>
                                 </button>
                                 <!-- Dots (desktop) / Counter (mobile) -->
                                 <div class="flex items-center gap-1.5" id="dotIndicators"></div>
                                 <div id="dotCounter" class="hidden items-center gap-1 text-xs font-mono font-bold text-charcoal-500 bg-charcoal-100 px-3 py-1.5 rounded-lg">
                                     <span id="dotCounterText">1 / 100</span>
                                 </div>
-                                <button onclick="nextQuestion()" id="nextBtn" class="flex items-center gap-1.5 text-sm font-bold text-safety-600 hover:text-safety-700 transition-colors">
-                                    <span class="hidden xs:inline">Selanjutnya</span>
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                                <button onclick="submitExam()" id="submitExamTopBtn" class="flex items-center gap-1.5 px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold text-charcoal-800 hover:text-white bg-charcoal-100 hover:bg-charcoal-900 border border-charcoal-200 transition-all shadow-sm">
+                                    <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                    <span class="hidden sm:inline">Kumpulkan Jawaban</span>
+                                    <span class="sm:hidden">Kumpulkan</span>
                                 </button>
                             </div>
                         </div>
 
-                        <!-- Submit Exam -->
-                        <div class="mt-6 text-center">
-                            <button onclick="submitExam()" id="submitExamBtn" class="bg-charcoal-900 hover:bg-charcoal-800 text-white font-bold py-3 px-8 rounded-xl transition-colors shadow-lg inline-flex items-center gap-2">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                                Kumpulkan Jawaban
+                        <!-- Main Primary Action: Next Button (Replaces Kumpulkan Jawaban in primary bottom position) -->
+                        <div class="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
+                            <button onclick="handlePrimaryExamAction()" id="primaryNextBtn" class="w-full sm:w-auto min-w-[260px] bg-gradient-to-r from-safety-500 to-safety-600 hover:from-safety-600 hover:to-safety-700 text-white font-black py-3.5 px-8 rounded-xl transition-all duration-200 shadow-lg shadow-safety-500/25 pulse-glow inline-flex items-center justify-center gap-2 text-sm sm:text-base cursor-pointer">
+                                <span id="primaryNextBtnText">Next (Soal Selanjutnya)</span>
+                                <svg class="w-5 h-5" id="primaryNextBtnIcon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
                             </button>
                         </div>
                     </div>
@@ -3733,11 +4055,20 @@ function renderQuestion() {
 
     // Update navigation
     document.getElementById('prevBtn').disabled = currentQuestion === 0;
-    const nextBtn = document.getElementById('nextBtn');
+    
+    // Update Primary Next button below card
+    const primaryNextBtn = document.getElementById('primaryNextBtn');
+    const primaryNextBtnText = document.getElementById('primaryNextBtnText');
+    const primaryNextBtnIcon = document.getElementById('primaryNextBtnIcon');
+    
     if (currentQuestion === questions.length - 1) {
-        nextBtn.innerHTML = '<span class="hidden xs:inline">Selesai</span><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4"/></svg>';
+        primaryNextBtn.className = 'w-full sm:w-auto min-w-[260px] bg-charcoal-900 hover:bg-charcoal-800 text-white font-black py-3.5 px-8 rounded-xl transition-all duration-200 shadow-xl inline-flex items-center justify-center gap-2 text-sm sm:text-base cursor-pointer border border-emerald-500/40';
+        primaryNextBtnText.textContent = '✓ Selesai & Kumpulkan Jawaban';
+        primaryNextBtnIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>';
     } else {
-        nextBtn.innerHTML = '<span class="hidden xs:inline">Selanjutnya</span><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>';
+        primaryNextBtn.className = 'w-full sm:w-auto min-w-[260px] bg-gradient-to-r from-safety-500 to-safety-600 hover:from-safety-600 hover:to-safety-700 text-white font-black py-3.5 px-8 rounded-xl transition-all duration-200 shadow-lg shadow-safety-500/25 pulse-glow inline-flex items-center justify-center gap-2 text-sm sm:text-base cursor-pointer';
+        primaryNextBtnText.textContent = 'Next (Soal Selanjutnya)';
+        primaryNextBtnIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6"/>';
     }
 
     // Progress
@@ -3796,10 +4127,60 @@ function nextQuestion() {
     if (currentQuestion < questions.length - 1) { currentQuestion++; renderQuestion(); }
 }
 
+function handlePrimaryExamAction() {
+    if (currentQuestion < questions.length - 1) {
+        nextQuestion();
+    } else {
+        submitExam();
+    }
+}
+
+function getDetailedOptionExplanation(q, optIndex, isCorrect) {
+    if (q.optionExplanations && q.optionExplanations[optIndex]) {
+        return q.optionExplanations[optIndex];
+    }
+    const optText = q.options[optIndex];
+    if (isCorrect) {
+        return `<strong class="text-emerald-800">✓ Mengapa Benar:</strong> Opsi ini merupakan jawaban yang tepat sesuai standar pengelasan & regulasi resmi. ${q.explanation}`;
+    }
+    
+    // Technical context-aware checks for distractors
+    const textLower = optText.toLowerCase();
+    if (textLower.includes('thermal shock')) {
+        return `<strong class="text-rose-800">✗ Mengapa Salah:</strong> <em>Thermal Shock</em> adalah tegangan mendadak akibat pendinginan ekstrem yang cepat (misal logam panas disiram air), bukan fenomena medan magnet yang membelokkan busur.`;
+    }
+    if (textLower.includes('eddy current')) {
+        return `<strong class="text-rose-800">✗ Mengapa Salah:</strong> <em>Eddy Current</em> (Arus Pusar) adalah arus pusaran listrik induksi di dalam konduktor, umum pada NDT pengujian retak pipa, bukan penyimpangan arah busur las.`;
+    }
+    if (textLower.includes('corona discharge')) {
+        return `<strong class="text-rose-800">✗ Mengapa Salah:</strong> <em>Corona Discharge</em> adalah pelepasan muatan listrik parsial ke udara pada kawat tegangan sangat tinggi (kV), tidak berhubungan dengan las DC.`;
+    }
+    if (textLower.includes('menaikkan amper') || textLower.includes('menambah panjang busur') || textLower.includes('menyiram benda')) {
+        return `<strong class="text-rose-800">✗ Mengapa Salah:</strong> Menambah panjang busur atau menyiram air justru memperparah pembelokan arc blow dan merusak kualitas metalurgi logam las.`;
+    }
+    if (textLower.includes('radiographic') && !q.question.toLowerCase().includes('radiographic')) {
+        return `<strong class="text-rose-800">✗ Mengapa Salah:</strong> <em>Radiographic Testing (RT)</em> menggunakan radiasi sinar-X/gamma untuk cacat volumetrik internal pelat tebal, bukan untuk pengujian cairan kapiler permukaan.`;
+    }
+    if (textLower.includes('ultrasonic') && !q.question.toLowerCase().includes('ultrasonic')) {
+        return `<strong class="text-rose-800">✗ Mengapa Salah:</strong> <em>Ultrasonic Testing (UT)</em> menggunakan gelombang suara pantul frekuensi tinggi untuk cacat internal ketebalan logam, bukan uji cairan kapiler permukaan.`;
+    }
+    if (textLower.includes('liquid penetrant') || textLower.includes('dye penetrant')) {
+        return `<strong class="text-rose-800">✗ Mengapa Salah:</strong> <em>Liquid Penetrant Testing (PT)</em> hanya mendeteksi retak terbuka di permukaan luar, tidak bisa menembus cacat di bagian dalam ketebalan las.`;
+    }
+    if (textLower.includes('visual testing') || textLower.includes('visual inspection')) {
+        return `<strong class="text-rose-800">✗ Mengapa Salah:</strong> <em>Visual Testing (VT)</em> hanya memeriksa cacat yang tampak kasat mata di permukaan tanpa alat gelombang internal.`;
+    }
+    if (textLower.includes('posisi 1g') || textLower.includes('posisi 2g') || textLower.includes('posisi 3g') || textLower.includes('posisi 4g') || textLower.includes('posisi 5g') || textLower.includes('posisi 6g')) {
+        return `<strong class="text-rose-800">✗ Mengapa Salah:</strong> Orientasi posisi pengelasan ini tidak sesuai dengan orientasi sumbu benda kerja (pelat/pipa) yang dimaksud dalam soal.`;
+    }
+    
+    return `<strong class="text-rose-800">✗ Mengapa Salah:</strong> Pilihan "${optText}" bukan jawaban yang tepat untuk pertanyaan ini karena tidak sesuai dengan parameter teknis, fungsi spesifik, atau regulasi yang ditanyakan.`;
+}
+
 function submitExam() {
     if (!examSubmitted && userAnswers.filter(a => a !== -1).length < questions.length) {
         const unanswered = userAnswers.filter(a => a === -1).length;
-        if (!confirm(`Anda masih memiliki ${unanswered} soal yang belum dijawab. Yakin ingin mengumpulkan?`)) return;
+        if (!confirm(`Anda masih memiliki ${unanswered} soal yang belum dijawab. Yakin ingin mengumpulkan ujian sekarang?`)) return;
     }
     clearInterval(examTimer);
     examSubmitted = true;
@@ -3838,17 +4219,28 @@ function submitExam() {
     const resultHeader = document.getElementById('resultHeader');
     if (passed) {
         document.getElementById('resultTitle').textContent = '🎉 Selamat! Anda LULUS!';
-        document.getElementById('resultSubtitle').textContent = `Skor ${percent}% — di atas batas minimum 70%. Terus pertahankan!`;
+        document.getElementById('resultSubtitle').textContent = `Skor ${percent}% — di atas batas minimum kelulusan 70%. Pertahankan pemahaman Anda!`;
         resultHeader.classList.add('bg-green-50');
     } else {
         document.getElementById('resultTitle').textContent = '📚 Belum Lulus — Pelajari Lagi!';
-        document.getElementById('resultSubtitle').textContent = `Skor ${percent}% — di bawah batas minimum 70%. Review materi dan coba lagi.`;
+        document.getElementById('resultSubtitle').textContent = `Skor ${percent}% — di bawah batas kelulusan 70%. Simak rincian pembahasan 4 opsi di bawah ini untuk belajar lebih mendalam.`;
         resultHeader.classList.add('bg-red-50');
     }
 
-    // Answer breakdown
+    // Answer breakdown with 4-option detailed explanations
     const breakdown = document.getElementById('answerBreakdown');
-    breakdown.innerHTML = '<h4 class="text-lg font-bold text-charcoal-800 mb-2">📋 Pembahasan Jawaban</h4>';
+    breakdown.innerHTML = `
+        <div class="flex items-center justify-between gap-2 mb-4 pb-2 border-b border-charcoal-200">
+            <div>
+                <h4 class="text-base sm:text-lg font-black text-charcoal-900">📋 Pembahasan Lengkap Seluruh Soal & Opsi (A – D)</h4>
+                <p class="text-xs text-charcoal-500 mt-0.5">Pelajari alasan mengapa jawaban benar dipilih dan mengapa 3 opsi pengecoh lainnya salah untuk setiap butir soal.</p>
+            </div>
+            <button onclick="retakeExam()" class="flex-shrink-0 bg-safety-500 hover:bg-safety-600 text-white text-xs font-bold px-4 py-2 rounded-xl transition-all shadow-md">
+                Ulangi Ujian ↺
+            </button>
+        </div>
+    `;
+
     questions.forEach((q, i) => {
         const userAns = userAnswers[i];
         const isCorrect = userAns === q.correct;
@@ -3856,30 +4248,67 @@ function submitExam() {
         const letters = ['A', 'B', 'C', 'D'];
 
         const card = document.createElement('div');
-        card.className = `bg-white rounded-xl border ${isCorrect ? 'border-green-200' : isUnanswered ? 'border-charcoal-200' : 'border-red-200'} overflow-hidden`;
-        card.innerHTML = `
-            <div class="p-5">
-                <div class="flex items-start gap-3 mb-3">
-                    <div class="flex-shrink-0 w-8 h-8 rounded-lg ${isCorrect ? 'bg-green-100 text-green-700' : isUnanswered ? 'bg-charcoal-100 text-charcoal-500' : 'bg-red-100 text-red-700'} flex items-center justify-center font-bold text-xs">${i + 1}</div>
-                    <div class="flex-1">
-                        <span class="inline-block text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full mb-1 ${q.catColor}">${q.category}</span>
-                        <p class="text-sm font-medium text-charcoal-800">${q.question}</p>
-                    </div>
-                    <span class="flex-shrink-0 text-xs font-bold px-2 py-1 rounded-full ${isCorrect ? 'bg-green-100 text-green-700' : isUnanswered ? 'bg-charcoal-100 text-charcoal-500' : 'bg-red-100 text-red-700'}">
-                        ${isCorrect ? '✓ BENAR' : isUnanswered ? '— KOSONG' : '✗ SALAH'}
-                    </span>
-                </div>
-                <div class="ml-11 space-y-1.5 mb-3">
-                    ${q.options.map((opt, j) => `
-                        <div class="flex items-center gap-2 text-sm py-1 px-2 rounded ${j === q.correct ? 'bg-green-50 text-green-800 font-medium' : j === userAns && !isCorrect ? 'bg-red-50 text-red-700 line-through' : 'text-charcoal-500'}">
-                            <span class="font-mono text-xs font-bold">${letters[j]}.</span> ${opt}
-                            ${j === q.correct ? '<span class="ml-auto text-[10px] font-bold text-green-600">✓ Jawaban Benar</span>' : ''}
-                            ${j === userAns && !isCorrect ? '<span class="ml-auto text-[10px] font-bold text-red-500">✗ Jawaban Anda</span>' : ''}
+        card.className = `bg-white rounded-2xl border ${isCorrect ? 'border-green-200 shadow-sm' : isUnanswered ? 'border-charcoal-200' : 'border-red-200 shadow-sm'} overflow-hidden mb-5`;
+        
+        let optionCardsHtml = q.options.map((opt, j) => {
+            const isThisCorrect = j === q.correct;
+            const isUserChoice = j === userAns;
+            const optLetter = letters[j];
+            const reason = getDetailedOptionExplanation(q, j, isThisCorrect);
+            
+            let cardBorder = isThisCorrect ? 'border-emerald-300 bg-emerald-50/70' : (isUserChoice ? 'border-rose-300 bg-rose-50/70' : 'border-charcoal-200 bg-charcoal-50/50');
+            let badgeBg = isThisCorrect ? 'bg-emerald-600 text-white' : (isUserChoice ? 'bg-rose-600 text-white' : 'bg-charcoal-200 text-charcoal-700');
+            let statusTag = isThisCorrect 
+                ? '<span class="inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-black px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300 flex-shrink-0">✓ KUNCI JAWABAN BENAR</span>'
+                : (isUserChoice 
+                    ? '<span class="inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-black px-2.5 py-0.5 rounded-full bg-rose-100 text-rose-800 border border-rose-300 flex-shrink-0">✗ JAWABAN ANDA (SALAH)</span>'
+                    : '<span class="inline-flex items-center gap-1 text-[9px] sm:text-[10px] font-semibold px-2 py-0.5 rounded-full bg-charcoal-200 text-charcoal-600 flex-shrink-0">✗ OPSI SALAH</span>');
+
+            return `
+                <div class="p-3.5 rounded-xl border ${cardBorder} transition-all">
+                    <div class="flex items-start justify-between gap-2 mb-1.5">
+                        <div class="flex items-start gap-2 min-w-0">
+                            <span class="w-6 h-6 rounded-lg ${badgeBg} flex items-center justify-center font-mono font-bold text-xs flex-shrink-0 mt-0.5">${optLetter}</span>
+                            <span class="text-xs sm:text-sm font-bold leading-snug ${isThisCorrect ? 'text-emerald-950' : (isUserChoice ? 'text-rose-950' : 'text-charcoal-800')}">${opt}</span>
                         </div>
-                    `).join('')}
+                        ${statusTag}
+                    </div>
+                    <div class="mt-2 text-xs leading-relaxed ${isThisCorrect ? 'text-emerald-900 bg-white/80' : (isUserChoice ? 'text-rose-900 bg-white/80' : 'text-charcoal-600 bg-white/70')} p-2.5 rounded-lg border border-black/5">
+                        ${reason}
+                    </div>
                 </div>
-                <div class="ml-11 bg-blue-50 border border-blue-100 rounded-lg p-3">
-                    <p class="text-xs text-blue-800 leading-relaxed"><span class="font-bold">💡 Penjelasan:</span> ${q.explanation}</p>
+            `;
+        }).join('');
+
+        card.innerHTML = `
+            <div class="p-5 sm:p-6">
+                <!-- Header Soal -->
+                <div class="flex items-start gap-3 mb-4 pb-3 border-b border-charcoal-100">
+                    <div class="flex-shrink-0 w-9 h-9 sm:w-10 sm:h-10 rounded-xl ${isCorrect ? 'bg-green-600 text-white' : isUnanswered ? 'bg-charcoal-200 text-charcoal-700' : 'bg-red-600 text-white'} flex items-center justify-center font-bold text-sm shadow-md">${i + 1}</div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex flex-wrap items-center gap-2 mb-1">
+                            <span class="inline-block text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full ${q.catColor}">${q.category}</span>
+                            <span class="text-[11px] font-mono font-bold ${isCorrect ? 'text-green-600' : isUnanswered ? 'text-charcoal-500' : 'text-red-500'}">
+                                ${isCorrect ? '✓ Benar (+1 Poin)' : isUnanswered ? '— Tidak Dijawab (0 Poin)' : '✗ Salah (0 Poin)'}
+                            </span>
+                        </div>
+                        <p class="text-sm sm:text-base font-bold text-charcoal-900 leading-relaxed">${q.question}</p>
+                    </div>
+                </div>
+
+                <!-- 4 Options Detailed Breakdown -->
+                <div class="space-y-2.5 mb-4">
+                    <div class="text-[11px] font-bold uppercase tracking-wider text-charcoal-400">Rincian Evaluasi Seluruh Opsi Jawaban (A, B, C, D):</div>
+                    ${optionCardsHtml}
+                </div>
+
+                <!-- Key Concept Summary Box -->
+                <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-3.5 flex items-start gap-3">
+                    <span class="text-lg flex-shrink-0">💡</span>
+                    <div class="text-xs text-blue-950 leading-relaxed flex-1">
+                        <strong class="text-blue-900 block font-bold mb-0.5">Ringkasan Konsep & Standar Industri:</strong>
+                        ${q.explanation}
+                    </div>
                 </div>
             </div>
         `;

@@ -2806,7 +2806,7 @@ export default function Bp3miApp() {
                       return (
                         <div
                           key={q.id}
-                          className={`bg-slate-950 rounded-xl border p-5 ${
+                          className={`bg-slate-950 rounded-2xl border p-5 sm:p-6 mb-4 ${
                             isCorrect
                               ? 'border-emerald-500/30 bg-emerald-950/10'
                               : isUnanswered
@@ -2814,56 +2814,78 @@ export default function Bp3miApp() {
                               : 'border-rose-500/30 bg-rose-950/10'
                           }`}
                         >
-                          <div className="flex items-start justify-between gap-3 mb-2">
+                          <div className="flex items-start justify-between gap-3 mb-3 pb-3 border-b border-slate-800">
                             <div className="flex items-center gap-2">
-                              <span className="text-xs font-black px-2 py-0.5 rounded bg-slate-800 text-slate-300">
+                              <span className="w-8 h-8 rounded-lg bg-amber-500 text-slate-950 font-black flex items-center justify-center text-xs">
                                 #{idx + 1}
                               </span>
-                              <span className="text-xs text-slate-400">{q.category}</span>
+                              <span className="text-xs text-slate-400 font-bold">{q.category}</span>
                             </div>
                             <span
-                              className={`text-[10px] font-black uppercase px-2 py-0.5 rounded ${
+                              className={`text-[10px] font-black uppercase px-2.5 py-1 rounded-full ${
                                 isCorrect
-                                  ? 'bg-emerald-500/20 text-emerald-400'
+                                  ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
                                   : isUnanswered
                                   ? 'bg-slate-800 text-slate-400'
-                                  : 'bg-rose-500/20 text-rose-400'
+                                  : 'bg-rose-500/20 text-rose-400 border border-rose-500/30'
                               }`}
                             >
                               {isCorrect ? '✓ Benar' : isUnanswered ? '— Kosong' : '✗ Salah'}
                             </span>
                           </div>
 
-                          <p className="text-sm font-bold text-slate-200 mb-3">{q.question}</p>
+                          <p className="text-sm sm:text-base font-bold text-slate-100 mb-4 leading-relaxed">{q.question}</p>
 
-                          <div className="space-y-1 mb-3 text-xs">
-                            {q.options.map((opt, oIdx) => (
-                              <div
-                                key={oIdx}
-                                className={`p-2 rounded flex items-center justify-between ${
-                                  oIdx === q.correct
-                                    ? 'bg-emerald-950/40 text-emerald-300 font-bold border border-emerald-500/30'
-                                    : oIdx === userAns && !isCorrect
-                                    ? 'bg-rose-950/40 text-rose-300 font-bold line-through border border-rose-500/30'
-                                    : 'text-slate-400'
-                                }`}
-                              >
-                                <span>
-                                  {letters[oIdx]}. {opt}
-                                </span>
-                                {oIdx === q.correct && (
-                                  <span className="text-[10px] text-emerald-400 font-bold">Kunci Jawaban</span>
-                                )}
-                                {oIdx === userAns && !isCorrect && (
-                                  <span className="text-[10px] text-rose-400 font-bold">Pilihan Anda</span>
-                                )}
-                              </div>
-                            ))}
+                          <div className="space-y-2 mb-4">
+                            <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Rincian Evaluasi Seluruh Opsi Jawaban (A - D):</div>
+                            {q.options.map((opt, oIdx) => {
+                              const isThisCorrect = oIdx === q.correct;
+                              const isChoice = oIdx === userAns;
+                              
+                              let optCardBg = isThisCorrect 
+                                ? 'bg-emerald-950/30 border-emerald-500/40 text-emerald-200' 
+                                : isChoice 
+                                ? 'bg-rose-950/30 border-rose-500/40 text-rose-200' 
+                                : 'bg-slate-900/40 border-slate-800 text-slate-300';
+                                
+                              return (
+                                <div key={oIdx} className={`p-3.5 rounded-xl border ${optCardBg}`}>
+                                  <div className="flex items-start justify-between gap-2 mb-1.5">
+                                    <div className="flex items-start gap-2 min-w-0">
+                                      <span className={`w-6 h-6 rounded-md flex items-center justify-center font-bold text-xs flex-shrink-0 ${
+                                        isThisCorrect ? 'bg-emerald-500 text-slate-950' : isChoice ? 'bg-rose-500 text-white' : 'bg-slate-800 text-slate-400'
+                                      }`}>{letters[oIdx]}</span>
+                                      <span className="text-xs sm:text-sm font-semibold">{opt}</span>
+                                    </div>
+                                    {isThisCorrect && (
+                                      <span className="text-[9px] sm:text-[10px] font-black uppercase text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-500/40 flex-shrink-0">
+                                        ✓ Kunci Benar
+                                      </span>
+                                    )}
+                                    {isChoice && !isThisCorrect && (
+                                      <span className="text-[9px] sm:text-[10px] font-black uppercase text-rose-400 bg-rose-950/60 px-2 py-0.5 rounded border border-rose-500/40 flex-shrink-0">
+                                        ✗ Pilihan Anda (Salah)
+                                      </span>
+                                    )}
+                                  </div>
+                                  <div className="mt-1.5 text-xs text-slate-300 bg-slate-950/70 p-2.5 rounded-lg border border-slate-800/80 leading-relaxed">
+                                    {isThisCorrect ? (
+                                      <span className="text-emerald-400 font-medium"><strong>✓ Mengapa Benar:</strong> Opsi ini merupakan jawaban yang tepat sesuai standar industri.</span>
+                                    ) : (
+                                      <span className="text-rose-300/90"><strong>✗ Mengapa Salah:</strong> Opsi "{opt}" bukan jawaban yang tepat karena tidak sesuai dengan parameter teknis atau regulasi yang ditanyakan.</span>
+                                    )}
+                                  </div>
+                                </div>
+                              );
+                            })}
                           </div>
 
-                          <div className="p-3.5 rounded-lg bg-slate-900 border border-slate-800 text-xs text-slate-300 leading-relaxed">
-                            <span className="font-bold text-amber-400">💡 Penjelasan: </span>
-                            {q.explanation}
+                          <div className="p-3.5 rounded-xl bg-blue-950/30 border border-blue-500/30 text-xs text-blue-200 leading-relaxed flex items-start gap-2.5">
+                            <span className="text-base flex-shrink-0">💡</span>
+                            <div>
+                              <span className="font-bold text-blue-400 block mb-0.5">Ringkasan Konsep & Standar:</span>
+                              {q.explanation}
+                            </div>
                           </div>
                         </div>
                       );
