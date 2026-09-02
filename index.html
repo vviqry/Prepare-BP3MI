@@ -22,6 +22,7 @@
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
@@ -5516,17 +5517,6 @@ function getWelderVoicePresets() {
     return presets;
 }
 
-function updateWelderVoiceNotice() {
-    const noticeEl = document.getElementById('welderVoiceInfoNotice');
-    if (!noticeEl) return;
-
-    const idVoices = (welderSpeechVoices || []).filter(isIndonesianVoice);
-    if (idVoices.length === 1) {
-        noticeEl.innerHTML = `🇮🇩 Menggunakan 1 voice Bahasa Indonesia (${getCleanVoiceName(idVoices[0])}) yang tersedia di perangkat ini.`;
-    } else if (idVoices.length > 1) {
-        noticeEl.innerHTML = `🇮🇩 Ditemukan ${idVoices.length} voice Bahasa Indonesia di perangkat ini.`;
-    } else {
-        noticeEl.innerHTML = `⚠️ Voice Bahasa Indonesia tidak terdeteksi di perangkat ini. Menggunakan suara alternatif.`;
 let currentTTSState = {
     sourceType: 'welder',
     sourceId: null,
