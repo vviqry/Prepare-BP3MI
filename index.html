@@ -2209,9 +2209,14 @@
                                 <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 100-6 3 3 0 000 6z"/></svg>
                             </div>
                             <div class="flex-1 min-w-0">
-                                <div class="flex flex-wrap items-center gap-2 mb-1">
-                                    <h4 class="text-xs sm:text-sm font-bold text-blue-950 uppercase tracking-wider">Sesi Pembuka (Interviewer)</h4>
-                                    <span class="bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-0.5 rounded-md">Verifikasi Awal</span>
+                                <div class="flex flex-wrap items-center justify-between gap-2 mb-1">
+                                    <div class="flex items-center gap-2">
+                                        <h4 class="text-xs sm:text-sm font-bold text-blue-950 uppercase tracking-wider">Sesi Pembuka (Interviewer)</h4>
+                                        <span class="bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-0.5 rounded-md">Verifikasi Awal</span>
+                                    </div>
+                                    <button type="button" onclick="playBP2MIOpenerTTS(event)" data-lang="id" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold text-blue-800 hover:text-white bg-blue-100/90 hover:bg-blue-600 border border-blue-200 transition-all shadow-xs" title="Dengarkan Sesi Pembuka (Bahasa Indonesia)">
+                                        <span>🔊</span> <span class="text-[10px]">Dengar Pembuka</span>
+                                    </button>
                                 </div>
                                 <p class="text-xs sm:text-sm text-charcoal-800 italic leading-relaxed bg-white/80 p-3 sm:p-3.5 rounded-xl border border-blue-100">
                                     "Selamat pagi/siang. Terima kasih sudah mendaftar di Program Pelatihan SMK Go Global untuk posisi Welder - Bahasa Inggris. Berkas administrasi dan Kartu AK-1 Anda sudah kami verifikasi dan sinkronisasi lewat QR-code. Sebelum kita masuk ke ruang praktik, ada beberapa hal penting yang ingin kami konfirmasi dari Anda. Tolong dijawab dengan jelas:"
@@ -2264,6 +2269,9 @@
                         <span class="inline-block text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-safety-500/20 text-safety-400 border border-safety-500/30">
                             Audio Sedang Diputar
                         </span>
+                        <span id="welderAudioLangBadge" class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                            🇮🇩 ID
+                        </span>
                         <span id="welderAudioModeBadge" class="text-[9px] font-semibold text-slate-400">
                             Mode: Simple
                         </span>
@@ -2276,13 +2284,10 @@
 
             <!-- Audio Controls & Voice Selector -->
             <div class="flex flex-wrap items-center justify-end gap-2 sm:gap-3 w-full md:w-auto">
-                <!-- 4-Voice Selector -->
+                <!-- Voice Selector (Dynamic Presets) -->
                 <div class="relative">
-                    <select id="welderVoiceSelect" onchange="changeWelderVoice(this.value)" class="bg-slate-900 text-xs text-slate-200 border border-slate-700 rounded-xl px-2.5 py-1.5 focus:outline-none focus:border-safety-500 font-medium">
-                        <option value="0">🇮🇩 Suara 1 (ID Standar)</option>
-                        <option value="1">🇮🇩 Suara 2 (ID Santai)</option>
-                        <option value="2">🌐 Suara 3 (Bilingual / Eng)</option>
-                        <option value="3">⚡ Suara 4 (Robotik Cepat)</option>
+                    <select id="welderVoiceSelect" onchange="changeWelderVoice(this.value)" class="bg-slate-900 text-xs text-slate-200 border border-slate-700 rounded-xl px-2.5 py-1.5 focus:outline-none focus:border-safety-500 font-medium max-w-[220px] sm:max-w-xs truncate">
+                        <option value="0">🇮🇩 Memuat suara...</option>
                     </select>
                 </div>
 
@@ -2309,8 +2314,8 @@
                 </button>
             </div>
         </div>
-        <p class="text-[10px] text-slate-500 text-center sm:text-left mt-1.5">
-            ℹ️ Kualitas dan ketersediaan variasi suara tergantung pada dukungan mesin suara browser dan perangkat Anda.
+        <p id="welderVoiceInfoNotice" class="text-[10px] text-slate-400 text-center sm:text-left mt-1.5">
+            🇮🇩 Menggunakan 1 voice Bahasa Indonesia yang tersedia di perangkat ini.
         </p>
     </div>
 
@@ -4485,24 +4490,31 @@ function retakeExam() {
 // ==================== INTERVIEW ====================
 function renderInterview() {
     const container = document.getElementById('interviewContainer');
+    if (!container) return;
     container.innerHTML = '';
     interviewQuestions.forEach((iq, i) => {
         const card = document.createElement('div');
         card.className = 'bg-white rounded-2xl border border-charcoal-100 overflow-hidden card-hover';
+        card.setAttribute('data-interview-idx', i);
         card.innerHTML = `
             <div class="p-6">
                 <div class="flex items-start gap-4">
                     <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-gradient-to-br from-safety-500 to-safety-600 text-white flex items-center justify-center font-bold text-sm shadow-lg shadow-safety-500/20">Q${i + 1}</div>
-                    <div class="flex-1">
-                        <h4 class="text-base font-bold text-charcoal-800 mb-1">"${iq.question}"</h4>
-                        <p class="text-xs text-charcoal-400 flex items-center gap-1.5">
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-start justify-between gap-2">
+                            <h4 class="text-base font-bold text-charcoal-800 mb-1">"${iq.question}"</h4>
+                            <button type="button" onclick="playInterviewQuestionTTS(${i}, event)" data-lang="en" class="flex-shrink-0 inline-flex items-center gap-1 text-[11px] font-bold text-charcoal-600 hover:text-safety-600 bg-charcoal-50 hover:bg-safety-50 border border-charcoal-200 hover:border-safety-300 px-2 py-1 rounded-lg transition-colors shadow-xs" title="Dengar Pertanyaan (English)">
+                                <span>🔊</span> <span class="hidden sm:inline">Dengar Soal</span>
+                            </button>
+                        </div>
+                        <p class="text-xs text-charcoal-400 flex items-center gap-1.5 mt-1">
                             <svg class="w-3.5 h-3.5 text-amber-500" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
                             <span class="font-medium">Tips:</span> ${iq.tip}
                         </p>
                     </div>
                 </div>
                 <!-- Accordion -->
-                <div class="mt-4 ml-14">
+                <div class="mt-4 sm:ml-14">
                     <button onclick="toggleAccordion(this)" class="w-full flex items-center justify-between bg-charcoal-50 hover:bg-charcoal-100 transition-colors rounded-xl px-4 py-3 text-sm font-semibold text-charcoal-700">
                         <span class="flex items-center gap-2">
                             <svg class="w-4 h-4 text-safety-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
@@ -4510,21 +4522,33 @@ function renderInterview() {
                         </span>
                         <svg class="w-4 h-4 accordion-icon transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                     </button>
-                    <div class="accordion-content px-4">
-                        <div class="space-y-4">
-                            <div>
-                                <h5 class="text-xs font-bold uppercase tracking-wider text-green-600 mb-2 flex items-center gap-1.5">
-                                    <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
-                                    Best Answer (English)
-                                </h5>
-                                <div class="bg-green-50 border border-green-100 rounded-xl p-4 text-sm text-green-900 leading-relaxed italic">${iq.answer}</div>
+                    <div class="accordion-content px-2 sm:px-4">
+                        <div class="space-y-4 pt-2">
+                            <!-- Best Answer (English) -->
+                            <div class="rounded-xl border border-green-200 bg-green-50/50 p-3 sm:p-4">
+                                <div class="flex items-center justify-between mb-2">
+                                    <h5 class="text-xs font-bold uppercase tracking-wider text-green-700 flex items-center gap-1.5">
+                                        <svg class="w-3.5 h-3.5 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                                        Best Answer (English)
+                                    </h5>
+                                    <button type="button" onclick="playInterviewTTS(${i}, 'en', event)" data-lang="en" class="inline-flex items-center gap-1.5 text-xs font-bold text-green-800 hover:text-white bg-green-200/80 hover:bg-green-600 border border-green-300 px-3 py-1.5 rounded-lg transition-all shadow-xs" title="Dengar Jawaban (English)">
+                                        <span>🔊</span> Dengar (English)
+                                    </button>
+                                </div>
+                                <div class="bg-white/80 border border-green-100 rounded-xl p-3.5 text-sm text-green-950 leading-relaxed italic">${iq.answer}</div>
                             </div>
-                            <div>
-                                <h5 class="text-xs font-bold uppercase tracking-wider text-blue-600 mb-2 flex items-center gap-1.5">
-                                    <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7 2a1 1 0 011 1v1h3a1 1 0 110 2H9.578a18.87 18.87 0 01-1.724 4.78c.29.354.596.696.914 1.026a1 1 0 11-1.44 1.389 21.034 21.034 0 01-.554-.6 19.098 19.098 0 01-3.107 3.567 1 1 0 01-1.334-1.49 17.087 17.087 0 003.13-3.733 18.992 18.992 0 01-1.487-2.494 1 1 0 111.79-.89c.234.47.489.928.764 1.372.417-.934.752-1.913.997-2.927H3a1 1 0 110-2h3V3a1 1 0 011-1zm6 6a1 1 0 01.894.553l2.991 5.982a.869.869 0 01.02.037l.99 1.98a1 1 0 11-1.79.895L15.383 16h-4.764l-.724 1.447a1 1 0 11-1.788-.894l.99-1.98.019-.038 2.99-5.982A1 1 0 0113 8zm-1.382 6h2.764L13 11.236 11.618 14z" clip-rule="evenodd"/></svg>
-                                    Terjemahan (Bahasa Indonesia)
-                                </h5>
-                                <div class="bg-blue-50 border border-blue-100 rounded-xl p-4 text-sm text-blue-900 leading-relaxed">${iq.translation}</div>
+                            <!-- Terjemahan (Bahasa Indonesia) -->
+                            <div class="rounded-xl border border-blue-200 bg-blue-50/50 p-3 sm:p-4">
+                                <div class="flex items-center justify-between mb-2">
+                                    <h5 class="text-xs font-bold uppercase tracking-wider text-blue-700 flex items-center gap-1.5">
+                                        <svg class="w-3.5 h-3.5 text-blue-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7 2a1 1 0 011 1v1h3a1 1 0 110 2H9.578a18.87 18.87 0 01-1.724 4.78c.29.354.596.696.914 1.026a1 1 0 11-1.44 1.389 21.034 21.034 0 01-.554-.6 19.098 19.098 0 01-3.107 3.567 1 1 0 01-1.334-1.49 17.087 17.087 0 003.13-3.733 18.992 18.992 0 01-1.487-2.494 1 1 0 111.79-.89c.234.47.489.928.764 1.372.417-.934.752-1.913.997-2.927H3a1 1 0 110-2h3V3a1 1 0 011-1zm6 6a1 1 0 01.894.553l2.991 5.982a.869.869 0 01.02.037l.99 1.98a1 1 0 11-1.79.895L15.383 16h-4.764l-.724 1.447a1 1 0 11-1.788-.894l.99-1.98.019-.038 2.99-5.982A1 1 0 0113 8zm-1.382 6h2.764L13 11.236 11.618 14z" clip-rule="evenodd"/></svg>
+                                        Terjemahan (Bahasa Indonesia)
+                                    </h5>
+                                    <button type="button" onclick="playInterviewTTS(${i}, 'id', event)" data-lang="id" class="inline-flex items-center gap-1.5 text-xs font-bold text-blue-800 hover:text-white bg-blue-200/80 hover:bg-blue-600 border border-blue-300 px-3 py-1.5 rounded-lg transition-all shadow-xs" title="Dengar Terjemahan (Bahasa Indonesia)">
+                                        <span>🔊</span> Dengar (Indonesia)
+                                    </button>
+                                </div>
+                                <div class="bg-white/80 border border-blue-100 rounded-xl p-3.5 text-sm text-blue-950 leading-relaxed">${iq.translation}</div>
                             </div>
                         </div>
                     </div>
@@ -4837,6 +4861,7 @@ function renderBP2MIMaterials() {
         const card = document.createElement('div');
         card.className = 'bp2mi-card bg-white rounded-2xl border border-charcoal-100 overflow-hidden card-hover';
         card.dataset.cat = mat.category;
+        card.setAttribute('data-bp2mi-id', mat.id);
 
         card.innerHTML = `
             <div class="p-6">
@@ -4845,9 +4870,14 @@ function renderBP2MIMaterials() {
                         ${mat.id}
                     </div>
                     <div class="flex-1 min-w-0">
-                        <div class="flex flex-wrap items-center gap-2 mb-1.5">
-                            <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border ${mat.badgeColor}">${mat.category}</span>
-                            <span class="text-[11px] font-semibold text-charcoal-400 font-mono">${mat.sessionNumber}</span>
+                        <div class="flex flex-wrap items-center justify-between gap-2 mb-1.5">
+                            <div class="flex items-center gap-2">
+                                <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border ${mat.badgeColor}">${mat.category}</span>
+                                <span class="text-[11px] font-semibold text-charcoal-400 font-mono">${mat.sessionNumber}</span>
+                            </div>
+                            <button type="button" onclick="playBP2MISessionTTS(${mat.id}, event)" data-lang="id" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold text-blue-800 hover:text-white bg-blue-100/80 hover:bg-blue-600 border border-blue-200 transition-all shadow-xs" title="Dengarkan Sesi ${mat.id} (Tanya & Jawab)">
+                                <span>🔊</span> <span class="text-[10px]">Dengar Sesi</span>
+                            </button>
                         </div>
                         <h4 class="text-base font-bold text-charcoal-900 mb-2">${mat.title}</h4>
                         <div class="bg-charcoal-50/80 border border-charcoal-100 rounded-xl p-3.5 text-sm text-charcoal-800 leading-relaxed font-medium">
@@ -4877,10 +4907,15 @@ function renderBP2MIMaterials() {
                                         <svg class="w-3.5 h-3.5 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
                                         Rekomendasi Respon Terbaik (Bahasa Indonesia)
                                     </h5>
-                                    <button onclick="copyAnswerText(this, ${JSON.stringify(mat.recommendedAnswer).replace(/"/g, '&quot;')})" class="inline-flex items-center gap-1 text-[11px] font-semibold text-charcoal-600 hover:text-charcoal-900 bg-white border border-charcoal-200 hover:border-charcoal-300 px-2.5 py-1 rounded-lg transition-colors">
-                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
-                                        Salin Teks
-                                    </button>
+                                    <div class="flex items-center gap-1.5">
+                                        <button type="button" onclick="playBP2MIAnswerTTS(${mat.id}, event)" data-lang="id" class="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-800 hover:text-white bg-emerald-100 hover:bg-emerald-600 border border-emerald-300 px-2.5 py-1 rounded-lg transition-all shadow-xs" title="Dengarkan Jawaban">
+                                            <span>🔊</span> Dengar
+                                        </button>
+                                        <button onclick="copyAnswerText(this, ${JSON.stringify(mat.recommendedAnswer).replace(/"/g, '&quot;')})" class="inline-flex items-center gap-1 text-[11px] font-semibold text-charcoal-600 hover:text-charcoal-900 bg-white border border-charcoal-200 hover:border-charcoal-300 px-2.5 py-1 rounded-lg transition-colors">
+                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                                            Salin Teks
+                                        </button>
+                                    </div>
                                 </div>
                                 <div class="bg-gradient-to-r from-emerald-50/80 to-green-50/50 border border-emerald-200/80 rounded-xl p-4 text-sm text-emerald-950 leading-relaxed font-medium">
                                     "${mat.recommendedAnswer}"
@@ -5371,65 +5406,316 @@ function updateWelderModeUI() {
 }
 
 // ==================== WEB SPEECH API (TTS ENGINE) ====================
+function isIndonesianVoice(v) {
+    if (!v) return false;
+    const lang = (v.lang || '').toLowerCase();
+    const name = (v.name || '').toLowerCase();
+    return lang.startsWith('id') ||
+           lang.includes('indonesian') ||
+           lang.includes('id-id') ||
+           lang.includes('id_id') ||
+           lang.startsWith('in') ||
+           name.includes('indonesian') ||
+           name.includes('indonesia') ||
+           name.includes('andika') ||
+           name.includes('gadis');
+}
+
+function getCleanVoiceName(voice) {
+    if (!voice) return 'Suara';
+    let name = voice.name || '';
+    if (name.includes('-')) {
+        name = name.replace(/^Microsoft\s+/i, '').split('-')[0].trim();
+    } else {
+        name = name.replace(/^Microsoft\s+/i, '').trim();
+    }
+    return name || voice.name;
+}
+
+function getWelderVoicePresets() {
+    const allVoices = welderSpeechVoices || [];
+    const idVoices = allVoices.filter(isIndonesianVoice);
+    const nonIdVoices = allVoices.filter(v => !isIndonesianVoice(v));
+
+    const presets = [];
+
+    if (idVoices.length > 0) {
+        const primaryId = idVoices[0];
+        const primaryName = getCleanVoiceName(primaryId);
+
+        // 1. Preset Utama (Default): Andika - Normal (Pitch 1.0, Rate 1.0)
+        presets.push({
+            name: `🇮🇩 ${primaryName} - Normal (Default)`,
+            voice: primaryId,
+            rate: 1.0,
+            pitch: 1.0,
+            isIndonesian: true
+        });
+
+        // 2. Varian 2: Andika - Santai (Pitch 0.9, Rate 0.85)
+        presets.push({
+            name: `🇮🇩 ${primaryName} - Santai (Tempo Tenang)`,
+            voice: primaryId,
+            rate: 0.85,
+            pitch: 0.9,
+            isIndonesian: true
+        });
+
+        // Jika ada voice Indonesia lainnya yang terdeteksi di sistem
+        for (let i = 1; i < idVoices.length; i++) {
+            const extraId = idVoices[i];
+            const extraName = getCleanVoiceName(extraId);
+            presets.push({
+                name: `🇮🇩 ${extraName} (Bahasa Indonesia)`,
+                voice: extraId,
+                rate: 1.0,
+                pitch: 1.0,
+                isIndonesian: true
+            });
+        }
+    } else {
+        // Fallback jika tidak ada voice ID sama sekali di perangkat
+        const fallbackVoice = allVoices[0] || null;
+        const fallbackName = getCleanVoiceName(fallbackVoice);
+        presets.push({
+            name: `⚠️ ${fallbackName} - Normal (Fallback)`,
+            voice: fallbackVoice,
+            rate: 1.0,
+            pitch: 1.0,
+            isIndonesian: false
+        });
+        presets.push({
+            name: `⚠️ ${fallbackName} - Santai (Fallback)`,
+            voice: fallbackVoice,
+            rate: 0.85,
+            pitch: 0.9,
+            isIndonesian: false
+        });
+    }
+
+    // 3. Sisa voice Inggris / Non-ID diturunkan prioritasnya di bawah dengan label peringatan jelas
+    nonIdVoices.forEach(v => {
+        const vName = getCleanVoiceName(v);
+        const langCode = (v.lang || '').toLowerCase();
+        let langLabel = 'English';
+        if (langCode.startsWith('en')) {
+            langLabel = 'English';
+        } else if (v.lang) {
+            langLabel = v.lang;
+        }
+
+        presets.push({
+            name: `🌐 ${vName} (${langLabel} - kurang cocok untuk teks Indonesia)`,
+            voice: v,
+            rate: 1.0,
+            pitch: 1.0,
+            isIndonesian: false
+        });
+    });
+
+    return presets;
+}
+
+function updateWelderVoiceNotice() {
+    const noticeEl = document.getElementById('welderVoiceInfoNotice');
+    if (!noticeEl) return;
+
+    const idVoices = (welderSpeechVoices || []).filter(isIndonesianVoice);
+    if (idVoices.length === 1) {
+        noticeEl.innerHTML = `🇮🇩 Menggunakan 1 voice Bahasa Indonesia (${getCleanVoiceName(idVoices[0])}) yang tersedia di perangkat ini.`;
+    } else if (idVoices.length > 1) {
+        noticeEl.innerHTML = `🇮🇩 Ditemukan ${idVoices.length} voice Bahasa Indonesia di perangkat ini.`;
+    } else {
+        noticeEl.innerHTML = `⚠️ Voice Bahasa Indonesia tidak terdeteksi di perangkat ini. Menggunakan suara alternatif.`;
+let currentTTSState = {
+    sourceType: 'welder',
+    sourceId: null,
+    lang: 'id',
+    title: '',
+    text: '',
+    badgeText: ''
+};
+
+function resolveVoiceForLang(lang, presetIdx) {
+    const allVoices = welderSpeechVoices || [];
+    const idVoices = allVoices.filter(isIndonesianVoice);
+    const enVoices = allVoices.filter(v => !isIndonesianVoice(v));
+
+    let chosenVoice = null;
+    let rate = 1.0;
+    let pitch = 1.0;
+    let autoAdjusted = false;
+
+    // Menentukan style tempo: 0 = Normal, 1 = Santai/Tenang
+    const isRelaxed = (presetIdx === 1);
+
+    if (lang === 'en') {
+        // Konten Bahasa Inggris -> wajib pakai voice Inggris yang jernih & natural
+        const preferredEn = enVoices.find(v => v.name.includes('David')) ||
+                            enVoices.find(v => v.name.includes('Mark')) ||
+                            enVoices.find(v => v.name.includes('Zira')) ||
+                            enVoices.find(v => (v.lang || '').toLowerCase().startsWith('en')) ||
+                            enVoices[0] ||
+                            allVoices[0] ||
+                            null;
+        chosenVoice = preferredEn;
+        rate = isRelaxed ? 0.85 : 1.0;
+        pitch = isRelaxed ? 0.95 : 1.0;
+
+        // Cek jika user sedang memilih preset Indonesia di dropdown saat konten Inggris aktif
+        const currentPreset = getWelderVoicePresets()[presetIdx];
+        if (currentPreset && currentPreset.isIndonesian) {
+            autoAdjusted = true;
+        }
+    } else {
+        // Konten Bahasa Indonesia (Default) -> wajib pakai voice Andika (id-ID)
+        const primaryId = idVoices[0] || allVoices[0] || null;
+        chosenVoice = primaryId;
+        rate = isRelaxed ? 0.85 : 1.0;
+        pitch = isRelaxed ? 0.9 : 1.0;
+
+        // Cek jika user sedang memilih preset non-Indonesia di dropdown saat konten Indonesia aktif
+        const currentPreset = getWelderVoicePresets()[presetIdx];
+        if (currentPreset && !currentPreset.isIndonesian) {
+            autoAdjusted = true;
+        }
+    }
+
+    return {
+        voice: chosenVoice,
+        lang: chosenVoice ? chosenVoice.lang : (lang === 'en' ? 'en-US' : 'id-ID'),
+        rate: rate,
+        pitch: pitch,
+        autoAdjusted: autoAdjusted
+    };
+}
+
+function updateWelderVoiceNotice(activeLang = currentTTSState.lang || 'id') {
+    const noticeEl = document.getElementById('welderVoiceInfoNotice');
+    if (!noticeEl) return;
+
+    const idVoices = (welderSpeechVoices || []).filter(isIndonesianVoice);
+    const resolved = resolveVoiceForLang(activeLang, welderSelectedVoiceIdx);
+
+    if (activeLang === 'en') {
+        const voiceName = resolved.voice ? getCleanVoiceName(resolved.voice) : 'English Engine';
+        if (resolved.autoAdjusted) {
+            noticeEl.innerHTML = `<span class="text-blue-400">🇺🇸</span> Menggunakan voice <strong>${voiceName}</strong> (English) — Otomatis disesuaikan ke bahasa konten.`;
+        } else {
+            noticeEl.innerHTML = `<span class="text-blue-400">🇺🇸</span> Menggunakan voice <strong>${voiceName}</strong> untuk konten Bahasa Inggris.`;
+        }
+    } else {
+        const voiceName = resolved.voice ? getCleanVoiceName(resolved.voice) : 'Indonesian Engine';
+        if (resolved.autoAdjusted) {
+            noticeEl.innerHTML = `<span class="text-safety-400">🇮🇩</span> Menggunakan voice <strong>${voiceName}</strong> (Bahasa Indonesia) — Otomatis disesuaikan ke bahasa konten.`;
+        } else if (idVoices.length === 1) {
+            noticeEl.innerHTML = `<span class="text-safety-400">🇮🇩</span> Menggunakan 1 voice Bahasa Indonesia (<strong>${voiceName}</strong>) yang tersedia di perangkat ini.`;
+        } else if (idVoices.length > 1) {
+            noticeEl.innerHTML = `<span class="text-safety-400">🇮🇩</span> Menggunakan voice <strong>${voiceName}</strong> (Ditemukan ${idVoices.length} voice Indonesia).`;
+        } else {
+            noticeEl.innerHTML = `<span class="text-amber-400">⚠️</span> Voice Bahasa Indonesia tidak terdeteksi di perangkat ini. Menggunakan suara alternatif.`;
+        }
+    }
+}
+
+function logWelderTTSVoices(presets) {
+    console.group('🎙️ [BP3MI TTS Voice Engine] Status Voice & Presets');
+    console.log(`%cTotal voice terdeteksi di sistem: ${welderSpeechVoices.length}`, 'color: #38bdf8; font-weight: bold;');
+    
+    if (welderSpeechVoices.length > 0) {
+        console.table(welderSpeechVoices.map((v, i) => ({
+            Index: i,
+            Name: v.name,
+            Lang: v.lang,
+            Default: v.default ? '✅' : '❌',
+            'Tipe Voice': isIndonesianVoice(v) ? '🇮🇩 Asli Indonesia (id-ID)' : '🌐 Non-Indonesia'
+        })));
+    } else {
+        console.warn('SpeechSynthesis belum mengembalikan daftar voice.');
+    }
+
+    console.log('%cPreset Suara yang Dibuat untuk Aplikasi:', 'color: #4ade80; font-weight: bold;');
+    presets.forEach((p, i) => {
+        const isSel = i === welderSelectedVoiceIdx ? '👉 [DEFAULT / DIPILIH]' : '  ';
+        console.log(`${isSel} Preset [${i}]: ${p.name} | Voice: "${p.voice ? p.voice.name : 'System Default'}" | Pitch: ${p.pitch} | Rate: ${p.rate}`);
+    });
+    console.groupEnd();
+}
+
+function populateWelderVoiceSelector() {
+    const select = document.getElementById('welderVoiceSelect');
+    const presets = getWelderVoicePresets();
+    
+    // Auto-deteksi: jika index belum valid atau belum diset, default ke index 0 (yaitu preset utama ID)
+    if (welderSelectedVoiceIdx < 0 || welderSelectedVoiceIdx >= presets.length) {
+        welderSelectedVoiceIdx = 0;
+    }
+
+    if (select) {
+        select.innerHTML = '';
+        presets.forEach((p, idx) => {
+            const opt = document.createElement('option');
+            opt.value = idx;
+            opt.textContent = p.name;
+            select.appendChild(opt);
+        });
+        select.value = welderSelectedVoiceIdx;
+    }
+
+    updateWelderVoiceNotice();
+}
+
 function initWelderTTS() {
     if (!('speechSynthesis' in window)) {
         console.warn('[TTS] Web Speech API tidak didukung di browser ini.');
+        const noticeEl = document.getElementById('welderVoiceInfoNotice');
+        if (noticeEl) {
+            noticeEl.textContent = '⚠️ Web Speech API (TTS) tidak didukung pada browser ini.';
+        }
         return;
     }
 
     const loadVoices = () => {
-        welderSpeechVoices = window.speechSynthesis.getVoices();
-        populateWelderVoiceSelector();
+        const voices = window.speechSynthesis.getVoices();
+        if (voices && voices.length > 0) {
+            welderSpeechVoices = voices;
+            // Pastikan voice ID terdeteksi menjadi default pilihan pertama (index 0)
+            welderSelectedVoiceIdx = 0;
+            populateWelderVoiceSelector();
+            const presets = getWelderVoicePresets();
+            logWelderTTSVoices(presets);
+        }
     };
 
     loadVoices();
     if (window.speechSynthesis.onvoiceschanged !== undefined) {
         window.speechSynthesis.onvoiceschanged = loadVoices;
     }
-}
-
-function getWelderVoicePresets() {
-    const idVoices = welderSpeechVoices.filter(v => v.lang.startsWith('id') || v.lang.includes('Indonesian'));
-    const enVoices = welderSpeechVoices.filter(v => v.lang.startsWith('en'));
     
-    // Preset 0: ID Native Default
-    const v0 = idVoices[0] || welderSpeechVoices[0] || null;
-    // Preset 1: ID Relaxed / 2nd ID Voice or Tuned Pitch
-    const v1 = idVoices[1] || idVoices[0] || welderSpeechVoices[0] || null;
-    // Preset 2: English / Bilingual Voice
-    const v2 = enVoices[0] || welderSpeechVoices[1] || welderSpeechVoices[0] || null;
-    // Preset 3: Fast Robotic Voice
-    const v3 = idVoices[0] || welderSpeechVoices[0] || null;
-
-    return [
-        { name: '🇮🇩 Suara 1 (ID Jernih - Default)', voice: v0, rate: 1.0, pitch: 1.0 },
-        { name: '🇮🇩 Suara 2 (ID Santai / Halus)', voice: v1, rate: 0.95, pitch: 1.12 },
-        { name: '🌐 Suara 3 (Bilingual / English Term)', voice: v2, rate: 1.0, pitch: 1.0 },
-        { name: '⚡ Suara 4 (Robotik Cepat)', voice: v3, rate: 1.25, pitch: 0.9 }
-    ];
-}
-
-function populateWelderVoiceSelector() {
-    const select = document.getElementById('welderVoiceSelect');
-    if (!select) return;
-    const presets = getWelderVoicePresets();
-    select.innerHTML = '';
-    presets.forEach((p, idx) => {
-        const opt = document.createElement('option');
-        opt.value = idx;
-        opt.textContent = p.name;
-        select.appendChild(opt);
-    });
-    select.value = welderSelectedVoiceIdx;
+    // Retries for asynchronous voice loading
+    setTimeout(loadVoices, 200);
+    setTimeout(loadVoices, 800);
 }
 
 function changeWelderVoice(idx) {
     welderSelectedVoiceIdx = parseInt(idx, 10) || 0;
-    if (window.speechSynthesis.speaking) {
-        // Restart current playback with new voice
-        if (welderPlayingSectionId) {
-            playWelderSectionTTS(welderPlayingSectionId);
-        }
+    const presets = getWelderVoicePresets();
+    const chosen = presets[welderSelectedVoiceIdx];
+
+    const currentLang = currentTTSState.lang || 'id';
+    const resolved = resolveVoiceForLang(currentLang, welderSelectedVoiceIdx);
+
+    if (resolved.autoAdjusted) {
+        const langName = currentLang === 'en' ? 'English' : 'Bahasa Indonesia';
+        showToast(`ℹ️ Preset disesuaikan ke bahasa konten (${langName})`, 'info');
+    } else if (chosen) {
+        showToast(`🎙️ Suara diubah: ${chosen.name}`, 'info');
+    }
+
+    updateWelderVoiceNotice(currentLang);
+
+    if (window.speechSynthesis.speaking && currentTTSState.text) {
+        replayCurrentTTS();
     }
 }
 
@@ -5441,67 +5727,69 @@ function cycleWelderPlaybackRate() {
     const rateBtn = document.getElementById('welderRateBtn');
     if (rateBtn) rateBtn.textContent = `${welderPlaybackRate}x`;
 
-    if (window.speechSynthesis.speaking && welderPlayingSectionId) {
-        playWelderSectionTTS(welderPlayingSectionId);
+    if (window.speechSynthesis.speaking && currentTTSState.text) {
+        replayCurrentTTS();
     }
 }
 
-function playWelderSectionTTS(sectionId, event) {
-    if (event) event.stopPropagation();
-
+// Universal TTS Player Engine
+function playUniversalTTS({ text, title, lang = 'id', badgeText = '', sourceType = 'custom', sourceId = null, queue = [], onEnd = null }) {
     if (!('speechSynthesis' in window)) {
         showToast('Fitur Text-to-Speech tidak didukung pada browser Anda.', 'warning');
         return;
     }
 
-    const data = WELDER_CONTENT_STORE[sectionId];
-    if (!data) return;
+    if (!text || !text.trim()) return;
 
     window.speechSynthesis.cancel();
     welderIsPaused = false;
-    welderPlayingSectionId = sectionId;
+    currentTTSState = { sourceType, sourceId, lang, title, text, badgeText };
 
-    const isSimple = welderLanguageMode === 'simple';
-    const textToSpeak = isSimple ? (data.simpleTTS || data.simple) : (data.technicalTTS || data.technical);
+    const cleanText = text.replace(/^"|"$/g, '').trim();
+    welderTTSUtterance = new SpeechSynthesisUtterance(cleanText);
 
-    welderTTSUtterance = new SpeechSynthesisUtterance(textToSpeak);
+    // Resolve voice & pitch/rate based on content language & selected style
+    const resolved = resolveVoiceForLang(lang, welderSelectedVoiceIdx);
 
-    const presets = getWelderVoicePresets();
-    const activePreset = presets[welderSelectedVoiceIdx] || presets[0];
-
-    if (activePreset.voice) {
-        welderTTSUtterance.voice = activePreset.voice;
-        welderTTSUtterance.lang = activePreset.voice.lang;
+    if (resolved.voice) {
+        welderTTSUtterance.voice = resolved.voice;
+        welderTTSUtterance.lang = resolved.voice.lang || resolved.lang;
     } else {
-        welderTTSUtterance.lang = 'id-ID';
+        welderTTSUtterance.lang = resolved.lang;
     }
 
-    welderTTSUtterance.rate = (activePreset.rate || 1.0) * (welderPlaybackRate || 1.0);
-    welderTTSUtterance.pitch = activePreset.pitch || 1.0;
+    welderTTSUtterance.rate = (resolved.rate || 1.0) * (welderPlaybackRate || 1.0);
+    welderTTSUtterance.pitch = resolved.pitch || 1.0;
 
-    // UI Updates on Speech Lifecycle
+    // Speech lifecycle handlers
     welderTTSUtterance.onstart = () => {
-        showWelderAudioBar(data.title);
-        highlightPlayingWelderSection(sectionId);
+        showWelderAudioBar(title, lang, badgeText);
+        updateWelderVoiceNotice(lang);
+        highlightPlayingSource(sourceType, sourceId);
+        updateWelderPlayPauseBtnState(true);
     };
 
     welderTTSUtterance.onend = () => {
-        removeWelderSectionHighlight();
-        // Check if queue has next item
-        if (welderModulePlayQueue.length > 0 && welderQueueIndex < welderModulePlayQueue.length - 1) {
+        removePlayingHighlight();
+        if (queue && queue.length > 0 && welderQueueIndex < queue.length - 1) {
             welderQueueIndex++;
-            playWelderSectionTTS(welderModulePlayQueue[welderQueueIndex]);
+            const nextItem = queue[welderQueueIndex];
+            if (typeof nextItem === 'function') {
+                nextItem();
+            } else if (typeof nextItem === 'string') {
+                playWelderSectionTTS(nextItem);
+            }
         } else {
             welderModulePlayQueue = [];
             welderQueueIndex = 0;
             updateWelderPlayPauseBtnState(false);
-            welderPlayingSectionId = null;
+            if (typeof onEnd === 'function') onEnd();
         }
     };
 
     welderTTSUtterance.onerror = (e) => {
         console.error('[TTS Error]', e);
-        removeWelderSectionHighlight();
+        removePlayingHighlight();
         updateWelderPlayPauseBtnState(false);
     };
 
@@ -5509,13 +5797,43 @@ function playWelderSectionTTS(sectionId, event) {
     updateWelderPlayPauseBtnState(true);
 }
 
+function replayCurrentTTS() {
+    if (currentTTSState.text) {
+        playUniversalTTS({
+            text: currentTTSState.text,
+            title: currentTTSState.title,
+            lang: currentTTSState.lang,
+            badgeText: currentTTSState.badgeText,
+            sourceType: currentTTSState.sourceType,
+            sourceId: currentTTSState.sourceId
+        });
+    }
+}
+
+// 1. Handlers for Materi Welder (Bahasa Indonesia)
+function playWelderSectionTTS(sectionId, event) {
+    if (event) event.stopPropagation();
+    const data = WELDER_CONTENT_STORE[sectionId];
+    if (!data) return;
+
+    const isSimple = welderLanguageMode === 'simple';
+    const textToSpeak = isSimple ? (data.simpleTTS || data.simple) : (data.technicalTTS || data.technical);
+    const badge = isSimple ? 'Mode: Simple (Analogi)' : 'Mode: Teknis Formal';
+
+    playUniversalTTS({
+        text: textToSpeak,
+        title: data.title,
+        lang: 'id',
+        badgeText: badge,
+        sourceType: 'welder',
+        sourceId: sectionId
+    });
+}
+
 function playWelderFullModuleTTS(moduleId, event) {
     if (event) event.stopPropagation();
-    
-    // Expand module card
     openWelderModule(moduleId);
 
-    // Collect all section IDs in this module
     const sectionIds = Object.keys(WELDER_CONTENT_STORE).filter(
         k => WELDER_CONTENT_STORE[k].moduleId === moduleId
     );
@@ -5525,9 +5843,99 @@ function playWelderFullModuleTTS(moduleId, event) {
     welderModulePlayQueue = sectionIds;
     welderQueueIndex = 0;
     playWelderSectionTTS(welderModulePlayQueue[0]);
-    showToast(`🔊 Memutar seluruh Modul ${moduleId}...`, 'info');
+    showToast(`🔊 Memutar seluruh Modul ${moduleId} (Bahasa Indonesia)...`, 'info');
 }
 
+// 2. Handlers for Materi BP2MI (Bahasa Indonesia)
+function playBP2MIOpenerTTS(event) {
+    if (event) event.stopPropagation();
+    const openerText = "Selamat pagi atau siang. Terima kasih sudah mendaftar di Program Pelatihan SMK Go Global untuk posisi Welder Bahasa Inggris. Berkas administrasi dan Kartu AK-1 Anda sudah kami verifikasi dan sinkronisasi lewat QR-code. Sebelum kita masuk ke ruang praktik, ada beberapa hal penting yang ingin kami konfirmasi dari Anda. Tolong dijawab dengan jelas.";
+
+    playUniversalTTS({
+        text: openerText,
+        title: "Sesi Pembuka Interviewer BP2MI",
+        lang: 'id',
+        badgeText: "BP2MI · Pembuka",
+        sourceType: 'bp2mi',
+        sourceId: 'opener'
+    });
+}
+
+function playBP2MISessionTTS(sessionId, event) {
+    if (event) event.stopPropagation();
+    const mat = bp2miMaterials.find(m => m.id === sessionId);
+    if (!mat) return;
+
+    const fullText = `Pertanyaan Interviewer: ${mat.interviewerQuestion}. Rekomendasi Jawaban: ${mat.recommendedAnswer}`;
+
+    playUniversalTTS({
+        text: fullText,
+        title: `BP2MI ${mat.sessionNumber}: ${mat.title}`,
+        lang: 'id',
+        badgeText: `BP2MI · ${mat.category}`,
+        sourceType: 'bp2mi',
+        sourceId: sessionId
+    });
+}
+
+function playBP2MIAnswerTTS(sessionId, event) {
+    if (event) event.stopPropagation();
+    const mat = bp2miMaterials.find(m => m.id === sessionId);
+    if (!mat) return;
+
+    playUniversalTTS({
+        text: mat.recommendedAnswer,
+        title: `Jawaban BP2MI ${mat.sessionNumber}`,
+        lang: 'id',
+        badgeText: "BP2MI · Respon",
+        sourceType: 'bp2mi',
+        sourceId: sessionId
+    });
+}
+
+// 3. Handlers for Latihan Interview (English & Indonesian)
+function playInterviewTTS(idx, lang, event) {
+    if (event) event.stopPropagation();
+    const iq = interviewQuestions[idx];
+    if (!iq) return;
+
+    if (lang === 'en') {
+        playUniversalTTS({
+            text: iq.answer,
+            title: `Q${idx + 1}: Best Answer (English)`,
+            lang: 'en',
+            badgeText: 'Interview · English',
+            sourceType: 'interview',
+            sourceId: `iq-${idx}-en`
+        });
+    } else {
+        playUniversalTTS({
+            text: iq.translation,
+            title: `Q${idx + 1}: Terjemahan Indonesia`,
+            lang: 'id',
+            badgeText: 'Interview · Indonesia',
+            sourceType: 'interview',
+            sourceId: `iq-${idx}-id`
+        });
+    }
+}
+
+function playInterviewQuestionTTS(idx, event) {
+    if (event) event.stopPropagation();
+    const iq = interviewQuestions[idx];
+    if (!iq) return;
+
+    playUniversalTTS({
+        text: iq.question,
+        title: `Q${idx + 1} Question (English)`,
+        lang: 'en',
+        badgeText: 'Interview · Question',
+        sourceType: 'interview',
+        sourceId: `iq-${idx}-q`
+    });
+}
+
+// Playback Control & Highlighting
 function toggleWelderAudioPlayback() {
     if (!('speechSynthesis' in window)) return;
 
@@ -5541,8 +5949,8 @@ function toggleWelderAudioPlayback() {
             welderIsPaused = true;
             updateWelderPlayPauseBtnState(false);
         }
-    } else if (welderPlayingSectionId) {
-        playWelderSectionTTS(welderPlayingSectionId);
+    } else if (currentTTSState.text) {
+        replayCurrentTTS();
     }
 }
 
@@ -5553,19 +5961,29 @@ function stopWelderAudio() {
     welderIsPaused = false;
     welderModulePlayQueue = [];
     welderQueueIndex = 0;
-    welderPlayingSectionId = null;
-    removeWelderSectionHighlight();
+    removePlayingHighlight();
     hideWelderAudioBar();
 }
 
-function showWelderAudioBar(title) {
+function showWelderAudioBar(title, lang = 'id', badgeText = '') {
     const bar = document.getElementById('welderAudioBar');
     const titleEl = document.getElementById('welderAudioTrackTitle');
     const modeBadge = document.getElementById('welderAudioModeBadge');
+    const langBadge = document.getElementById('welderAudioLangBadge');
+
     if (bar && titleEl) {
-        titleEl.textContent = title || 'Materi Welder';
+        titleEl.textContent = title || 'Materi Pembelajaran';
         if (modeBadge) {
-            modeBadge.textContent = welderLanguageMode === 'simple' ? 'Mode: Simple' : 'Mode: Teknis';
+            modeBadge.textContent = badgeText || (welderLanguageMode === 'simple' ? 'Mode: Simple' : 'Mode: Teknis');
+        }
+        if (langBadge) {
+            if (lang === 'en') {
+                langBadge.textContent = '🇺🇸 EN';
+                langBadge.className = 'text-[9px] font-bold px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/30';
+            } else {
+                langBadge.textContent = '🇮🇩 ID';
+                langBadge.className = 'text-[9px] font-bold px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30';
+            }
         }
         bar.classList.remove('translate-y-full', 'opacity-0', 'pointer-events-none');
         bar.classList.add('translate-y-0', 'opacity-100', 'pointer-events-auto');
@@ -5598,20 +6016,37 @@ function updateWelderPlayPauseBtnState(isPlaying) {
     }
 }
 
-function highlightPlayingWelderSection(sectionId) {
-    removeWelderSectionHighlight();
-    const el = document.querySelector(`[data-welder-section="${sectionId}"]`);
-    if (el) {
-        el.classList.add('welder-playing-highlight');
-        // Smooth scroll if not in viewport
-        el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+function highlightPlayingSource(sourceType, sourceId) {
+    removePlayingHighlight();
+    if (!sourceId) return;
+
+    if (sourceType === 'welder') {
+        welderPlayingSectionId = sourceId;
+        const el = document.querySelector(`[data-welder-section="${sourceId}"]`);
+        if (el) {
+            el.classList.add('welder-playing-highlight');
+            el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+    } else if (sourceType === 'interview') {
+        const el = document.querySelector(`[data-interview-idx="${sourceId}"]`);
+        if (el) {
+            el.classList.add('welder-playing-highlight');
+            el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+    } else if (sourceType === 'bp2mi') {
+        const el = document.querySelector(`[data-bp2mi-id="${sourceId}"]`);
+        if (el) {
+            el.classList.add('welder-playing-highlight');
+            el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
     }
 }
 
-function removeWelderSectionHighlight() {
+function removePlayingHighlight() {
     document.querySelectorAll('.welder-playing-highlight').forEach(el => {
         el.classList.remove('welder-playing-highlight');
     });
+    welderPlayingSectionId = null;
 }
 
 // ==================== INITIALIZATION & SECTION BINDING ====================
@@ -5647,7 +6082,8 @@ function bindWelderDOMSections() {
             const btn = document.createElement('button');
             btn.type = 'button';
             btn.className = 'mod-tts-btn inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold text-charcoal-700 bg-charcoal-100 hover:bg-safety-500 hover:text-white transition-all shadow-sm';
-            btn.title = `Putar Seluruh Modul ${modId}`;
+            btn.setAttribute('data-lang', 'id');
+            btn.title = `Putar Seluruh Modul ${modId} (Bahasa Indonesia)`;
             btn.innerHTML = `<span>🔊</span><span class="hidden sm:inline">Dengar Modul</span>`;
             btn.onclick = (e) => playWelderFullModuleTTS(modId, e);
             headerActions.insertBefore(btn, headerActions.firstChild);
@@ -5779,7 +6215,8 @@ function attachSectionToCard(cardEl, sectionId) {
         speakerBtn.type = 'button';
         speakerBtn.className = 'sec-speaker-btn inline-flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-bold text-charcoal-600 hover:text-safety-600 hover:bg-safety-50 bg-charcoal-50 border border-charcoal-200 hover:border-safety-300 transition-colors shadow-sm ml-auto';
         speakerBtn.setAttribute('data-for', sectionId);
-        speakerBtn.title = 'Dengarkan penjelasan suara';
+        speakerBtn.setAttribute('data-lang', 'id');
+        speakerBtn.title = 'Dengarkan penjelasan suara (Bahasa Indonesia)';
         speakerBtn.innerHTML = `<span>🔊</span> <span class="text-[10px] hidden sm:inline">Dengar</span>`;
         speakerBtn.onclick = (e) => playWelderSectionTTS(sectionId, e);
 
