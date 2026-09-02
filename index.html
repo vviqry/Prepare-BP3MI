@@ -94,6 +94,19 @@
         .sidebar-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.4); z-index:40; opacity:0; transition: opacity .3s ease; }
         .sidebar-overlay.show { display:block; opacity:1; }
 
+        /* Sidebar collapse transition for Desktop */
+        #sidebar {
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease;
+        }
+        @media (min-width: 1024px) {
+            #sidebar.sidebar-collapsed {
+                margin-left: -18rem !important; /* -w-72 (-18rem) */
+                transform: translateX(-100%) !important;
+                opacity: 0 !important;
+                pointer-events: none !important;
+            }
+        }
+
         /* Shimmer loading */
         .shimmer { background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
         @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
@@ -101,6 +114,34 @@
         /* Timer danger */
         .timer-danger { animation: timerPulse .8s infinite; }
         @keyframes timerPulse { 0%,100% { color: #ef4444; } 50% { color: #fca5a5; } }
+
+        /* ===== WELDER DUAL MODE & AUDIO TTS STYLES ===== */
+        .welder-simple-box {
+            background: linear-gradient(135deg, rgba(255, 248, 237, 0.95) 0%, rgba(255, 240, 212, 0.88) 100%);
+            border: 1.5px solid #ffc370;
+            border-radius: 0.875rem;
+            padding: 1rem 1.125rem;
+            margin-top: 0.75rem;
+            margin-bottom: 0.75rem;
+            box-shadow: 0 4px 15px rgba(255, 131, 16, 0.08);
+            animation: welderFadeIn .3s cubic-bezier(.16,1,.3,1) forwards;
+        }
+        @keyframes welderFadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .welder-playing-highlight {
+            outline: 3px solid #ff8310 !important;
+            box-shadow: 0 0 25px rgba(255,131,16,0.35) !important;
+            border-color: #ff8310 !important;
+            animation: playingGlow 1.8s infinite ease-in-out;
+        }
+        @keyframes playingGlow {
+            0%, 100% { outline-color: #ff8310; box-shadow: 0 0 20px rgba(255,131,16,0.3); }
+            50% { outline-color: #ffc370; box-shadow: 0 0 35px rgba(255,195,112,0.55); }
+        }
+        .welder-text-technical { transition: opacity .25s ease, max-height .3s ease; }
+        .welder-text-simple { transition: opacity .25s ease, max-height .3s ease; }
 
         /* ===== MOBILE BOTTOM NAV ===== */
         .bottom-nav { display: none; }
@@ -338,6 +379,29 @@
                         </div>
                         <div class="h-3 bg-charcoal-100 rounded-full overflow-hidden">
                             <div id="welderProgressBar" class="h-full bg-gradient-to-r from-safety-500 via-amber-500 to-emerald-500 rounded-full transition-all duration-500 ease-out" style="width:0%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Mode Switch Info Banner -->
+                    <div id="welderModeNoticeCard" class="bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent border border-amber-500/30 rounded-2xl p-4 sm:p-5 mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm transition-all duration-300">
+                        <div class="flex items-start gap-3.5">
+                            <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-500 border border-amber-500/30 flex items-center justify-center text-xl flex-shrink-0" id="welderModeHeaderIcon">
+                                🧒
+                            </div>
+                            <div>
+                                <div class="flex items-center gap-2 mb-0.5">
+                                    <h4 class="text-xs sm:text-sm font-black text-charcoal-900 uppercase tracking-wide" id="welderModeHeaderTitle">Mode Bahasa Simple Aktif</h4>
+                                    <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-200" id="welderModeHeaderBadge">Analogi Pemula</span>
+                                </div>
+                                <p class="text-xs text-charcoal-600 leading-relaxed" id="welderModeHeaderDesc">
+                                    Penjelasan teknis diubah menjadi analogi sehari-hari yang ringan. Klik tombol speaker 🔊 pada setiap materi untuk mendengarkan audio pembacaan.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 flex-shrink-0">
+                            <button onclick="toggleWelderLanguageMode()" id="welderModeToggleBannerBtn" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold bg-charcoal-900 hover:bg-charcoal-800 text-white shadow-md transition-all">
+                                <span id="welderBannerToggleBtnText">Ganti ke Mode Teknis</span> <span>⚙️</span>
+                            </button>
                         </div>
                     </div>
 
@@ -2176,6 +2240,80 @@
         </main>
     </div>
 
+    <!-- ================= FLOATING MODE SWITCHER (FAB) ================= -->
+    <div id="welderFloatingFab" class="fixed bottom-20 lg:bottom-8 right-4 sm:right-6 z-40 transition-all duration-300 transform opacity-0 scale-95 pointer-events-none">
+        <button onclick="toggleWelderLanguageMode()" id="welderFabBtn" class="flex items-center gap-2.5 px-4 py-3 sm:px-5 sm:py-3.5 rounded-full bg-gradient-to-r from-amber-500 via-safety-500 to-amber-600 text-slate-950 font-black text-xs sm:text-sm shadow-2xl shadow-amber-500/40 border-2 border-white/90 hover:scale-105 active:scale-95 transition-all pulse-glow">
+            <span id="welderFabIcon" class="text-base sm:text-xl">🧒</span>
+            <div class="text-left">
+                <span class="block text-[9px] uppercase tracking-wider font-bold text-slate-900 opacity-80 leading-none">Pilihan Bahasa</span>
+                <span id="welderFabLabel" class="text-xs sm:text-sm font-black">Mode Simple</span>
+            </div>
+        </button>
+    </div>
+
+    <!-- ================= STICKY MINI AUDIO PLAYER BAR ================= -->
+    <div id="welderAudioBar" class="fixed bottom-0 lg:bottom-0 left-0 right-0 z-50 bg-slate-950/95 backdrop-blur-md border-t border-slate-800 text-white px-4 py-3 sm:px-8 shadow-2xl transition-all duration-300 translate-y-full opacity-0 pointer-events-none">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
+            <!-- Now Playing Info -->
+            <div class="flex items-center gap-3 w-full md:w-auto min-w-0">
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-safety-500 to-amber-500 flex items-center justify-center text-slate-950 font-bold text-base flex-shrink-0 animate-pulse">
+                    🔊
+                </div>
+                <div class="min-w-0 flex-1">
+                    <div class="flex items-center gap-2">
+                        <span class="inline-block text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-safety-500/20 text-safety-400 border border-safety-500/30">
+                            Audio Sedang Diputar
+                        </span>
+                        <span id="welderAudioModeBadge" class="text-[9px] font-semibold text-slate-400">
+                            Mode: Simple
+                        </span>
+                    </div>
+                    <h5 id="welderAudioTrackTitle" class="text-xs sm:text-sm font-bold text-white truncate mt-0.5">
+                        Memuat Materi...
+                    </h5>
+                </div>
+            </div>
+
+            <!-- Audio Controls & Voice Selector -->
+            <div class="flex flex-wrap items-center justify-end gap-2 sm:gap-3 w-full md:w-auto">
+                <!-- 4-Voice Selector -->
+                <div class="relative">
+                    <select id="welderVoiceSelect" onchange="changeWelderVoice(this.value)" class="bg-slate-900 text-xs text-slate-200 border border-slate-700 rounded-xl px-2.5 py-1.5 focus:outline-none focus:border-safety-500 font-medium">
+                        <option value="0">🇮🇩 Suara 1 (ID Standar)</option>
+                        <option value="1">🇮🇩 Suara 2 (ID Santai)</option>
+                        <option value="2">🌐 Suara 3 (Bilingual / Eng)</option>
+                        <option value="3">⚡ Suara 4 (Robotik Cepat)</option>
+                    </select>
+                </div>
+
+                <!-- Speed Toggle Button -->
+                <button onclick="cycleWelderPlaybackRate()" id="welderRateBtn" class="text-xs font-mono font-bold bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 px-2.5 py-1.5 rounded-xl transition-colors">
+                    1.0x
+                </button>
+
+                <!-- Play/Pause Button -->
+                <button onclick="toggleWelderAudioPlayback()" id="welderPlayPauseBtn" class="bg-safety-500 hover:bg-safety-600 text-white font-bold p-2 sm:px-3 sm:py-1.5 rounded-xl text-xs inline-flex items-center gap-1.5 transition-colors shadow-lg shadow-safety-500/20">
+                    <span id="welderPlayPauseIcon">⏸️</span>
+                    <span id="welderPlayPauseText" class="hidden sm:inline">Pause</span>
+                </button>
+
+                <!-- Stop Button -->
+                <button onclick="stopWelderAudio()" class="bg-slate-800 hover:bg-rose-900 text-slate-300 hover:text-white font-bold p-2 sm:px-3 sm:py-1.5 rounded-xl text-xs inline-flex items-center gap-1 transition-colors">
+                    <span>⏹️</span>
+                    <span class="hidden sm:inline">Stop</span>
+                </button>
+
+                <!-- Close Bar Button -->
+                <button onclick="closeWelderAudioBar()" class="text-slate-500 hover:text-slate-300 p-1 rounded-lg">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+        </div>
+        <p class="text-[10px] text-slate-500 text-center sm:text-left mt-1.5">
+            ℹ️ Kualitas dan ketersediaan variasi suara tergantung pada dukungan mesin suara browser dan perangkat Anda.
+        </p>
+    </div>
+
     <!-- ===== MOBILE BOTTOM NAV ===== -->
     <nav class="bottom-nav" id="bottomNav" aria-label="Navigasi bawah">
         <button class="bottom-nav-btn active" id="bnav-materi-welder" onclick="navigateTo('materi-welder')">
@@ -3914,6 +4052,23 @@ function navigateTo(page) {
         document.getElementById('timerDisplay').classList.remove('flex');
         document.getElementById('timerDisplay').classList.add('hidden');
     }
+
+    // Show/hide Welder Floating FAB (Respect isWelderFabVisible state)
+    const welderFab = document.getElementById('welderFloatingFab');
+    if (welderFab) {
+        if (page === 'materi-welder' && isWelderFabVisible) {
+            welderFab.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
+            welderFab.classList.add('opacity-100', 'scale-100', 'pointer-events-auto');
+        } else {
+            welderFab.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
+            welderFab.classList.remove('opacity-100', 'scale-100', 'pointer-events-auto');
+            // If leaving materi-welder, stop any playing audio
+            if (page !== 'materi-welder' && typeof stopWelderAudio === 'function') {
+                stopWelderAudio();
+            }
+        }
+    }
+
     // Close mobile sidebar
     closeSidebar();
     // Scroll to top on mobile
@@ -4815,9 +4970,661 @@ const welderVocabData = [
     { en: 'Weaving Technique', cat: 'Blueprint', id: 'Teknik Ayunan / Menganyam Las', ex: 'Use a slight weaving motion to distribute heat evenly across both bevel faces.' }
 ];
 
+// ==================== MASTER DATA: WELDER CONTENT STORE (6 MODUL) ====================
+const WELDER_CONTENT_STORE = {
+    // ----------------- MODUL 1 -----------------
+    'm1-konsep': {
+        moduleId: 1,
+        title: 'Konsep Inti: Mengapa Logam Menyatu Kuat?',
+        analogyBadge: 'Analogi Lilin Meleleh',
+        simple: 'Bayangkan kamu mau menyatukan dua batang lilin: kamu panaskan ujungnya sampai meleleh lalu tempelkan jadi satu. Nah, las listrik itu sama, tapi pakai panas petir buatan (lebih dari 3.000°C) untuk melelehkan besi. Supaya besinya tidak keropos kena udara kotor, proses leburnya dilindungi payung pelindung (bisa berupa gas atau selaput kerak fluks).',
+        simpleTTS: 'Konsep Inti Pengelasan. Bayangkan kamu menyatukan dua batang lilin dengan melelehkannya. Las listrik menggunakan panas petir buatan lebih dari tiga ribu derajat Celsius untuk melelehkan besi, sambil dilindungi payung gas atau kerak fluks agar tidak keropos.',
+        technicalTTS: 'Konsep Inti Pengelasan. Pengelasan adalah proses penyatuan dua logam atau lebih secara metalurgi dengan memanaskan titik sambungan hingga mencair di atas tiga ribu derajat Celsius menggunakan energi busur listrik. Cairan las dilindungi dari udara luar oleh gas pelindung atau selaput fluks.'
+    },
+    'm1-smaw': {
+        moduleId: 1,
+        title: '1. SMAW (Shielded Metal Arc Welding / Las Stik)',
+        analogyBadge: 'Las Stik Paling Populer',
+        simple: 'Ini jenis las stik yang paling sering kamu lihat di bengkel pagar pinggir jalan. Kawat lasnya dibungkus serbuk khusus. Pas dipakai mengelas, serbuk itu ikut terbakar dan berubah jadi "kerak pelindung" (seperti koreng pelindung luka). Kerak ini menjaga besi panas agar tidak bolong-bolong kena angin luar. Sangat tahan angin di luar ruangan, tapi keraknya harus diketok bersih setelah mengelas.',
+        simpleTTS: 'SMAW atau Las Stik. Menggunakan kawat las berbungkus serbuk khusus. Saat mengelas, serbuk terbakar menjadi kerak pelindung di atas jalur las. Sangat tahan angin luar ruangan, tetapi keraknya wajib diketok bersih.',
+        technicalTTS: 'SMAW Shielded Metal Arc Welding atau Las Stik MMA. Menggunakan elektroda stik berlapis serbuk fluks padat. Busur listrik membakar kawat inti dan fluks secara serentak menghasilkan gas pelindung dan lapisan terak padat atau slag.'
+    },
+    'm1-gmaw': {
+        moduleId: 1,
+        title: '2. GMAW (MIG / MAG - Kawat Gulungan Otomatis)',
+        analogyBadge: 'Pistol Lem Tembak Otomatis',
+        simple: 'Seperti pistol lem tembak otomatis: kawat las di dalam gulungan keluar terus tanpa henti saat pelatuk ditekan. Sambil mengelas, ujung pistol menyemprotkan gas pelindung bening dari tabung. Keuntungannya: kerjanya super cepat dan tidak ada kerak kotor yang harus diketok-ketok! (MIG = pakai gas Argon untuk stainless/aluminium, MAG = pakai gas CO2 untuk besi biasa).',
+        simpleTTS: 'GMAW atau MIG MAG. Menggunakan kawat gulungan yang keluar terus menerus secara otomatis disertai semprotan gas pelindung. Kerjanya sangat cepat dan bersih tanpa kerak.',
+        technicalTTS: 'GMAW Gas Metal Arc Welding atau MIG MAG. Kawat las padat diumpankan otomatis terus-menerus melalui welding gun bersama semprotan gas pelindung untuk mengisolasi leburan logam tanpa menghasilkan terak.'
+    },
+    'm1-gtaw': {
+        moduleId: 1,
+        title: '3. GTAW (TIG - Las Argon Presisi Tinggi)',
+        analogyBadge: 'Seni Menyulam Logam',
+        simple: 'Ini teknik las paling rapi dan mewah (biasanya untuk pipa gas dan knalpot balap). Jarum lasnya (tungsten) tidak bisa habis/meleleh. Tangan kanan memegang obor api jarum, tangan kiri menyuapkan kawat tambah sedikit demi sedikit, seperti menyulam logam dengan sangat teliti dan presisi tinggi.',
+        simpleTTS: 'GTAW atau TIG Las Argon. Menggunakan jarum tungsten yang tidak ikut mencair dan gas argon murni. Kawat tambah disuapkan manual dengan tangan kiri. Menghasilkan sambungan paling presisi dan bersih untuk pipa migas dan pesawat.',
+        technicalTTS: 'GTAW Gas Tungsten Arc Welding atau TIG. Menggunakan jarum tungsten non-consumable dengan titik lebur tiga ribu empat ratus dua puluh dua derajat Celsius dan gas argon murni seratus persen.'
+    },
+    'm1-polarity': {
+        moduleId: 1,
+        title: '4. Polaritas Listrik (DCEP vs DCEN vs AC)',
+        analogyBadge: 'Arah Semprotan Panas',
+        simple: 'Polaritas itu seperti mengatur arah semprotan selang air panas:\n• DCEP (Stang Positif): 70% panas menyemprot ke kawat las, bikin hasil lasan menembus sangat dalam ke dalam pelat besi (standar las pipa).\n• DCEN (Stang Negatif): 70% panas di pelat besi, kawat meleleh cepat dan dangkal, cocok untuk pelat tipis biar tidak jebol bolong.\n• AC (Arus Bolak-Balik): Panas dibagi adil rata 50% di stang dan 50% di besi.',
+        simpleTTS: 'Polaritas Listrik. DCEP memusatkan panas ke elektroda sehingga hasil las tembus dalam. DCEN memusatkan panas ke benda kerja untuk pelat tipis. Arus bolak-balik AC membagi panas seimbang lima puluh banding lima puluh.',
+        technicalTTS: 'Polaritas Listrik. DCEP Reverse Polarity memusatkan tujuh puluh persen panas di elektroda menghasilkan penetrasi dalam. DCEN Straight Polarity memusatkan tujuh puluh persen panas di benda kerja. AC menghasilkan distribusi panas seimbang lima puluh banding lima puluh.'
+    },
+    'm1-arcblow': {
+        moduleId: 1,
+        title: 'Fenomena Magnetic Arc Blow & 5 Solusinya',
+        analogyBadge: 'Api Ditiup Angin Magnet',
+        simple: 'Pernah lihat api lilin yang tertiup angin sampai miring? Arc Blow itu mirip: api las tiba-tiba "ditiup hantu magnet" belok ke samping sendiri karena besi punya sifat magnetik saat pakai arus searah (DC).\n\n5 Cara Gampang Mengatasinya:\n1. Beralih ke arus bolak-balik (AC).\n2. Dekatkan jarak kawat las ke cairan las (jangan terlalu jauh).\n3. Pindahkan jepitan klem massa (arde) ke tempat lain.\n4. Lilitkan kabel massa di sekeliling benda kerja.\n5. Mengelas menjauhi titik jepitan massa.',
+        simpleTTS: 'Magnetic Arc Blow adalah peristiwa membeloknya api busur las akibat gaya medan magnet. Lima cara mengatasinya: gunakan arus AC, perpendek jarak busur, pindahkan klem massa, lilitkan kabel massa ke benda kerja, dan las menjauhi klem massa.',
+        technicalTTS: 'Magnetic Arc Blow adalah fenomena penyimpangan busur nyala las akibat gaya medan magnetik asimetris pada pengelasan arus searah DC. Diatasi dengan beralih ke arus AC, memperpendek arc length, memindahkan klem massa, melilitkan kabel massa, dan mengelas menjauhi titik massa.'
+    },
+    'm1-dutycycle': {
+        moduleId: 1,
+        title: 'Duty Cycle 10 Menit & Preheating',
+        analogyBadge: 'Waktu Istirahat & Pemanasan',
+        simple: '• Duty Cycle 60% @ 200A: Mesin las juga butuh istirahat! Kalau dipakai 6 menit nonstop, wajib dimatikan/istirahat 4 menit dalam total 10 menit biar trafo tidak meledak/gosong.\n• Preheating (Pemanasan Awal): Seperti pemanasan sebelum olahraga. Besi tebal dihangatkan dulu (100°-250°C) sebelum dilas biar tidak "kram" atau retak dingin mendadak saat beku.',
+        simpleTTS: 'Duty Cycle dan Preheating. Duty cycle enam puluh persen berarti mesin las aman dipakai enam menit dan wajib istirahat pendinginan empat menit. Pemanasan awal dilakukan untuk mencegah retak dingin pada logam.',
+        technicalTTS: 'Duty Cycle 60% pada beban dua ratus Ampere berarti mesin aman dipakai mengelas enam menit dan wajib istirahat pendinginan empat menit dalam siklus sepuluh menit. Preheating dan Interpass Temperature menjaga laju pendinginan lambat guna mencegah martensit getas.'
+    },
+    'm1-aws': {
+        moduleId: 1,
+        title: '5. Membaca Kode Elektroda AWS E7018 & Tungsten',
+        analogyBadge: 'Membaca Resep Rahasia',
+        simple: 'Membaca kode stik las itu seperti membaca label nutrisi makanan:\n• E = Elektroda (Stik Las)\n• 70 = Kuat tarik 70.000 psi (sangat kuat menahan beban berat jembatan).\n• 1 = Serbaguna! Boleh dipakai di semua posisi las (datar, tegak, maupun atap).\n• 8 = Formula khusus anti-retak hidrogen (wajib di-oven sebelum dipakai).\n\nUntuk Jarum Tungsten TIG:\n• Ujung Hijau: Khusus las Aluminium (Arus AC).\n• Ujung Merah: Khusus las Besi Baja & Stainless (Arus DCEN).\n• Ujung Emas/Abu: Serbaguna untuk semua logam.',
+        simpleTTS: 'Kode Elektroda AWS E7018. E artinya elektroda stik, 70 artinya kekuatan tarik minimal tujuh puluh ribu psi, 1 artinya dapat digunakan di semua posisi las, dan 8 artinya salutan rendah hidrogen tahan retak.',
+        technicalTTS: 'Klasifikasi AWS E7018. E adalah elektroda, 70 adalah kuat tarik minimum tujuh puluh ribu psi, 1 adalah semua posisi pengelasan, dan 8 adalah fluks rendah hidrogen serbuk besi. Tungsten hijau untuk AC aluminium, ujung merah untuk DCEN baja, dan ujung abu atau emas untuk serbaguna.'
+    },
+    'm1-special': {
+        moduleId: 1,
+        title: '6. Proses Las Khusus: FCAW, SAW, CAC-A Gouging',
+        analogyBadge: 'Teknologi Las Industri Berat',
+        simple: '• FCAW: Kawat las tubular berongga isi serbuk di dalamnya. Sangat tahan hembusan angin badai di luar ruangan.\n• SAW (Busur Terendam): Las tertimbun pasir putih tanpa silau radiasi api terbuka, punya kecepatan lebur tertinggi untuk kapal besar.\n• CAC-A Gouging: Seperti penghapus pensil untuk besi. Menggunakan petir elektroda karbon dan semprotan angin kompresor bertekanan tinggi untuk mencungkil dan membersihkan lasan yang cacat.',
+        simpleTTS: 'Proses Las Khusus Industri. FCAW menggunakan kawat berinti fluks tahan angin luar ruangan. SAW menenggelamkan busur las di bawah pasir fluks tanpa radiasi terbuka. Gouging menggunakan elektroda karbon dan angin kompresor untuk mencungkil cacat las.',
+        technicalTTS: 'Proses Pengelasan Khusus. FCAW self shielded berinti fluks tanpa tabung gas luar. SAW Submerged Arc Welding memiliki busur terbenam di bawah serbuk fluks granular dengan laju deposisi tertinggi. CAC-A Gouging mencungkil akar las dengan elektroda karbon dan semprotan udara bertekanan.'
+    },
+
+    // ----------------- MODUL 2 -----------------
+    'm2-intro': {
+        moduleId: 2,
+        title: 'Cara Membaca Kode Standar Posisi Las',
+        analogyBadge: 'Sandi Posisi Pengelasan',
+        simple: 'Angka menunjukkan sudut kemiringan:\n• 1 = Datar (di lantai/meja)\n• 2 = Mendatar (di dinding samping)\n• 3 = Tegak (memanjat naik/turun)\n• 4 = Di atas kepala (menengadah ke plafon atap)\n• 5G = Pipa datar terkunci mati\n• 6G = Pipa miring 45 derajat terkunci mati\nHuruf G = Sambungan Alur/Kampuh (Groove), Huruf F = Sambungan Sudut Siku (Fillet).',
+        simpleTTS: 'Cara membaca posisi las. Angka satu untuk posisi datar, dua posisi horizontal, tiga posisi vertikal, empat posisi overhead di atas kepala, lima G pipa horizontal tetap, dan enam G pipa miring empat puluh lima derajat tetap.',
+        technicalTTS: 'Standardisasi posisi pengelasan ASME dan AWS. Angka satu Flat, dua Horizontal, tiga Vertical, empat Overhead, lima G Pipe Horizontal Fixed, dan enam G Pipe 45 degree Fixed. Huruf G untuk Groove dan F untuk Fillet.'
+    },
+    'm2-1g': {
+        moduleId: 2,
+        title: 'Posisi 1G (Pelat Datar)',
+        analogyBadge: 'Tingkat: Mudah ★☆☆☆☆',
+        simple: 'Pelat ditaruh mendatar di bawah tangan juru las seperti menulis di atas meja. Posisi paling santai dan mudah karena gravitasi bumi membantu cairan las mengalir masuk ke celah sambungan secara alami.',
+        simpleTTS: 'Posisi satu G pelat datar. Pengelasan paling mudah di bawah tangan, di mana gravitasi membantu cairan las masuk ke celah sambungan.',
+        technicalTTS: 'Posisi 1G Flat Plate. Pelat mendatar di bawah tangan juru las. Gravitasi sangat membantu cairan las masuk ke celah sambungan secara alami.'
+    },
+    'm2-2g': {
+        moduleId: 2,
+        title: 'Posisi 2G (Pelat Horizontal)',
+        analogyBadge: 'Tingkat: Menengah ★★☆☆☆',
+        simple: 'Pelat berdiri tegak, tapi garis lasnya mendatar ke samping seperti menggaris di papan tulis. Tangan harus menahan sudut elektroda sedikit menengadah (75°-80°) supaya lelehan besi tidak melorot ke bawah seperti es krim meleleh.',
+        simpleTTS: 'Posisi dua G pelat horizontal. Pelat berdiri tegak dan garis las mendatar. Juru las harus menahan sudut elektroda agar cairan las tidak melorot ke bawah.',
+        technicalTTS: 'Posisi 2G Horizontal Plate. Pelat berdiri tegak, sumbu las mendatar. Juru las harus menahan sudut elektroda agar lelehan tidak melorot ke bawah atau sagging.'
+    },
+    'm2-3g': {
+        moduleId: 2,
+        title: 'Posisi 3G (Pelat Vertikal)',
+        analogyBadge: 'Tingkat: Sulit ★★★★☆',
+        simple: 'Pelat berdiri tegak, garis las berjalan naik ke atas (vertical-up). Seperti memanjat tangga: tangan harus mengayun zigzag secara teratur dan berhenti sejenak di sisi kiri dan kanan agar tepi kampuh tidak cekung berparit.',
+        simpleTTS: 'Posisi tiga G pelat vertikal. Pengelasan berjalan naik ke atas. Membutuhkan ayunan teratur dengan jeda di kedua tepi sambungan.',
+        technicalTTS: 'Posisi 3G Vertical Plate. Pelat tegak, garis las naik ke atas vertical-up. Menuntut ayunan segitiga atau zigzag teratur dengan jeda di sisi tepi kampuh untuk menghindari undercut.'
+    },
+    'm2-4g': {
+        moduleId: 2,
+        title: 'Posisi 4G (Pelat Overhead)',
+        analogyBadge: 'Tingkat: Sangat Sulit ★★★★★',
+        simple: 'Pelat ada di atas kepala, mengelas sambil menengadah ke langit-langit atap. Melawan gaya gravitasi penuh! Jarak busur wajib sangat dekat dan amper disetel lebih kecil agar lelehan besi tidak menetes jatuh mengenai badan.',
+        simpleTTS: 'Posisi empat G pelat overhead di atas kepala. Posisi melawan gravitasi penuh. Jarak busur wajib pendek dan arus amper dijaga stabil agar cairan las tidak jatuh.',
+        technicalTTS: 'Posisi 4G Overhead Plate. Pelat di atas kepala, mengelas melawan gaya gravitasi penuh. Jarak busur wajib dijaga sangat pendek dengan amper lebih rendah.'
+    },
+    'm2-5g': {
+        moduleId: 2,
+        title: 'Posisi 5G (Pipa Horizontal Tetap)',
+        analogyBadge: 'Tingkat: Sulit ★★★★☆',
+        simple: 'Pipa dipasang mendatar dan terkunci mati tidak boleh diputar! Juru las harus mengelas melingkari pipa: mulai dari bawah jam 6 (overhead), naik ke jam 9 (vertikal), dan selesai di atas jam 12 (datar).',
+        simpleTTS: 'Posisi lima G pipa horizontal tetap. Pipa tidak boleh diputar, welder mengelas melingkar dari posisi jam enam overhead, jam sembilan vertikal, hingga jam dua belas datar.',
+        technicalTTS: 'Posisi 5G Pipe Horizontal Fixed. Pipa mendatar tidak boleh diputar. Welder harus mengelas melingkar dari jam enam overhead, jam sembilan vertikal, dan finis di jam dua belas flat.'
+    },
+    'm2-6g': {
+        moduleId: 2,
+        title: 'Posisi 6G (Pipa Miring 45° Tetap) - Raja Sertifikasi',
+        analogyBadge: 'Tingkat: Master Welder ★★★★★',
+        simple: 'Ini posisi ujian tingkatan tertinggi! Pipa dipasang miring 45 derajat dan dikunci mati. Menguji kemampuan tangan kanan dan kiri di semua posisi sekaligus. Kalau lulus tes 6G, kamu otomatis diakui dan boleh mengelas posisi apa pun di seluruh dunia!',
+        simpleTTS: 'Posisi enam G pipa miring empat puluh lima derajat tetap. Merupakan kualifikasi tertinggi sertifikasi internasional. Lulus enam G mengkualifikasi juru las untuk semua posisi pelat dan pipa.',
+        technicalTTS: 'Posisi 6G Pipe 45 degree Fixed. Posisi kualifikasi tertinggi ASME dan AWS. Pipa miring empat puluh lima derajat terkunci mati, menguji kombinasi keterampilan kedua tangan pada seluruh posisi pengelasan.'
+    },
+    'm2-groove': {
+        moduleId: 2,
+        title: 'Anatomi Kampuh & Teknik Keyhole',
+        analogyBadge: 'Mempersiapkan Parit Sambungan',
+        simple: '• Bevel Angle (30°-35°): Lereng parit dibuka miring supaya ujung kawat las bisa masuk sampai ke dasar parit.\n• Root Gap (2-3 mm): Celah renggang di dasar parit agar cairan las bisa tembus ke belakang.\n• Root Face (1.5-2.5 mm): Bibir tebal penahan api agar cairan las tidak langsung bolong jebol.\n• Keyhole (Lubang Kunci): Saat mengelas lapisan akar, jaga agar selalu ada lubang intip kecil di depan kawah las sebagai tanda lasan sudah tembus 100% sempurna.',
+        simpleTTS: 'Anatomi Kampuh dan Teknik Lubang Kunci. Kemiringan bevel membuka akses elektroda, celah akar memberi ruang penembusan, dan muka akar menahan panas. Teknik keyhole memastikan penetrasi akar tembus seratus persen.',
+        technicalTTS: 'Anatomi Kampuh Groove Geometry. Bevel angle tiga puluh hingga tiga puluh lima derajat, root gap dua hingga tiga koma dua milimeter, dan root face satu koma lima hingga dua koma lima milimeter. Keyhole technique menjaga penetrasi akar tembus seratus persen.'
+    },
+
+    // ----------------- MODUL 3 -----------------
+    'm3-intro': {
+        moduleId: 3,
+        title: 'Mengapa Cacat Las Sangat Berbahaya?',
+        analogyBadge: 'Kekuatan Fondasi Logam',
+        simple: 'Cacat las itu seperti tiang jembatan yang keropos: dari luar kelihatan kokoh, tapi saat dilewati truk berat bisa patah tiba-tiba! Di industri kapal dan migas, cacat las bisa bikin kapal tenggelam atau pipa gas meledak.',
+        simpleTTS: 'Bahaya Cacat Las. Cacat pada sambungan las menyebabkan pemusatan tegangan yang dapat memicu retak getas hingga robohnya jembatan atau kebocoran pipa gas.',
+        technicalTTS: 'Bahaya Cacat Las. Cacat las menyebabkan konsentrasi tegangan atau stress concentration yang dapat memicu retak getas brittle fracture hingga kegagalan struktur jembatan, tangki, dan perpipaan.'
+    },
+    'm3-porosity': {
+        moduleId: 3,
+        title: '1. Porosity (Porositas / Rongga Gas)',
+        analogyBadge: 'Roti Bolong Kena Busa Gas',
+        simple: 'Bentuknya seperti roti bolong-bolong berongga kecil di dalam manik las. Terjadi karena kawat las basah lembab, pelat berkarat berminyak, atau gas pelindung tertiup angin.\nSolusi: Oven kawat las (150-300°C), sikat bersih pelat, dan pasang tirai penahan angin.',
+        simpleTTS: 'Porositas atau rongga gas. Terjadi karena elektroda lembab, pelat kotor berkarat, atau gas pelindung tertiup angin. Solusinya adalah mengoven elektroda dan membersihkan pelat.',
+        technicalTTS: 'Porosity adalah cacat berupa rongga-rongga gas terperangkap di dalam deposit las. Disebabkan elektroda lembab, pelat kotor berkarat, dan hilangnya selimut gas. Diatasi dengan mengoven elektroda dan memasang pelindung angin.'
+    },
+    'm3-undercut': {
+        moduleId: 3,
+        title: '2. Undercut (Torehan Tepi / Termakan)',
+        analogyBadge: 'Parit Gigitan Tikus di Pinggir',
+        simple: 'Pinggir pelat di samping jalur las termakan cekung seperti digigit tikus. Terjadi karena setelan amper terlalu tinggi atau gerak tangan terlalu buru-buru kencang.\nSolusi: Turunkan amper mesin las, perlambat ayunan tangan, dan tahan sejenak di pinggir dinding celah.',
+        simpleTTS: 'Undercut atau parit termakan di tepi las. Disebabkan oleh arus amper terlalu tinggi atau kecepatan jalan terlalu cepat. Solusinya turunkan amper dan beri jeda di dinding tepi kampuh.',
+        technicalTTS: 'Undercut adalah alur parit cekung yang termakan pada tepi logam induk. Disebabkan arus amper terlalu tinggi dan travel speed terlalu cepat. Solusinya turunkan arus dan lakukan jeda di tepi sambungan.'
+    },
+    'm3-spatter': {
+        moduleId: 3,
+        title: '3. Spatter (Percikan Logam Berlebih)',
+        analogyBadge: 'Percikan Kembang Api Liar',
+        simple: 'Butiran-butiran besi cair beterbangan dan menempel kasar di sekitar pelat. Terjadi karena amper terlalu besar atau ujung kawat las ditarik terlalu jauh dari pelat.\nSolusi: Dekatkan ujung kawat las ke pelat dan semprotkan cairan anti-spatter.',
+        simpleTTS: 'Spatter atau percikan las berlebih. Disebabkan oleh arus terlalu tinggi atau busur las terlalu panjang. Solusinya perpendek jarak busur dan sesuaikan voltase.',
+        technicalTTS: 'Spatter adalah butiran logam cair yang terlempar keluar dari busur las dan menempel di permukaan pelat. Disebabkan long arc length dan arus terlalu tinggi.'
+    },
+    'm3-slag': {
+        moduleId: 3,
+        title: '4. Slag Inclusion (Terak Terperangkap)',
+        analogyBadge: 'Kotoran Terkubur di Kue Lapis',
+        simple: 'Kerak kotoran terak terpendam di dalam lapisan las (seperti pasir di dalam adonan kue lapis). Terjadi karena malas menyikat bersih jalur pertama sebelum menimpa jalur kedua.\nSolusi: Sikat dan ketok terak sampai mengkilap bersih sebelum menimpa jalur las berikutnya.',
+        simpleTTS: 'Slag Inclusion atau terak terperangkap. Terjadi karena pembersihan terak antar lapisan las kurang bersih. Solusinya sikat dan gerinda hingga mengkilap sebelum multi pass.',
+        technicalTTS: 'Slag Inclusion adalah terjebaknya terak fluks non-logam di antara lapisan manik las. Disebabkan pembersihan interpass yang kurang bersih dengan palu atau gerinda.'
+    },
+    'm3-fusion': {
+        moduleId: 3,
+        title: '5. Lack of Fusion (Kurang Peleburan / Cold Lap)',
+        analogyBadge: 'Hanya Nempel Seperti Permen Karet',
+        simple: 'Cairan las cuma menempel di atas besi dingin tanpa meleleh menyatu secara mendalam. Terjadi karena api las kurang panas atau gerak tangan terlalu kencang.\nSolusi: Naikkan amper dan arahkan api las tepat ke dinding besi yang dingin.',
+        simpleTTS: 'Lack of Fusion atau kurang peleburan. Cairan las tidak melebur menyatu dengan logam induk akibat masukan panas terlalu rendah. Solusinya naikkan amper.',
+        technicalTTS: 'Lack of Fusion atau Cold Lap adalah kondisi di mana deposit logam las gagal melebur menyatu secara metalurgi dengan logam induk. Disebabkan heat input terlalu rendah.'
+    },
+    'm3-penetration': {
+        moduleId: 3,
+        title: '6. Lack of Penetration (Penetrasi Dangkal)',
+        analogyBadge: 'Akar Sambungan Belum Tembus',
+        simple: 'Logam las tidak tembus sampai ke bagian bawah dasar sambungan (akar menggantung). Terjadi karena celah bawah terlalu sempit rapat atau amper kurang besar.\nSolusi: Beri celah akar yang pas (2-3 mm) dan pastikan terbentuk lubang kunci (keyhole).',
+        simpleTTS: 'Lack of Penetration atau penetrasi dangkal. Logam las tidak tembus mencapai dasar akar sambungan. Solusinya buat celah akar dua hingga tiga milimeter.',
+        technicalTTS: 'Incomplete Penetration adalah kondisi cairan las tidak mencapai kedalaman akar kampuh sambungan. Disebabkan root gap terlalu rapat atau root face terlalu tebal.'
+    },
+    'm3-burnthrough': {
+        moduleId: 3,
+        title: '7. Burn-Through (Jebol / Bolong Akar)',
+        analogyBadge: 'Lasan Jebol Melompong',
+        simple: 'Logam las ambrol jebol ke bawah meninggalkan lubang bolong besar. Terjadi karena setelan amper terlalu panas membara atau juru las berhenti terlalu lama di satu titik.\nSolusi: Turunkan amper dan gerakkan tangan lebih lincah teratur.',
+        simpleTTS: 'Burn Through atau jebol akar. Terjadi akibat panas berlebih dan amper terlalu tinggi sehingga logam las ambrol berlubang ke bawah. Solusinya turunkan amper.',
+        technicalTTS: 'Burn-Through adalah jebolnya akar lasan membentuk lubang terbuka akibat panas berlebih excessive heat input atau travel speed terlalu lambat.'
+    },
+    'm3-overfill': {
+        moduleId: 3,
+        title: '8. Overfill (Reinforcement Berlebih / Punuk Unta)',
+        analogyBadge: 'Mahkota Las Kegendutan',
+        simple: 'Mahkota jalur las terlalu cembung menjulang tinggi seperti punuk unta (melebihi batas standar 3 mm). Bikin boros kawat las dan rentan retak kaku.\nSolusi: Percepat laju gerak elektroda dan jaga tinggi mahkota maksimal 2-3 mm saja.',
+        simpleTTS: 'Overfill atau pengisian mahkota berlebih. Tinggi mahkota las melebihi batas maksimal tiga milimeter. Solusinya percepat laju elektroda.',
+        technicalTTS: 'Excessive Reinforcement atau Overfill adalah pengisian mahkota las yang terlalu cembung melebihi toleransi maksimal tiga milimeter di atas permukaan pelat.'
+    },
+    'm3-cracks': {
+        moduleId: 3,
+        title: '9. Jenis Retak Las & Pengendalian Distorsi',
+        analogyBadge: 'Bahaya Retak & Besi Melengkung',
+        simple: '• Hot Crack (Retak Panas): Retak memanjang pas besi masih membara (>1.000°C).\n• Cold Crack (Retak Dingin): Retak sembunyi-sembunyi yang baru muncul beberapa jam/hari kemudian karena gas hidrogen jahat. Dicegah dengan elektroda E7018 dan pemanasan awal.\n• Pengendalian Distorsi (Besi Melengkung): Cegah besi melengkung dengan cara menjepit klem kuat-kuat, mengelas lompat-lompat segmen pendek (backstep), dan mengelas bergantian kiri-kanan.',
+        simpleTTS: 'Jenis Retak Las dan Distorsi. Retak panas terjadi saat logam membeku pada suhu tinggi. Retak dingin terjadi akibat gas hidrogen terperangkap. Distorsi dicegah dengan teknik backstep dan penguncian klem.',
+        technicalTTS: 'Weld Cracks dan Distorsi. Hot crack terjadi saat pembekuan suhu tinggi, cold crack atau retak hidrogen tertunda terjadi pada zona HAZ. Pengendalian distorsi dilakukan dengan teknik backstep, presetting, clamping, dan balanced sequence.'
+    },
+    'm3-ndt': {
+        moduleId: 3,
+        title: '10. Metode Uji Tak Rusak (NDT) & WPS/PQR',
+        analogyBadge: 'Pemeriksaan Dokter untuk Besi',
+        simple: 'NDT itu cara menguji kekuatan lasan tanpa merusak barangnya:\n• VT (Visual): Diperiksa pakai mata dan kaca pembesar.\n• PT (Penetrant): Disemprot cairan merah peresap untuk mendeteksi retak rambut luar.\n• MT (Magnet): Pakai serbuk magnet untuk baja.\n• UT (Ultrasonic): Seperti USG kandungan bayi, pakai gelombang suara pantul untuk mendeteksi cacat di dalam perut besi.\n• RT (Radiography): Difoto rontgen pakai sinar-X seperti foto rontgen tulang patah.',
+        simpleTTS: 'Metode Pengujian Tak Rusak NDT. Meliputi Visual Testing, Penetrant Testing dengan cairan merah, Magnetic Particle, Ultrasonic Testing dengan gelombang suara, dan Radiographic Testing dengan foto rontgen sinar X.',
+        technicalTTS: 'Metode NDT Non-Destructive Testing meliputi Visual Testing, Liquid Penetrant PT, Magnetic Particle MT, Ultrasonic Testing UT gelombang suara, dan Radiographic Testing RT sinar X atau gamma. Didukung dokumen instruksi WPS dan rekaman kualifikasi PQR.'
+    },
+
+    // ----------------- MODUL 4 -----------------
+    'm4-apd': {
+        moduleId: 4,
+        title: '1. APD Wajib Welder',
+        analogyBadge: 'Baju Zirah Keselamatan',
+        simple: '• Helm Las (Welding Helmet): Tameng muka pelindung dari sinar radiasi yang bisa bikin buta katarak.\n• Sarung Tangan Kulit: Kulit sapi tebal tahan bara api 1.500°C dan penangkal sengatan listrik.\n• Apron Kulit: Celemek kulit pelindung dada dari percikan api panas.\n• Sepatu Safety (Steel Toe): Ujung sepatu ada besi baja penahan benturan barang jatuh 200 Joule.\n• Masker Respirator: Penyaring asap racun seng agar tidak demam uap logam.',
+        simpleTTS: 'Alat Pelindung Diri Wajib Welder. Meliputi helm las otomatis ADF, sarung tangan kulit sapi tebal, apron dada kulit, sepatu safety berujung baja, dan masker respirator uap logam.',
+        technicalTTS: 'Standar APD Keselamatan Welder OSHA. Meliputi Auto Darkening Helmet, sarung tangan kulit tahan termal, leather apron dan sleeves, sepatu safety toe cap dua ratus Joule, respirator partikel uap N95, dan pelindung telinga.'
+    },
+    'm4-shade': {
+        moduleId: 4,
+        title: '2. Tabel Pemilihan Shade Lens Kaca Helm Las',
+        analogyBadge: 'Kacamata Hitam Super Gelap',
+        simple: 'Kaca helm las itu seperti kacamata hitam super gelap: makin besar apinya (amper tinggi), makin gelap nomor kacanya biar mata tidak buta!\n• Las SMAW 60-160 Ampere: Pakai Shade 10 (Paling Standar Umum).\n• Las TIG / Argon: Pakai Shade 9 - 11.\n• Las GMAW / MIG: Pakai Shade 10 - 12.',
+        simpleTTS: 'Standar Pemilihan Kaca Helm Las. Untuk pengelasan SMAW standar enam puluh sampai seratus enam puluh ampere menggunakan nomor shade sepuluh. Arus lebih tinggi membutuhkan shade sebelas hingga dua belas.',
+        technicalTTS: 'Tabel Standar Pemilihan Shade Lens ANSI Z87.1. SMAW arus enam puluh hingga seratus enam puluh ampere direkomendasikan Shade sepuluh. GTAW arus lima puluh hingga seratus lima puluh ampere menggunakan Shade sebelas hingga dua belas.'
+    },
+    'm4-gas': {
+        moduleId: 4,
+        title: '3. SOP Penanganan Tabung Gas Bertekanan',
+        analogyBadge: 'Menjinakkan Tabung Bertekanan',
+        simple: 'Tabung gas itu berisi tekanan sangat tinggi:\n1. Tabung Oksigen (Warna Biru/Hitam, drat putar ke kanan).\n2. Tabung Asetilen (Warna Merah/Kuning, drat putar ke kiri).\n3. Wajib berdiri tegak dan diikat rantai ke troli/dinding.\n4. Tabung O2 dan gas bakar wajib dijauhkan minimal 6 meter.\n5. Pasang Flashback Arrestor (alat penahan semburan api balik) agar tabung tidak meledak!',
+        simpleTTS: 'SOP Penanganan Tabung Gas. Tabung oksigen berdrat kanan dan tabung asetilen berdrat kiri. Tabung wajib berdiri tegak diikat rantai, dipisahkan minimal enam meter, dan dipasangi flashback arrestor.',
+        technicalTTS: 'SOP Penanganan Tabung Gas Silinder. Oksigen berulir kanan dan asetilen berulir kiri. Tabung wajib tegak terikat rantai pengaman, dipisahkan minimal enam meter, dan dilengkapi flashback arrestor pada regulator dan torch.'
+    },
+    'm4-hazards': {
+        moduleId: 4,
+        title: '4. Bahaya Khusus K3: Arc Eye, Metal Fume Fever, OCV, Confined Space',
+        analogyBadge: 'Mengenal Musuh Tersembunyi',
+        simple: '• Arc Eye: Mata berpasir dan perih luar biasa karena terkena kilatan sinar UV las tanpa helm.\n• Metal Fume Fever: Demam dan menggigil gara-gara menghirup asap putih seng saat mengelas besi galvanis.\n• Sengatan OCV: Tersengat listrik saat mengganti kawat las dengan tangan basah.\n• Ruang Sempit (Confined Space): Mengelas di dalam tangki sempit wajib ada izin resmi, dicek kadar oksigennya (19.5%-23.5%), dan ditiup blower angin segar (DILARANG meniupkan tabung oksigen murni!).',
+        simpleTTS: 'Bahaya Khusus Pengelasan. Arc eye adalah iritasi kornea akibat radiasi UV. Metal fume fever adalah keracunan uap seng. Pengelasan di ruang terbatas wajib memiliki izin resmi dan ventilasi blower.',
+        technicalTTS: 'Identifikasi Bahaya Khusus. Arc eye atau radiasi ultraviolet, metal fume fever akibat uap zinc galvanis, sengatan Open Circuit Voltage lima puluh hingga delapan puluh Volt, serta izin permit confined space dengan ventilasi udara segar wajib.'
+    },
+
+    // ----------------- MODUL 5 -----------------
+    'm5-vocab': {
+        moduleId: 5,
+        title: '24 Kosakata Bahasa Inggris Bengkel',
+        analogyBadge: 'Kamus Sakti Juru Las Global',
+        simple: 'Kosakata penting yang wajib dihafal saat kerja di luar negeri (Jepang, Korea, Jerman, Timur Tengah) agar mengerti instruksi mandor bule:\n• Tools: Angle Grinder (Gerinda Tangan), Chipping Hammer (Palu Terak), Ground Clamp (Klem Massa), Root Gap (Celah Akar).\n• Safety: Cover Up! / Eyes! (Awas Nyala Busur!), Hot Work Permit (Izin Kerja Panas), Flashback Arrestor (Penahan Api Balik).\n• Blueprint: WPS (Lembar Resep Las Standar), NDT (Uji Kualitas Tanpa Rusak), Weaving (Teknik Ayunan Menganyam).',
+        simpleTTS: 'Kosakata Bahasa Inggris Bengkel. Memuat istilah peralatan kerja seperti angle grinder dan ground clamp, perintah keselamatan seperti eyes dan hot work permit, serta istilah gambar teknik seperti WPS dan NDT.',
+        technicalTTS: 'Kosakata Bahasa Inggris Bengkel Industri mencakup klasifikasi peralatan tools, perintah keselamatan kerja safety commands, serta terminologi gambar kerja blueprint dan pengujian mutu.'
+    },
+    'm5-symbols': {
+        moduleId: 5,
+        title: 'Panduan Membaca Simbol Las Standar AWS A2.4',
+        analogyBadge: 'Membaca Peta Rahasia Blueprint',
+        simple: 'Simbol las itu seperti peta petunjuk gambar teknik:\n• Simbol di BAWAH Garis: Las tepat pada sisi yang ditunjuk panah (Arrow Side).\n• Simbol di ATAS Garis: Las di sisi seberang/balik arah panah (Other Side).\n• Simbol di Atas DAN Bawah: Las di kedua belah sisi (misal las bolak-balik).\n• Simbol Bendera Hitam: Wajib dilas di lokasi proyek lapangan (on site), bukan di dalam pabrik bengkel.\n• Simbol Lingkaran Bulat: Las mengelilingi seluruh sambungan memutar secara penuh (weld all around).',
+        simpleTTS: 'Membaca Simbol Las AWS A2.4. Simbol di bawah garis berarti las pada sisi panah, di atas garis berarti sisi sebaliknya. Bendera hitam menandakan pengelasan di lapangan proyek, dan lingkaran bulat menandakan pengelasan keliling penuh.',
+        technicalTTS: 'Standar Simbol Pengelasan AWS A2.4. Simbol di bawah garis referensi menandakan Arrow Side, di atas garis menandakan Other Side. Bendera hitam adalah Field Weld dan lingkaran pada perpotongan garis adalah Weld All Around.'
+    },
+
+    // ----------------- MODUL 6 -----------------
+    'm6-intro': {
+        moduleId: 6,
+        title: 'Jalur Resmi Negara (UU No. 18 Tahun 2017)',
+        analogyBadge: 'Perlindungan Penuh Jalur Resmi',
+        simple: 'Berangkat melalui program resmi SMK Go Global BP3MI menjamin keselamatan dan masa depan kamu: ada kontrak kerja sah, gaji standar mata uang asing resmi, asuransi kerja, dan dilindungi negara (anti ditipu calo atau sindikat ilegal non-prosedural).',
+        simpleTTS: 'Jalur Resmi Penempatan BP2MI. Program SMK Go Global menjamin perlindungan hukum ketenagakerjaan, asuransi, kontrak kerja resmi, dan gaji standar internasional bebas calo.',
+        technicalTTS: 'Regulasi Resmi Penempatan PMI Undang-Undang Nomor 18 Tahun 2017 menjamin perlindungan hukum, asuransi ketenagakerjaan, kontrak kerja legal, dan standar upah internasional.'
+    },
+    'm6-flowchart': {
+        moduleId: 6,
+        title: 'Flowchart 7 Tahapan Seleksi Calon PMI',
+        analogyBadge: '7 Tangga Menuju Sukses Luar Negeri',
+        simple: '7 Langkah Pasti Terbang ke Luar Negeri:\n1. Pendaftaran Berkas SISKOP2MI & AK-1 Disnaker.\n2. Ujian Tertulis Teori Las, K3, dan Bahasa Inggris (100 Soal).\n3. Wawancara Tatap Muka Verifikasi Mental & Motivasi.\n4. Medical Check-Up (MCU) Paru-Paru, Fisik & Bebas Buta Warna.\n5. Karantina Asrama (640 Jam Pelatihan Bahasa Inggris + 180 Jam Praktik Las).\n6. Uji Sertifikasi Kompetensi Resmi & Pembekalan Akhir (PAP).\n7. Terima Visa Kerja & E-PMI, Terbang Resmi ke Perusahaan Mitra Luar Negeri!',
+        simpleTTS: 'Tujuh Tahapan Seleksi PMI. Pertama verifikasi dokumen, kedua tes tertulis seratus soal, ketiga wawancara, keempat tes kesehatan MCU, kelima pelatihan asrama, keenam sertifikasi kompetensi, dan ketujuh penerbitan visa kerja dan pemberangkatan resmi.',
+        technicalTTS: 'Flowchart 7 Tahapan Seleksi BP2MI meliputi verifikasi SISKOP2MI, tes tertulis pengetahuan umum dan kejuruan, wawancara terarah, Medical Check-Up komprehensif, pelatihan intensif asrama 640 JPL, uji kompetensi BNSP dan PAP, serta penerbitan E-PMI dan visa kerja.'
+    }
+};
+
+// ==================== STATE MANAGEMENT (DUAL MODE & TTS) ====================
+let welderLanguageMode = localStorage.getItem('bp3mi_welder_language_mode') || 'technical';
+let isWelderFabVisible = false; // Hidden by default, toggled via Ctrl+X (resets on reload)
+let welderPlayingSectionId = null;
+let welderTTSUtterance = null;
+let welderSpeechVoices = [];
+let welderSelectedVoiceIdx = 0;
+let welderPlaybackRate = 1.0;
+let welderIsPaused = false;
+let welderModulePlayQueue = [];
+let welderQueueIndex = 0;
+
+// ==================== DUAL MODE LOGIC ====================
+function getWelderLanguageMode() {
+    return welderLanguageMode;
+}
+
+function setWelderLanguageMode(mode) {
+    welderLanguageMode = mode === 'simple' ? 'simple' : 'technical';
+    localStorage.setItem('bp3mi_welder_language_mode', welderLanguageMode);
+    updateWelderModeUI();
+    
+    if (welderLanguageMode === 'simple') {
+        showToast('🧒 Mode Bahasa Simple aktif: Konsep dijelaskan dengan analogi ringan!', 'info');
+    } else {
+        showToast('⚙️ Mode Teknis aktif: Teks formal untuk persiapan ujian tertulis!', 'info');
+    }
+}
+
+function toggleWelderLanguageMode() {
+    const newMode = welderLanguageMode === 'simple' ? 'technical' : 'simple';
+    setWelderLanguageMode(newMode);
+}
+
+function updateWelderModeUI() {
+    const isSimple = welderLanguageMode === 'simple';
+
+    // 1. Update FAB UI
+    const fabBtn = document.getElementById('welderFabBtn');
+    const fabIcon = document.getElementById('welderFabIcon');
+    const fabLabel = document.getElementById('welderFabLabel');
+    if (fabBtn && fabIcon && fabLabel) {
+        if (isSimple) {
+            fabIcon.textContent = '🧒';
+            fabLabel.textContent = 'Mode Simple';
+            fabBtn.className = 'flex items-center gap-2.5 px-4 py-3 sm:px-5 sm:py-3.5 rounded-full bg-gradient-to-r from-amber-500 via-safety-500 to-amber-600 text-slate-950 font-black text-xs sm:text-sm shadow-2xl shadow-amber-500/40 border-2 border-white/90 hover:scale-105 active:scale-95 transition-all pulse-glow';
+        } else {
+            fabIcon.textContent = '⚙️';
+            fabLabel.textContent = 'Mode Teknis';
+            fabBtn.className = 'flex items-center gap-2.5 px-4 py-3 sm:px-5 sm:py-3.5 rounded-full bg-gradient-to-r from-charcoal-900 via-charcoal-800 to-steel-900 text-white font-black text-xs sm:text-sm shadow-2xl shadow-black/50 border-2 border-charcoal-700 hover:scale-105 active:scale-95 transition-all';
+        }
+    }
+
+    // 2. Update Mode Notice Banner in page-materi-welder
+    const noticeIcon = document.getElementById('welderModeHeaderIcon');
+    const noticeTitle = document.getElementById('welderModeHeaderTitle');
+    const noticeBadge = document.getElementById('welderModeHeaderBadge');
+    const noticeDesc = document.getElementById('welderModeHeaderDesc');
+    const bannerBtnText = document.getElementById('welderBannerToggleBtnText');
+    const noticeCard = document.getElementById('welderModeNoticeCard');
+
+    if (noticeCard && noticeIcon && noticeTitle && noticeBadge && noticeDesc && bannerBtnText) {
+        if (isSimple) {
+            noticeIcon.textContent = '🧒';
+            noticeTitle.textContent = 'Mode Bahasa Simple Aktif';
+            noticeBadge.textContent = 'Analogi Pemula';
+            noticeBadge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-200';
+            noticeDesc.textContent = 'Penjelasan teknis diubah menjadi analogi sehari-hari yang ringan. Klik tombol speaker 🔊 pada setiap materi untuk mendengarkan audio pembacaan.';
+            bannerBtnText.textContent = 'Ganti ke Mode Teknis';
+            noticeCard.className = 'bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent border border-amber-500/30 rounded-2xl p-4 sm:p-5 mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm transition-all duration-300';
+        } else {
+            noticeIcon.textContent = '⚙️';
+            noticeTitle.textContent = 'Mode Teknis (Standar Industri) Aktif';
+            noticeBadge.textContent = 'Standar Ujian';
+            noticeBadge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 border border-blue-200';
+            noticeDesc.textContent = 'Menampilkan istilah formal teknis (AWS/ASME) yang diperlukan untuk menjawab soal ujian simulasi tertulis dan wawancara BP3MI.';
+            bannerBtnText.textContent = 'Ganti ke Mode Simple';
+            noticeCard.className = 'bg-gradient-to-r from-blue-500/10 via-blue-500/5 to-transparent border border-blue-500/30 rounded-2xl p-4 sm:p-5 mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm transition-all duration-300';
+        }
+    }
+
+    // 3. Update Audio Bar mode badge if visible
+    const audioModeBadge = document.getElementById('welderAudioModeBadge');
+    if (audioModeBadge) {
+        audioModeBadge.textContent = isSimple ? 'Mode: Simple (Analogi)' : 'Mode: Teknis Formal';
+    }
+
+    // 4. Update all simple boxes in DOM
+    document.querySelectorAll('.welder-simple-box-container').forEach(el => {
+        if (isSimple) {
+            el.classList.remove('hidden');
+        } else {
+            el.classList.add('hidden');
+        }
+    });
+}
+
+// ==================== WEB SPEECH API (TTS ENGINE) ====================
+function initWelderTTS() {
+    if (!('speechSynthesis' in window)) {
+        console.warn('[TTS] Web Speech API tidak didukung di browser ini.');
+        return;
+    }
+
+    const loadVoices = () => {
+        welderSpeechVoices = window.speechSynthesis.getVoices();
+        populateWelderVoiceSelector();
+    };
+
+    loadVoices();
+    if (window.speechSynthesis.onvoiceschanged !== undefined) {
+        window.speechSynthesis.onvoiceschanged = loadVoices;
+    }
+}
+
+function getWelderVoicePresets() {
+    const idVoices = welderSpeechVoices.filter(v => v.lang.startsWith('id') || v.lang.includes('Indonesian'));
+    const enVoices = welderSpeechVoices.filter(v => v.lang.startsWith('en'));
+    
+    // Preset 0: ID Native Default
+    const v0 = idVoices[0] || welderSpeechVoices[0] || null;
+    // Preset 1: ID Relaxed / 2nd ID Voice or Tuned Pitch
+    const v1 = idVoices[1] || idVoices[0] || welderSpeechVoices[0] || null;
+    // Preset 2: English / Bilingual Voice
+    const v2 = enVoices[0] || welderSpeechVoices[1] || welderSpeechVoices[0] || null;
+    // Preset 3: Fast Robotic Voice
+    const v3 = idVoices[0] || welderSpeechVoices[0] || null;
+
+    return [
+        { name: '🇮🇩 Suara 1 (ID Jernih - Default)', voice: v0, rate: 1.0, pitch: 1.0 },
+        { name: '🇮🇩 Suara 2 (ID Santai / Halus)', voice: v1, rate: 0.95, pitch: 1.12 },
+        { name: '🌐 Suara 3 (Bilingual / English Term)', voice: v2, rate: 1.0, pitch: 1.0 },
+        { name: '⚡ Suara 4 (Robotik Cepat)', voice: v3, rate: 1.25, pitch: 0.9 }
+    ];
+}
+
+function populateWelderVoiceSelector() {
+    const select = document.getElementById('welderVoiceSelect');
+    if (!select) return;
+    const presets = getWelderVoicePresets();
+    select.innerHTML = '';
+    presets.forEach((p, idx) => {
+        const opt = document.createElement('option');
+        opt.value = idx;
+        opt.textContent = p.name;
+        select.appendChild(opt);
+    });
+    select.value = welderSelectedVoiceIdx;
+}
+
+function changeWelderVoice(idx) {
+    welderSelectedVoiceIdx = parseInt(idx, 10) || 0;
+    if (window.speechSynthesis.speaking) {
+        // Restart current playback with new voice
+        if (welderPlayingSectionId) {
+            playWelderSectionTTS(welderPlayingSectionId);
+        }
+    }
+}
+
+function cycleWelderPlaybackRate() {
+    const rates = [0.85, 1.0, 1.25];
+    const curIdx = rates.indexOf(welderPlaybackRate);
+    welderPlaybackRate = rates[(curIdx + 1) % rates.length];
+    
+    const rateBtn = document.getElementById('welderRateBtn');
+    if (rateBtn) rateBtn.textContent = `${welderPlaybackRate}x`;
+
+    if (window.speechSynthesis.speaking && welderPlayingSectionId) {
+        playWelderSectionTTS(welderPlayingSectionId);
+    }
+}
+
+function playWelderSectionTTS(sectionId, event) {
+    if (event) event.stopPropagation();
+
+    if (!('speechSynthesis' in window)) {
+        showToast('Fitur Text-to-Speech tidak didukung pada browser Anda.', 'warning');
+        return;
+    }
+
+    const data = WELDER_CONTENT_STORE[sectionId];
+    if (!data) return;
+
+    window.speechSynthesis.cancel();
+    welderIsPaused = false;
+    welderPlayingSectionId = sectionId;
+
+    const isSimple = welderLanguageMode === 'simple';
+    const textToSpeak = isSimple ? (data.simpleTTS || data.simple) : (data.technicalTTS || data.technical);
+
+    welderTTSUtterance = new SpeechSynthesisUtterance(textToSpeak);
+
+    const presets = getWelderVoicePresets();
+    const activePreset = presets[welderSelectedVoiceIdx] || presets[0];
+
+    if (activePreset.voice) {
+        welderTTSUtterance.voice = activePreset.voice;
+        welderTTSUtterance.lang = activePreset.voice.lang;
+    } else {
+        welderTTSUtterance.lang = 'id-ID';
+    }
+
+    welderTTSUtterance.rate = (activePreset.rate || 1.0) * (welderPlaybackRate || 1.0);
+    welderTTSUtterance.pitch = activePreset.pitch || 1.0;
+
+    // UI Updates on Speech Lifecycle
+    welderTTSUtterance.onstart = () => {
+        showWelderAudioBar(data.title);
+        highlightPlayingWelderSection(sectionId);
+    };
+
+    welderTTSUtterance.onend = () => {
+        removeWelderSectionHighlight();
+        // Check if queue has next item
+        if (welderModulePlayQueue.length > 0 && welderQueueIndex < welderModulePlayQueue.length - 1) {
+            welderQueueIndex++;
+            playWelderSectionTTS(welderModulePlayQueue[welderQueueIndex]);
+        } else {
+            welderModulePlayQueue = [];
+            welderQueueIndex = 0;
+            updateWelderPlayPauseBtnState(false);
+            welderPlayingSectionId = null;
+        }
+    };
+
+    welderTTSUtterance.onerror = (e) => {
+        console.error('[TTS Error]', e);
+        removeWelderSectionHighlight();
+        updateWelderPlayPauseBtnState(false);
+    };
+
+    window.speechSynthesis.speak(welderTTSUtterance);
+    updateWelderPlayPauseBtnState(true);
+}
+
+function playWelderFullModuleTTS(moduleId, event) {
+    if (event) event.stopPropagation();
+    
+    // Expand module card
+    openWelderModule(moduleId);
+
+    // Collect all section IDs in this module
+    const sectionIds = Object.keys(WELDER_CONTENT_STORE).filter(
+        k => WELDER_CONTENT_STORE[k].moduleId === moduleId
+    );
+
+    if (sectionIds.length === 0) return;
+
+    welderModulePlayQueue = sectionIds;
+    welderQueueIndex = 0;
+    playWelderSectionTTS(welderModulePlayQueue[0]);
+    showToast(`🔊 Memutar seluruh Modul ${moduleId}...`, 'info');
+}
+
+function toggleWelderAudioPlayback() {
+    if (!('speechSynthesis' in window)) return;
+
+    if (window.speechSynthesis.speaking) {
+        if (window.speechSynthesis.paused) {
+            window.speechSynthesis.resume();
+            welderIsPaused = false;
+            updateWelderPlayPauseBtnState(true);
+        } else {
+            window.speechSynthesis.pause();
+            welderIsPaused = true;
+            updateWelderPlayPauseBtnState(false);
+        }
+    } else if (welderPlayingSectionId) {
+        playWelderSectionTTS(welderPlayingSectionId);
+    }
+}
+
+function stopWelderAudio() {
+    if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+    }
+    welderIsPaused = false;
+    welderModulePlayQueue = [];
+    welderQueueIndex = 0;
+    welderPlayingSectionId = null;
+    removeWelderSectionHighlight();
+    hideWelderAudioBar();
+}
+
+function showWelderAudioBar(title) {
+    const bar = document.getElementById('welderAudioBar');
+    const titleEl = document.getElementById('welderAudioTrackTitle');
+    const modeBadge = document.getElementById('welderAudioModeBadge');
+    if (bar && titleEl) {
+        titleEl.textContent = title || 'Materi Welder';
+        if (modeBadge) {
+            modeBadge.textContent = welderLanguageMode === 'simple' ? 'Mode: Simple' : 'Mode: Teknis';
+        }
+        bar.classList.remove('translate-y-full', 'opacity-0', 'pointer-events-none');
+        bar.classList.add('translate-y-0', 'opacity-100', 'pointer-events-auto');
+    }
+}
+
+function hideWelderAudioBar() {
+    const bar = document.getElementById('welderAudioBar');
+    if (bar) {
+        bar.classList.add('translate-y-full', 'opacity-0', 'pointer-events-none');
+        bar.classList.remove('translate-y-0', 'opacity-100', 'pointer-events-auto');
+    }
+}
+
+function closeWelderAudioBar() {
+    stopWelderAudio();
+}
+
+function updateWelderPlayPauseBtnState(isPlaying) {
+    const icon = document.getElementById('welderPlayPauseIcon');
+    const text = document.getElementById('welderPlayPauseText');
+    if (icon && text) {
+        if (isPlaying) {
+            icon.textContent = '⏸️';
+            text.textContent = 'Pause';
+        } else {
+            icon.textContent = '▶️';
+            text.textContent = 'Play';
+        }
+    }
+}
+
+function highlightPlayingWelderSection(sectionId) {
+    removeWelderSectionHighlight();
+    const el = document.querySelector(`[data-welder-section="${sectionId}"]`);
+    if (el) {
+        el.classList.add('welder-playing-highlight');
+        // Smooth scroll if not in viewport
+        el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+}
+
+function removeWelderSectionHighlight() {
+    document.querySelectorAll('.welder-playing-highlight').forEach(el => {
+        el.classList.remove('welder-playing-highlight');
+    });
+}
+
+// ==================== INITIALIZATION & SECTION BINDING ====================
 function initWelderModules() {
     renderWelderVocab();
     updateWelderProgressUI();
+    initWelderTTS();
+
+    // Map section IDs to DOM cards automatically
+    bindWelderDOMSections();
+
+    // Set initial mode UI
+    updateWelderModeUI();
 
     // Default: Buka modul 1 saat pertama kali dimuat
     const firstModule = document.querySelector('.welder-module-card[data-module-id="1"]');
@@ -4827,6 +5634,191 @@ function initWelderModules() {
         if (content && !content.classList.contains('open')) {
             content.classList.add('open');
             if (icon) icon.classList.add('rotated');
+        }
+    }
+}
+
+function bindWelderDOMSections() {
+    // 1. Inisialisasi tombol putar full modul di header setiap modul
+    document.querySelectorAll('.welder-module-card').forEach(card => {
+        const modId = parseInt(card.dataset.moduleId, 10);
+        const headerActions = card.querySelector('.p-5 .flex.items-center.gap-2.flex-shrink-0');
+        if (headerActions && !headerActions.querySelector('.mod-tts-btn')) {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'mod-tts-btn inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold text-charcoal-700 bg-charcoal-100 hover:bg-safety-500 hover:text-white transition-all shadow-sm';
+            btn.title = `Putar Seluruh Modul ${modId}`;
+            btn.innerHTML = `<span>🔊</span><span class="hidden sm:inline">Dengar Modul</span>`;
+            btn.onclick = (e) => playWelderFullModuleTTS(modId, e);
+            headerActions.insertBefore(btn, headerActions.firstChild);
+        }
+    });
+
+    // 2. Mapping Section Card di Modul 1
+    const m1Card = document.querySelector('.welder-module-card[data-module-id="1"]');
+    if (m1Card) {
+        const accContent = m1Card.querySelector('.accordion-content .space-y-6');
+        if (accContent) {
+            const children = accContent.children;
+            // Konsep Inti
+            if (children[0]) attachSectionToCard(children[0], 'm1-konsep');
+            // SMAW
+            if (children[1]) attachSectionToCard(children[1], 'm1-smaw');
+            // GMAW
+            if (children[2]) attachSectionToCard(children[2], 'm1-gmaw');
+            // GTAW
+            if (children[3]) attachSectionToCard(children[3], 'm1-gtaw');
+            // Polaritas, Arc Blow & Duty Cycle container
+            if (children[5]) {
+                const subCards = children[5].querySelectorAll('.bg-gradient-to-r, .grid');
+                attachSectionToCard(children[5], 'm1-polarity');
+                // Magnetic Arc Blow Sub-block
+                const arcBlowBlock = children[5].querySelector('.border-l-4.border-amber-500');
+                if (arcBlowBlock) attachSectionToCard(arcBlowBlock, 'm1-arcblow');
+            }
+            // AWS E7018
+            if (children[6]) attachSectionToCard(children[6], 'm1-aws');
+            // Proses Khusus
+            if (children[7]) attachSectionToCard(children[7], 'm1-special');
+        }
+    }
+
+    // 3. Mapping Section Card di Modul 2
+    const m2Card = document.querySelector('.welder-module-card[data-module-id="2"]');
+    if (m2Card) {
+        const accContent = m2Card.querySelector('.accordion-content .space-y-6');
+        if (accContent) {
+            const introBox = accContent.querySelector('.bg-amber-50\\/70');
+            if (introBox) attachSectionToCard(introBox, 'm2-intro');
+
+            const gridCards = accContent.querySelectorAll('.grid > div');
+            if (gridCards[0]) attachSectionToCard(gridCards[0], 'm2-1g');
+            if (gridCards[1]) attachSectionToCard(gridCards[1], 'm2-2g');
+            if (gridCards[2]) attachSectionToCard(gridCards[2], 'm2-3g');
+            if (gridCards[3]) attachSectionToCard(gridCards[3], 'm2-4g');
+            if (gridCards[4]) attachSectionToCard(gridCards[4], 'm2-5g');
+            if (gridCards[5]) attachSectionToCard(gridCards[5], 'm2-6g');
+
+            const grooveBox = accContent.querySelectorAll('.rounded-2xl')[0];
+            if (grooveBox) attachSectionToCard(grooveBox, 'm2-groove');
+        }
+    }
+
+    // 4. Mapping Section Card di Modul 3
+    const m3Card = document.querySelector('.welder-module-card[data-module-id="3"]');
+    if (m3Card) {
+        const accContent = m3Card.querySelector('.accordion-content .space-y-4');
+        if (accContent) {
+            const introBox = accContent.querySelector('.bg-red-50\\/70');
+            if (introBox) attachSectionToCard(introBox, 'm3-intro');
+
+            const defectCards = accContent.querySelectorAll('.grid > div');
+            if (defectCards[0]) attachSectionToCard(defectCards[0], 'm3-porosity');
+            if (defectCards[1]) attachSectionToCard(defectCards[1], 'm3-undercut');
+            if (defectCards[2]) attachSectionToCard(defectCards[2], 'm3-spatter');
+            if (defectCards[3]) attachSectionToCard(defectCards[3], 'm3-slag');
+            if (defectCards[4]) attachSectionToCard(defectCards[4], 'm3-fusion');
+            if (defectCards[5]) attachSectionToCard(defectCards[5], 'm3-penetration');
+            if (defectCards[6]) attachSectionToCard(defectCards[6], 'm3-burnthrough');
+            if (defectCards[7]) attachSectionToCard(defectCards[7], 'm3-overfill');
+
+            const extraCards = accContent.querySelectorAll('.rounded-2xl');
+            if (extraCards[0]) attachSectionToCard(extraCards[0], 'm3-cracks');
+            if (extraCards[1]) attachSectionToCard(extraCards[1], 'm3-ndt');
+        }
+    }
+
+    // 5. Mapping Section Card di Modul 4
+    const m4Card = document.querySelector('.welder-module-card[data-module-id="4"]');
+    if (m4Card) {
+        const accContent = m4Card.querySelector('.accordion-content .space-y-6');
+        if (accContent) {
+            const sections = accContent.children;
+            if (sections[0]) attachSectionToCard(sections[0], 'm4-apd');
+            if (sections[1]) attachSectionToCard(sections[1], 'm4-shade');
+            if (sections[2]) attachSectionToCard(sections[2], 'm4-gas');
+            if (sections[3]) attachSectionToCard(sections[3], 'm4-hazards');
+        }
+    }
+
+    // 6. Mapping Section Card di Modul 5
+    const m5Card = document.querySelector('.welder-module-card[data-module-id="5"]');
+    if (m5Card) {
+        const accContent = m5Card.querySelector('.accordion-content .space-y-4');
+        if (accContent) {
+            const vocabContainer = accContent.querySelector('#welderVocabGrid');
+            if (vocabContainer) attachSectionToCard(vocabContainer.parentElement, 'm5-vocab');
+            const symbolCard = accContent.querySelector('.rounded-2xl');
+            if (symbolCard) attachSectionToCard(symbolCard, 'm5-symbols');
+        }
+    }
+
+    // 7. Mapping Section Card di Modul 6
+    const m6Card = document.querySelector('.welder-module-card[data-module-id="6"]');
+    if (m6Card) {
+        const accContent = m6Card.querySelector('.accordion-content .space-y-6');
+        if (accContent) {
+            const introBox = accContent.querySelector('.bg-blue-50\\/70');
+            if (introBox) attachSectionToCard(introBox, 'm6-intro');
+            const flowchartBox = accContent.children[1];
+            if (flowchartBox) attachSectionToCard(flowchartBox, 'm6-flowchart');
+        }
+    }
+}
+
+function attachSectionToCard(cardEl, sectionId) {
+    if (!cardEl) return;
+    const data = WELDER_CONTENT_STORE[sectionId];
+    if (!data) return;
+
+    cardEl.setAttribute('data-welder-section', sectionId);
+
+    // Injeksi speaker button jika belum ada
+    if (!cardEl.querySelector(`.sec-speaker-btn[data-for="${sectionId}"]`)) {
+        const speakerBtn = document.createElement('button');
+        speakerBtn.type = 'button';
+        speakerBtn.className = 'sec-speaker-btn inline-flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-bold text-charcoal-600 hover:text-safety-600 hover:bg-safety-50 bg-charcoal-50 border border-charcoal-200 hover:border-safety-300 transition-colors shadow-sm ml-auto';
+        speakerBtn.setAttribute('data-for', sectionId);
+        speakerBtn.title = 'Dengarkan penjelasan suara';
+        speakerBtn.innerHTML = `<span>🔊</span> <span class="text-[10px] hidden sm:inline">Dengar</span>`;
+        speakerBtn.onclick = (e) => playWelderSectionTTS(sectionId, e);
+
+        // Cari header atau elemen awal di dalam card untuk meletakkan tombol
+        const targetHeader = cardEl.querySelector('.flex.items-center.justify-between') ||
+                             cardEl.querySelector('h5, h6, .flex.items-center') ||
+                             cardEl.firstElementChild;
+        
+        if (targetHeader && targetHeader.classList.contains('flex')) {
+            targetHeader.appendChild(speakerBtn);
+        } else if (targetHeader) {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'flex items-center justify-between gap-2 mb-2';
+            targetHeader.parentNode.insertBefore(wrapper, targetHeader);
+            wrapper.appendChild(targetHeader);
+            wrapper.appendChild(speakerBtn);
+        }
+    }
+
+    // Injeksi box analogi bahasa simple jika belum ada
+    if (!cardEl.querySelector(`.welder-simple-box-container[data-for="${sectionId}"]`)) {
+        const simpleBox = document.createElement('div');
+        simpleBox.className = 'welder-simple-box-container welder-simple-box text-xs sm:text-sm text-charcoal-900 leading-relaxed font-medium hidden';
+        simpleBox.setAttribute('data-for', sectionId);
+        simpleBox.innerHTML = `
+            <div class="flex items-center gap-2 mb-1.5 pb-1 border-b border-amber-300/60">
+                <span class="text-base">🧒</span>
+                <strong class="text-amber-950 font-bold text-xs uppercase tracking-wide">Analogi Bahasa Simple:</strong>
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-200 text-amber-900 ml-auto border border-amber-300/80">${data.analogyBadge || 'Analogi Sehari-hari'}</span>
+            </div>
+            <p class="text-charcoal-800 whitespace-pre-line leading-relaxed">${data.simple}</p>
+        `;
+        
+        // Letakkan sebelum SVG/Diagram atau di bagian atas card
+        const svgContainer = cardEl.querySelector('.bg-charcoal-950, svg, table, .overflow-x-auto');
+        if (svgContainer) {
+            svgContainer.parentNode.insertBefore(simpleBox, svgContainer);
+        } else {
+            cardEl.appendChild(simpleBox);
         }
     }
 }
@@ -5017,13 +6009,106 @@ function collapseAllWelderModules() {
     showToast('Semua modul ditutup', 'info');
 }
 
+// ==================== KEYBOARD SHORTCUTS (Ctrl+X & Ctrl+B) ====================
+function toggleWelderFabShortcut() {
+    isWelderFabVisible = !isWelderFabVisible;
+    const fab = document.getElementById('welderFloatingFab');
+    if (fab) {
+        if (isWelderFabVisible) {
+            fab.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
+            fab.classList.add('opacity-100', 'scale-100', 'pointer-events-auto');
+            showToast('Tombol Pilihan Bahasa dimunculkan (Ctrl+X)', 'info');
+        } else {
+            fab.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
+            fab.classList.remove('opacity-100', 'scale-100', 'pointer-events-auto');
+            showToast('Tombol Pilihan Bahasa disembunyikan (Ctrl+X)', 'info');
+        }
+    }
+}
+
+function toggleSidebarShortcut() {
+    const sidebar = document.getElementById('sidebar');
+    if (!sidebar) return;
+
+    // Responsive: On Mobile (< 1024px)
+    if (window.innerWidth < 1024) {
+        const isOpen = !sidebar.classList.contains('-translate-x-full');
+        if (isOpen) {
+            closeSidebar();
+        } else {
+            sidebar.classList.remove('-translate-x-full');
+            const overlay = document.getElementById('sidebarOverlay');
+            if (overlay) overlay.classList.add('show');
+        }
+        return;
+    }
+
+    // On Desktop (>= 1024px)
+    const isCurrentlyCollapsed = sidebar.classList.contains('sidebar-collapsed');
+    const willCollapse = !isCurrentlyCollapsed;
+
+    if (willCollapse) {
+        sidebar.classList.add('sidebar-collapsed');
+        localStorage.setItem('bp3mi_sidebar_collapsed', 'true');
+        showToast('Sidebar menu disembunyikan (Ctrl+B)', 'info');
+    } else {
+        sidebar.classList.remove('sidebar-collapsed');
+        localStorage.setItem('bp3mi_sidebar_collapsed', 'false');
+        showToast('Sidebar menu ditampilkan (Ctrl+B)', 'info');
+    }
+}
+
+function initSidebarState() {
+    const isCollapsed = localStorage.getItem('bp3mi_sidebar_collapsed') === 'true';
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar && isCollapsed && window.innerWidth >= 1024) {
+        sidebar.classList.add('sidebar-collapsed');
+    }
+}
+
+function checkAndShowShortcutTip() {
+    const tipShown = localStorage.getItem('bp3mi_shortcut_tip_shown');
+    if (!tipShown) {
+        setTimeout(() => {
+            showToast('💡 Tips: Tekan Ctrl+X untuk tombol bahasa, Ctrl+B untuk sembunyikan menu', 'info');
+            localStorage.setItem('bp3mi_shortcut_tip_shown', 'true');
+        }, 1200);
+    }
+}
+
+// Global Keydown Listener
+window.addEventListener('keydown', (e) => {
+    // Jangan intercept jika user sedang mengetik di input, textarea, atau contenteditable
+    const activeEl = document.activeElement;
+    const isInput = activeEl && (
+        activeEl.tagName === 'INPUT' ||
+        activeEl.tagName === 'TEXTAREA' ||
+        activeEl.isContentEditable
+    );
+    if (isInput) return;
+
+    // Shortcut 1: Ctrl+X / Cmd+X -> Toggle Floating Button Pilihan Bahasa
+    if ((e.ctrlKey || e.metaKey) && (e.key === 'x' || e.key === 'X')) {
+        e.preventDefault();
+        toggleWelderFabShortcut();
+    }
+
+    // Shortcut 2: Ctrl+B / Cmd+B -> Toggle Sidebar Kiri
+    if ((e.ctrlKey || e.metaKey) && (e.key === 'b' || e.key === 'B')) {
+        e.preventDefault();
+        toggleSidebarShortcut();
+    }
+});
+
 // ==================== INIT ====================
 document.addEventListener('DOMContentLoaded', () => {
+    initSidebarState();
     initWelderModules();
     renderInterview();
     renderChecklist();
     renderCheatSheet();
     renderBP2MIMaterials();
+    checkAndShowShortcutTip();
 
     // Register Service Worker for PWA
     if ('serviceWorker' in navigator) {

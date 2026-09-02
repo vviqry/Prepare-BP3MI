@@ -1920,6 +1920,65 @@ export default function Bp3miApp() {
     }, 3500);
   }, []);
 
+  // Keyboard Shortcuts State (Ctrl+X: Floating Lang Button, Ctrl+B: Sidebar Toggle)
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('bp3mi_sidebar_collapsed') === 'true';
+    }
+    return false;
+  });
+  const [showFloatingLangBtn, setShowFloatingLangBtn] = useState(false);
+
+  // Global Keyboard Shortcuts Effect
+  useEffect(() => {
+    // Show one-time tip if not shown yet
+    if (typeof window !== 'undefined') {
+      const tipShown = localStorage.getItem('bp3mi_shortcut_tip_shown');
+      if (!tipShown) {
+        setTimeout(() => {
+          addToast('💡 Tips: Tekan Ctrl+X untuk tombol bahasa, Ctrl+B untuk sembunyikan menu', 'info');
+          localStorage.setItem('bp3mi_shortcut_tip_shown', 'true');
+        }, 1200);
+      }
+    }
+
+    const handleKeyDown = (e) => {
+      const activeEl = document.activeElement;
+      const isInput = activeEl && (
+        activeEl.tagName === 'INPUT' ||
+        activeEl.tagName === 'TEXTAREA' ||
+        activeEl.isContentEditable
+      );
+      if (isInput) return;
+
+      // Ctrl+X or Cmd+X -> Toggle Floating Button Pilihan Bahasa
+      if ((e.ctrlKey || e.metaKey) && (e.key === 'x' || e.key === 'X')) {
+        e.preventDefault();
+        setShowFloatingLangBtn((prev) => {
+          const next = !prev;
+          addToast(next ? 'Tombol Pilihan Bahasa dimunculkan (Ctrl+X)' : 'Tombol Pilihan Bahasa disembunyikan (Ctrl+X)', 'info');
+          return next;
+        });
+      }
+
+      // Ctrl+B or Cmd+B -> Toggle Sidebar Kiri
+      if ((e.ctrlKey || e.metaKey) && (e.key === 'b' || e.key === 'B')) {
+        e.preventDefault();
+        setSidebarCollapsed((prev) => {
+          const next = !prev;
+          if (typeof window !== 'undefined') {
+            localStorage.setItem('bp3mi_sidebar_collapsed', String(next));
+          }
+          addToast(next ? 'Sidebar menu disembunyikan (Ctrl+B)' : 'Sidebar menu ditampilkan (Ctrl+B)', 'info');
+          return next;
+        });
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [addToast]);
+
   // Timer Effect (Only active during Strict Exam Mode)
   useEffect(() => {
     let timerInterval = null;
@@ -2145,8 +2204,10 @@ export default function Bp3miApp() {
       {/* SIDEBAR NAVIGATION */}
       {/* ==================================================================== */}
       <aside
-        className={`fixed lg:sticky top-0 left-0 h-screen w-72 bg-slate-950 border-r border-slate-800/80 flex flex-col z-50 transition-transform duration-300 ${
+        className={`fixed lg:sticky top-0 left-0 h-screen w-72 bg-slate-950 border-r border-slate-800/80 flex flex-col z-50 transition-all duration-300 ${
           mobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+        } ${
+          sidebarCollapsed ? 'lg:-ml-72 lg:-translate-x-full lg:opacity-0 lg:pointer-events-none' : 'lg:ml-0 lg:translate-x-0 lg:opacity-100'
         }`}
       >
         {/* Brand Header */}
@@ -3392,6 +3453,26 @@ export default function Bp3miApp() {
           )}
         </div>
       </main>
+
+      {/* ==================================================================== */}
+      {/* FLOATING BUTTON (TOGGLED VIA Ctrl+X) */}
+      {/* ==================================================================== */}
+      <div
+        className={`fixed bottom-20 lg:bottom-8 right-4 sm:right-6 z-40 transition-all duration-300 transform ${
+          showFloatingLangBtn ? 'opacity-100 scale-100 pointer-events-auto' : 'opacity-0 scale-95 pointer-events-none'
+        }`}
+      >
+        <button
+          onClick={() => addToast('Pilihan Bahasa aktif (Mode Simple / Teknis)', 'info')}
+          className="flex items-center gap-2.5 px-4 py-3 sm:px-5 sm:py-3.5 rounded-full bg-gradient-to-r from-amber-500 via-amber-600 to-amber-700 text-slate-950 font-black text-xs sm:text-sm shadow-2xl shadow-amber-500/40 border-2 border-white/90 hover:scale-105 active:scale-95 transition-all"
+        >
+          <span className="text-base sm:text-xl">🧒</span>
+          <div className="text-left">
+            <span className="block text-[9px] uppercase tracking-wider font-bold text-slate-900 opacity-80 leading-none">Pilihan Bahasa</span>
+            <span className="text-xs sm:text-sm font-black">Mode Simple</span>
+          </div>
+        </button>
+      </div>
     </div>
   );
 }
