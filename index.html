@@ -5527,56 +5527,30 @@ let currentTTSState = {
 };
 
 function resolveVoiceForLang(lang, presetIdx) {
-    const allVoices = welderSpeechVoices || [];
-    const idVoices = allVoices.filter(isIndonesianVoice);
-    const enVoices = allVoices.filter(v => !isIndonesianVoice(v));
+    // Gunakan preset yang sudah difilter sesuai bahasa aktif
+    const filteredPresets = getWelderVoicePresetsForLang(lang);
+    const safeIdx = (presetIdx >= 0 && presetIdx < filteredPresets.length) ? presetIdx : 0;
+    const chosen = filteredPresets[safeIdx];
 
-    let chosenVoice = null;
-    let rate = 1.0;
-    let pitch = 1.0;
-    let autoAdjusted = false;
-
-    // Menentukan style tempo: 0 = Normal, 1 = Santai/Tenang
-    const isRelaxed = (presetIdx === 1);
-
-    if (lang === 'en') {
-        // Konten Bahasa Inggris -> wajib pakai voice Inggris yang jernih & natural
-        const preferredEn = enVoices.find(v => v.name.includes('David')) ||
-                            enVoices.find(v => v.name.includes('Mark')) ||
-                            enVoices.find(v => v.name.includes('Zira')) ||
-                            enVoices.find(v => (v.lang || '').toLowerCase().startsWith('en')) ||
-                            enVoices[0] ||
-                            allVoices[0] ||
-                            null;
-        chosenVoice = preferredEn;
-        rate = isRelaxed ? 0.85 : 1.0;
-        pitch = isRelaxed ? 0.95 : 1.0;
-
-        // Cek jika user sedang memilih preset Indonesia di dropdown saat konten Inggris aktif
-        const currentPreset = getWelderVoicePresets()[presetIdx];
-        if (currentPreset && currentPreset.isIndonesian) {
-            autoAdjusted = true;
-        }
-    } else {
-        // Konten Bahasa Indonesia (Default) -> wajib pakai voice Andika (id-ID)
-        const primaryId = idVoices[0] || allVoices[0] || null;
-        chosenVoice = primaryId;
-        rate = isRelaxed ? 0.85 : 1.0;
-        pitch = isRelaxed ? 0.9 : 1.0;
-
-        // Cek jika user sedang memilih preset non-Indonesia di dropdown saat konten Indonesia aktif
-        const currentPreset = getWelderVoicePresets()[presetIdx];
-        if (currentPreset && !currentPreset.isIndonesian) {
-            autoAdjusted = true;
-        }
+    if (chosen) {
+        return {
+            voice: chosen.voice,
+            lang: chosen.voice ? chosen.voice.lang : (lang === 'en' ? 'en-US' : 'id-ID'),
+            rate: chosen.rate || 1.0,
+            pitch: chosen.pitch || 1.0,
+            autoAdjusted: false
+        };
     }
 
+    // Fallback jika tidak ada preset sama sekali
+    const allVoices = welderSpeechVoices || [];
+    const fallback = allVoices[0] || null;
     return {
-        voice: chosenVoice,
-        lang: chosenVoice ? chosenVoice.lang : (lang === 'en' ? 'en-US' : 'id-ID'),
-        rate: rate,
-        pitch: pitch,
-        autoAdjusted: autoAdjusted
+        voice: fallback,
+        lang: fallback ? fallback.lang : (lang === 'en' ? 'en-US' : 'id-ID'),
+        rate: 1.0,
+        pitch: 1.0,
+        autoAdjusted: false
     };
 }
 
@@ -5632,27 +5606,47 @@ function logWelderTTSVoices(presets) {
     console.groupEnd();
 }
 
-function populateWelderVoiceSelector() {
-    const select = document.getElementById('welderVoiceSelect');
+// Menghasilkan presets yang sudah difilter berdasarkan bahasa aktif
+function getWelderVoicePresetsForLang(lang) {
     const presets = getWelderVoicePresets();
+    if (lang === 'en') {
+        // Hanya tampilkan voice Inggris/Non-Indonesia
+        const enPresets = presets.filter(p => !p.isIndonesian);
+        return enPresets.length > 0 ? enPresets : presets; // fallback ke semua jika tidak ada EN
+    } else {
+        // Hanya tampilkan voice Indonesia
+        const idPresets = presets.filter(p => p.isIndonesian);
+        return idPresets.length > 0 ? idPresets : presets; // fallback ke semua jika tidak ada ID
+    }
+}
+
+function populateWelderVoiceSelector(lang) {
+    const select = document.getElementById('welderVoiceSelect');
+    const activeLang = lang || currentTTSState.lang || 'id';
+    const filteredPresets = getWelderVoicePresetsForLang(activeLang);
     
-    // Auto-deteksi: jika index belum valid atau belum diset, default ke index 0 (yaitu preset utama ID)
-    if (welderSelectedVoiceIdx < 0 || welderSelectedVoiceIdx >= presets.length) {
+    // Reset index jika tidak valid untuk set presets baru
+    if (welderSelectedVoiceIdx < 0 || welderSelectedVoiceIdx >= filteredPresets.length) {
         welderSelectedVoiceIdx = 0;
     }
 
     if (select) {
         select.innerHTML = '';
-        presets.forEach((p, idx) => {
+        filteredPresets.forEach((p, idx) => {
             const opt = document.createElement('option');
             opt.value = idx;
-            opt.textContent = p.name;
+            // Bersihkan label "kurang cocok" karena dropdown sudah difilter
+            let label = p.name;
+            if (activeLang === 'en') {
+                label = label.replace(/ - kurang cocok untuk teks Indonesia/g, '');
+            }
+            opt.textContent = label;
             select.appendChild(opt);
         });
         select.value = welderSelectedVoiceIdx;
     }
 
-    updateWelderVoiceNotice();
+    updateWelderVoiceNotice(activeLang);
 }
 
 function initWelderTTS() {
@@ -5689,23 +5683,23 @@ function initWelderTTS() {
 
 function changeWelderVoice(idx) {
     welderSelectedVoiceIdx = parseInt(idx, 10) || 0;
-    const presets = getWelderVoicePresets();
-    const chosen = presets[welderSelectedVoiceIdx];
-
     const currentLang = currentTTSState.lang || 'id';
-    const resolved = resolveVoiceForLang(currentLang, welderSelectedVoiceIdx);
+    const filteredPresets = getWelderVoicePresetsForLang(currentLang);
+    const chosen = filteredPresets[welderSelectedVoiceIdx];
 
-    if (resolved.autoAdjusted) {
-        const langName = currentLang === 'en' ? 'English' : 'Bahasa Indonesia';
-        showToast(`ℹ️ Preset disesuaikan ke bahasa konten (${langName})`, 'info');
-    } else if (chosen) {
+    if (chosen) {
         showToast(`🎙️ Suara diubah: ${chosen.name}`, 'info');
     }
 
     updateWelderVoiceNotice(currentLang);
 
-    if (window.speechSynthesis.speaking && currentTTSState.text) {
-        replayCurrentTTS();
+    // Jika audio sedang berjalan, cancel dulu lalu replay dengan voice baru
+    // Gunakan setTimeout untuk menghindari race condition cancel()+speak() di Chrome
+    if ((window.speechSynthesis.speaking || window.speechSynthesis.paused) && currentTTSState.text) {
+        window.speechSynthesis.cancel();
+        setTimeout(() => {
+            replayCurrentTTS();
+        }, 50);
     }
 }
 
@@ -5717,8 +5711,11 @@ function cycleWelderPlaybackRate() {
     const rateBtn = document.getElementById('welderRateBtn');
     if (rateBtn) rateBtn.textContent = `${welderPlaybackRate}x`;
 
-    if (window.speechSynthesis.speaking && currentTTSState.text) {
-        replayCurrentTTS();
+    if ((window.speechSynthesis.speaking || window.speechSynthesis.paused) && currentTTSState.text) {
+        window.speechSynthesis.cancel();
+        setTimeout(() => {
+            replayCurrentTTS();
+        }, 50);
     }
 }
 
@@ -5975,6 +5972,9 @@ function showWelderAudioBar(title, lang = 'id', badgeText = '') {
                 langBadge.className = 'text-[9px] font-bold px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30';
             }
         }
+        // Update dropdown voice selector sesuai bahasa konten yang sedang diputar
+        populateWelderVoiceSelector(lang);
+
         bar.classList.remove('translate-y-full', 'opacity-0', 'pointer-events-none');
         bar.classList.add('translate-y-0', 'opacity-100', 'pointer-events-auto');
     }
@@ -6240,10 +6240,24 @@ function attachSectionToCard(cardEl, sectionId) {
             <p class="text-charcoal-800 whitespace-pre-line leading-relaxed">${data.simple}</p>
         `;
         
-        // Letakkan sebelum SVG/Diagram atau di bagian atas card
-        const svgContainer = cardEl.querySelector('.bg-charcoal-950, svg, table, .overflow-x-auto');
-        if (svgContainer) {
-            svgContainer.parentNode.insertBefore(simpleBox, svgContainer);
+        // Letakkan setelah header (h5/h6) dan sebelum konten utama (grid/table/svg)
+        // PENTING: Hanya iterasi direct children cardEl, BUKAN querySelector rekursif
+        // untuk menghindari match SVG ikon di dalam grid cell yang menyebabkan overlap
+        let insertAnchor = null;
+        for (const child of cardEl.children) {
+            const tag = child.tagName.toLowerCase();
+            // Skip header elements (h5, h6)
+            if (tag === 'h5' || tag === 'h6') continue;
+            // Skip flex wrapper yang membungkus header + speaker button
+            if (child.classList.contains('flex') && child.querySelector('h5, h6')) continue;
+            // Skip simple box yang sudah ada
+            if (child.classList.contains('welder-simple-box-container')) continue;
+            // Elemen pertama setelah header = posisi insert
+            insertAnchor = child;
+            break;
+        }
+        if (insertAnchor) {
+            cardEl.insertBefore(simpleBox, insertAnchor);
         } else {
             cardEl.appendChild(simpleBox);
         }
